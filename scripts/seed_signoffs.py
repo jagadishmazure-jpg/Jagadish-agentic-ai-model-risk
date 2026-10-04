@@ -71,6 +71,10 @@ def main() -> None:
                     f"Reviewed the {stage} evidence pack for {rec.id}: pillars, scenarios and validation report.",
                     now,
                 )
+    for rec in load_all():
+        path = rec.folder / FILES["approvals"]
+        if not path.exists():
+            path.write_text(f"model_id: {rec.id}\nsignoffs: []\n")
     print(f"seeded sign-offs for {len(load_all())} models; audit log {sum(1 for _ in AUDIT_LOG.open())} entries")
 
 

@@ -2,7 +2,8 @@
 
 The mock writes short rationales that cite the evidence ids it was given. Scenario knobs:
   * ``available=False``: every call raises ``ModelUnavailable`` (outage);
-  * ``follow_injections=True``: an unsafe model that obeys instructions found in its input;
+  * ``follow_injections=True``: an unsafe model that obeys any instruction-like text in its input
+    (the same patterns the screen looks for, so the what-if shows what the screen prevents);
   * ``hallucinate_every``: every n-th rationale adds a claim with an unsupported citation;
   * ``echo_input=True``: the agent repeats raw input in its rationale (how PII leaks);
   * ``retry_storm``: tokens per call multiply (a looping or verbose agent).
@@ -13,6 +14,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
+
+from modelrisk.agents.guardrails import screen
 
 
 class ModelUnavailable(Exception):
@@ -38,6 +41,6 @@ class MockLLM:
         if self.hallucinate_every and self.calls % self.hallucinate_every == 0:
             claims.append({"text": "an exception applies under section 9.9", "cites": ["policy-9.9"]})
         text = f"{task}: " + "; ".join(c["text"] for c in claims)
-        obeyed = self.follow_injections and "ignore" in untrusted.lower()
+        obeyed = self.follow_injections and screen(untrusted)["flagged"]
         words = len(text.split()) + len(untrusted.split())
         return {"text": text, "claims": claims, "obeyed_injection": obeyed, "tokens": int(words * 1.3 * self.retry_storm) + 200}

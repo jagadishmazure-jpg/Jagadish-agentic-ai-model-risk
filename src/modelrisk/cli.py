@@ -12,6 +12,7 @@ import asyncio
 import json
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 import yaml
@@ -316,6 +317,22 @@ def cmd_signoff(a) -> int:
     return 0
 
 
+def cmd_telemetry(a) -> int:
+    from collections import Counter
+
+    from modelrisk.gate import run_gate
+    from modelrisk.telemetry import collect
+
+    events = collect(run_gate())
+    if a.out:
+        Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+        Path(a.out).write_text("".join(json.dumps(e, sort_keys=True) + "\n" for e in events))
+    for name, n in sorted(Counter(e["name"] for e in events).items()):
+        _p(f"{name:<20} {n}")
+    _p(f"{len(events)} events" + (f" written to {a.out}" if a.out else ""))
+    return 0
+
+
 def cmd_mcp(a) -> int:
     from modelrisk.mcp_server import build_server
 
@@ -390,6 +407,9 @@ def parser() -> argparse.ArgumentParser:
     s.add_argument("--comment", default="")
     s.add_argument("--reject", action="store_true")
     s.set_defaults(fn=cmd_signoff)
+    s = sub.add_parser("telemetry")
+    s.add_argument("--out")
+    s.set_defaults(fn=cmd_telemetry)
     sub.add_parser("mcp").set_defaults(fn=cmd_mcp)
     sub.add_parser("mcp-demo").set_defaults(fn=cmd_mcp_demo)
     return p
