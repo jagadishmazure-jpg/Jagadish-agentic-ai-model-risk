@@ -34,7 +34,7 @@ insurance-ai: State insurance AI expectations (NAIC model bulletin) (1 controls)
 ## CSA AI Model Risk Management Framework (the four pillars)
 
 The Cloud Security Alliance AI Technology and Risk working group frames model risk management around
-four tools used together: model cards, data sheets, risk cards and scenario planning
+four tools used together: model cards, data sheets, risk cards, plus scenario planning
 ([working group page](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk)). This repository implements each as a JSON Schema, a YAML artifact
 per model and code, and adds explicit links between them (`docs/pillars/combining-the-pillars.md`).
 The framework document is not reproduced or redistributed here.

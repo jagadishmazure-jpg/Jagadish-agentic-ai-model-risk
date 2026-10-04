@@ -7,7 +7,7 @@ frameworks:
     source: https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk
     summary: >-
       The Cloud Security Alliance AI Technology and Risk working group describes four
-      complementary tools: model cards, data sheets, risk cards and scenario planning, used
+      complementary tools: model cards, data sheets, risk cards, plus scenario planning, used
       together. This repository implements them as schemas, YAML artifacts and code. The
       framework text itself is not reproduced here.
     items:

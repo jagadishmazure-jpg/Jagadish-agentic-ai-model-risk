@@ -1,7 +1,7 @@
 [project]
 name = "agentic-ai-model-risk"
 version = "0.1.0"
-description = "AI model risk management as code: model cards, data sheets, risk cards and scenario planning for five mock agentic AI systems, with inventory tiering, lifecycle gates, independent validation, monitoring, HITL sign-off and a CI gate. Offline, synthetic data."
+description = "AI model risk management as code: model cards, data sheets, risk cards, plus scenario planning for five mock agentic AI systems, with inventory tiering, lifecycle gates, independent validation, monitoring, HITL sign-off and a CI gate. Offline, synthetic data."
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Jagadish Meduri" }]

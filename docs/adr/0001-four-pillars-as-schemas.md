@@ -4,7 +4,7 @@
 
 ## Context
 
-Model governance documents are usually prose, which cannot be checked. The CSA framework's four tools (model cards, data sheets, risk cards, scenario planning) need to be machine-checkable to gate CI.
+Model governance documents are usually prose, which cannot be checked. The CSA framework's four tools (model cards, data sheets, risk cards, plus scenario planning) need to be machine-checkable to gate CI.
 
 ## Decision
 

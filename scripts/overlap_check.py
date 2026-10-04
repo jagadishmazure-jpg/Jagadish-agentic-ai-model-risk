@@ -4,6 +4,9 @@ sure no reference wording was copied. The references themselves are never part o
 
     python scripts/overlap_check.py /path/to/refs/*.txt [--n 8]
 
+URLs are removed from both sides before comparing: the attribution link that the repository is
+required to carry also appears in the reference, and a link is a citation, not copied prose.
+
 Exit code 1 if any overlap is found."""
 
 from __future__ import annotations
@@ -33,8 +36,11 @@ TEXT_SUFFIXES = {
 }
 
 
+URL = re.compile(r"(?:https?://|www\.)\S+|\b[\w.-]+\.(?:org|com|net|gov|eu|io)(?:/\S*)?", re.I)
+
+
 def words(text: str) -> list[str]:
-    return re.findall(r"[a-z0-9]+(?:['’][a-z]+)?", text.lower())
+    return re.findall(r"[a-z0-9]+(?:['’][a-z]+)?", URL.sub(" ", text).lower())
 
 
 def shingles(ws: list[str], n: int) -> set[tuple[str, ...]]:

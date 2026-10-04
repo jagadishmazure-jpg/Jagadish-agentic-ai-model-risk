@@ -5,8 +5,7 @@
 
 ## At a glance (for recruiters)
 
-- **Model risk management for agentic AI as working code.** Model cards, data sheets, risk cards and
-  scenario planning (the four pillars described by the Cloud Security Alliance) are JSON Schemas plus
+- **Model risk management for agentic AI as working code.** Model cards, data sheets, risk cards, plus scenario planning (the four pillars described by the Cloud Security Alliance) are JSON Schemas plus
   YAML for each model, and code connects them: the model card implies risks, the data sheet is tested
   against the running model, risks drive scenarios, and scenario results update residual risk and
   generate a development backlog.
@@ -45,7 +44,7 @@ demo records, and nothing is deployed to Azure.*
 
 ## Attribution
 
-The four-pillar structure (model cards, data sheets, risk cards, scenario planning, used together)
+The four-pillar structure (model cards, data sheets, risk cards, plus scenario planning, used together)
 comes from the Cloud Security Alliance AI Technology and Risk working group's AI Model Risk
 Management Framework: [https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk). The framework document is **not** included or redistributed
 here, and nothing in this repository copies its text. Schemas, scoring, scenarios, code and wording

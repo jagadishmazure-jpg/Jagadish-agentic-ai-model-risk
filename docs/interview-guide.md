@@ -5,7 +5,7 @@ How to present this repository in 2, 10 and 30 minutes, with likely questions.
 ## Two minutes
 
 "This is a model risk management system for agentic AI, built on four pillars credited to the Cloud
-Security Alliance: model cards, data sheets, risk cards and scenario planning. Each pillar is a JSON
+Security Alliance: model cards, data sheets, risk cards, plus scenario planning. Each pillar is a JSON
 Schema and YAML per model, and the pillars are wired together in code: the card implies risks, the
 data sheet is tested against the model, risks drive scenarios, and scenario results update residual
 risk and generate the backlog. Five fictional enterprise agents (fraud, claims, mortgage underwriting,
