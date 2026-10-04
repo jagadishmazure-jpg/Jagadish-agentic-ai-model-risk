@@ -118,6 +118,7 @@ A hosted version would log tool calls to Application Insights.
 
 * Host as an **Azure Container App** or **Azure Functions** MCP endpoint behind **API Management**;
   register in **Foundry** as a tool; **Application Insights** for calls; **Azure Policy** for private networking.
+* **Microsoft Purview**: catalogue the evidence this produces (reports, logs, datasets) as data assets with sensitivity labels and lineage back to the model it governs.
 
 ## 15. Limitations
 

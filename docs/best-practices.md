@@ -33,5 +33,5 @@
 1. Offline, deterministic, synthetic data; fictional companies only.
 2. Docs carry real outputs and code excerpts, regenerated and drift-checked in CI.
 3. Terraform and Bicep share policy JSON; smallest SKUs; deploy gated by `DEPLOY_ENABLED`, OIDC only.
-4. No dates in docs; no TODOs; a README in every folder.
+4. No dates in docs, no unfinished placeholders, and a README in every folder.
 5. Third-party frameworks are paraphrased and attributed, never copied.

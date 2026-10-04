@@ -161,6 +161,7 @@ regulatory mapping.
 * **Azure AI Language PII detection** (including PHI categories) instead of regex.
 * **Purview DLP** on the evidence storage; **Azure Policy** for diagnostic settings.
 * **Application Insights** sampling and data collection rules that drop text fields.
+* **Microsoft Foundry evaluations**: run the same check as a custom evaluator against a hosted deployment, so the result is attached to the model card as evaluation evidence.
 
 ## 15. Limitations
 

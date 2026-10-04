@@ -166,6 +166,7 @@ Validation outcome is part of the gate report uploaded as evidence.
 
 * **Foundry evaluations** run on a held-out dataset as the re-performance step; **Azure ML** jobs for
   challenger models; **Purview** to confirm validation data lineage; results in **Application Insights**.
+* **Azure Policy**: the model-card tag, risk-tier and private-endpoint policies keep the resources involved here tied to an inventoried, tiered model.
 
 ## 15. Limitations
 

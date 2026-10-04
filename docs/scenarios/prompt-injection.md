@@ -168,6 +168,7 @@ them runs the whole scenario suite.
 * **Azure AI Content Safety Prompt Shields** (user and document attacks) instead of regex.
 * **Foundry red teaming agent** and indirect-attack evaluators for hosted models.
 * **Application Insights** counts of screened inputs; **Azure Policy** denies public endpoints.
+* **Microsoft Purview**: catalogue the evidence this produces (reports, logs, datasets) as data assets with sensitivity labels and lineage back to the model it governs.
 
 ## 15. Limitations
 

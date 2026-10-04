@@ -200,6 +200,7 @@ non-passing scenario.
 * **Azure AI Content Safety Prompt Shields** replace the regex screen for injection.
 * **Application Insights**: scenario events and the breach table in the workbook.
 * **Azure Policy** keeps the deployment configuration the scenarios assumed (private endpoints, tags).
+* **Microsoft Purview**: catalogue the evidence this produces (reports, logs, datasets) as data assets with sensitivity labels and lineage back to the model it governs.
 
 ## 15. Limitations
 

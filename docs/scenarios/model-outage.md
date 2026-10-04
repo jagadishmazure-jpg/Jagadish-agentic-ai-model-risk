@@ -133,6 +133,8 @@ AI Platform Engineering owns outage risks in every domain.
 * **Foundry** deployments in two regions or provisioned throughput; **Azure API Management** for
   failover between deployments.
 * **Application Insights** availability and dependency failure alerts.
+* **Microsoft Purview**: catalogue the evidence this produces (reports, logs, datasets) as data assets with sensitivity labels and lineage back to the model it governs.
+* **Azure Policy**: the model-card tag, risk-tier and private-endpoint policies keep the resources involved here tied to an inventoried, tiered model.
 
 ## 15. Limitations
 

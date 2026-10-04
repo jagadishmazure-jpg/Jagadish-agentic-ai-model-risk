@@ -192,6 +192,7 @@ conclusion.
 * **Foundry evaluations** with custom fairness evaluators; **Azure Machine Learning Responsible AI
   dashboard** (Fairlearn) for disaggregated metrics.
 * **Purview** labels protected attributes; **Application Insights** for monthly parity metrics.
+* **Azure Policy**: the model-card tag, risk-tier and private-endpoint policies keep the resources involved here tied to an inventoried, tiered model.
 
 ## 15. Limitations
 

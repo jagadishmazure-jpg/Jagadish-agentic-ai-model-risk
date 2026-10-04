@@ -161,6 +161,7 @@ The gate report is the evidence a reviewer asks for at merge and at release.
 * **GitHub Actions** required status check; **Azure Policy** as the runtime counterpart; gate JSON in the
   **evidence storage account**; **Application Insights** for gate events; **Foundry evaluations** as
   scenario evidence for hosted models.
+* **Microsoft Purview**: catalogue the evidence this produces (reports, logs, datasets) as data assets with sensitivity labels and lineage back to the model it governs.
 
 ## 15. Limitations
 

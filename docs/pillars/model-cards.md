@@ -39,7 +39,7 @@ flowchart LR
    uses, the system (type, framework, base models, tools, autonomy, fallback), decision impact,
    data sensitivity, volume, metrics with thresholds, evaluation methods, explainability, fairness,
    limitations, environment estimate, regulatory frameworks, monitoring thresholds and notices.
-2. `schema.errors("model-card", card)` validates it (draft 2020-12, unknown fields rejected).
+2. `schema.errors("model-card", card)` validates it (current JSON Schema draft, unknown fields rejected).
 3. `tiering.materiality(card)` scores impact, autonomy, sensitivity and scale (0 to 12 points);
    seven or more is tier 1, four to six tier 2, the rest tier 3. `regulatory.tier_floor` can only
    raise the tier.

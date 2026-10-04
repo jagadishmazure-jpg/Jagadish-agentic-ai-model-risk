@@ -8,7 +8,7 @@ Model governance documents are usually prose, which cannot be checked. The CSA f
 
 ## Decision
 
-Each pillar is a JSON Schema (draft 2020-12, no unknown fields) and one YAML file per model under `registry/<model-id>/`. Code reads the YAML; nothing is duplicated in prose.
+Each pillar is a JSON Schema (current JSON Schema draft, no unknown fields) and one YAML file per model under `registry/<model-id>/`. Code reads the YAML; nothing is duplicated in prose.
 
 ## Consequences
 

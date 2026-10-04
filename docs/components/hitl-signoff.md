@@ -120,6 +120,7 @@ Audit log entries hold ids and digests, never personal data beyond fictional nam
 
 * **Azure Storage immutable blob (WORM) policy** for the log in the evidence container; **Entra ID** for
   approver identity; **Purview** audit; **Application Insights** sign-off events; **Azure Policy** to enforce immutability.
+* **Microsoft Foundry evaluations**: run the same check as a custom evaluator against a hosted deployment, so the result is attached to the model card as evaluation evidence.
 
 ## 15. Limitations
 

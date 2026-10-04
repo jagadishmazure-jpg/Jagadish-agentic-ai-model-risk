@@ -175,6 +175,7 @@ needs re-approval.
   in front of action APIs with limits.
 * **Entra ID managed identities** scoped per tool; **Azure Policy** for resource-level guardrails.
 * **Application Insights** for tool-call traces.
+* **Microsoft Purview**: catalogue the evidence this produces (reports, logs, datasets) as data assets with sensitivity labels and lineage back to the model it governs.
 
 ## 15. Limitations
 

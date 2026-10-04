@@ -153,6 +153,8 @@ Business owners own the misinformation risks (H3). Validators check groundedness
 * **Foundry groundedness evaluator** and **Azure AI Content Safety groundedness detection** for
   semantic checks on hosted models.
 * **Application Insights** for the removal rate.
+* **Microsoft Purview**: catalogue the evidence this produces (reports, logs, datasets) as data assets with sensitivity labels and lineage back to the model it governs.
+* **Azure Policy**: the model-card tag, risk-tier and private-endpoint policies keep the resources involved here tied to an inventoried, tiered model.
 
 ## 15. Limitations
 

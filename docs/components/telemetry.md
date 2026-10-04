@@ -114,6 +114,7 @@ This component is the observability layer.
 
 * **Application Insights** custom events, **Log Analytics** workbook, **Storage** evidence container,
   **Azure Policy** for diagnostic settings, **Purview** to catalogue the evidence store.
+* **Microsoft Foundry evaluations**: run the same check as a custom evaluator against a hosted deployment, so the result is attached to the model card as evaluation evidence.
 
 ## 15. Limitations
 

@@ -140,6 +140,8 @@ subscription level.
 
 * **Azure OpenAI / Foundry** token metrics in Azure Monitor; **Azure API Management** token limit policy.
 * **Cost Management budgets**; **Application Insights** for per-task cost.
+* **Microsoft Purview**: catalogue the evidence this produces (reports, logs, datasets) as data assets with sensitivity labels and lineage back to the model it governs.
+* **Azure Policy**: the model-card tag, risk-tier and private-endpoint policies keep the resources involved here tied to an inventoried, tiered model.
 
 ## 15. Limitations
 
