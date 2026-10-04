@@ -72,7 +72,7 @@ def test_evidence_registry_is_keyless_and_versioned():
 
 
 def test_app_insights_disables_local_auth_in_both_stacks():
-    assert "local_authentication_enabled  = false" in (TF / "main.tf").read_text()
+    assert re.search(r"local_authentication_enabled\s*=\s*false", (TF / "main.tf").read_text())
     assert "DisableLocalAuth: true" in (ROOT / "infra/bicep/modules/registry.bicep").read_text()
 
 
