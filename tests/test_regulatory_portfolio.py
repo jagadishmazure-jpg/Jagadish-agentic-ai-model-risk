@@ -36,11 +36,16 @@ def test_csa_attribution_links_the_working_group():
     assert csa["source"] == "https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk"
 
 
-@pytest.mark.parametrize("model_id,repo", [
-    ("pfa-mortgage-flow", "Jagadish-azure-agent-platform"), ("pfs-safety-layer", "Jagadish-azure-ai-integration-platform"),
-    ("pal-agent-labs", "Jagadish-azure-agent-labs"), ("pfb-fabric-data-agent", "Jagadish-fabric-enterprise-bi"),
-    ("pff-finops-agent", "Jagadish-azure-finops"),
-])
+@pytest.mark.parametrize(
+    "model_id,repo",
+    [
+        ("pfa-mortgage-flow", "Jagadish-azure-agent-platform"),
+        ("pfs-safety-layer", "Jagadish-azure-ai-integration-platform"),
+        ("pal-agent-labs", "Jagadish-azure-agent-labs"),
+        ("pfb-fabric-data-agent", "Jagadish-fabric-enterprise-bi"),
+        ("pff-finops-agent", "Jagadish-azure-finops"),
+    ],
+)
 def test_portfolio_cards_govern_the_other_repos(records, model_id, repo):
     card = records[model_id].model_card
     assert card["kind"] == "portfolio" and f"/jagadishmazure-jpg/{repo}/" in card["governs"]

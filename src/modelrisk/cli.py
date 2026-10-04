@@ -136,8 +136,16 @@ def cmd_family(a) -> int:
         off = {y["id"]: y for y in _scen_rows(model_id, False) if y["kind"] == a.kind}
         for x in on:
             y = off[x["id"]]
-            rows.append({"model": model_id, "id": x["id"], "metric": x["metric"], "threshold": x["threshold"],
-                         "on": f"{x['value']} {x['status']}", "off": f"{y['value']} {y['status']}"})
+            rows.append(
+                {
+                    "model": model_id,
+                    "id": x["id"],
+                    "metric": x["metric"],
+                    "threshold": x["threshold"],
+                    "on": f"{x['value']} {x['status']}",
+                    "off": f"{y['value']} {y['status']}",
+                }
+            )
             details.append(f"{x['id']} on:  {json.dumps(x['details'], sort_keys=True)}")
             details.append(f"{x['id']} off: {json.dumps(y['details'], sort_keys=True)}")
     _p(table(rows, ["model", "id", "metric", "threshold", "on", "off"], ["model", "id", "metric", "threshold", "controls on", "controls off"]))

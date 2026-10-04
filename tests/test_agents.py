@@ -108,8 +108,10 @@ def test_retail_forecast_responds_to_price_gap():
 def test_banking_card_block_waits_for_an_analyst():
     from modelrisk.agents import banking
 
-    case = {**banking.SPEC.generate(1, 7)[0], "x": {**banking.SPEC.generate(1, 7)[0]["x"], "velocity_1h": 9, "geo_mismatch": 1,
-                                                       "device_age_days": 0, "mcc_risk": 1.0, "amount": 4000}}
+    case = {
+        **banking.SPEC.generate(1, 7)[0],
+        "x": {**banking.SPEC.generate(1, 7)[0]["x"], "velocity_1h": 9, "geo_mismatch": 1, "device_age_days": 0, "mcc_risk": 1.0, "amount": 4000},
+    }
     s = build(banking.SPEC).invoke(case)
     assert s["decision"] == "block-card" and s["pending_action"]["tool"] == "block_card" and s["status"] == "awaiting-human"
 

@@ -70,10 +70,17 @@ def test_psi_is_zero_for_identical_samples_and_grows_with_shift():
     assert psi(ref, [v + 0.5 for v in ref]) > 0.25
 
 
-@pytest.mark.parametrize("value,op,thr,warn,expected", [
-    (0.0, "<=", 0.0, None, "pass"), (0.1, "<=", 0.0, None, "breach"), (0.04, "<=", 0.05, 0.03, "warn"),
-    (0.95, ">=", 0.8, 0.9, "pass"), (0.85, ">=", 0.8, 0.9, "warn"), (0.7, ">=", 0.8, 0.9, "breach"),
-])
+@pytest.mark.parametrize(
+    "value,op,thr,warn,expected",
+    [
+        (0.0, "<=", 0.0, None, "pass"),
+        (0.1, "<=", 0.0, None, "breach"),
+        (0.04, "<=", 0.05, 0.03, "warn"),
+        (0.95, ">=", 0.8, 0.9, "pass"),
+        (0.85, ">=", 0.8, 0.9, "warn"),
+        (0.7, ">=", 0.8, 0.9, "breach"),
+    ],
+)
 def test_status(value, op, thr, warn, expected):
     assert status(value, {"op": op, "value": thr}, warn) == expected
 

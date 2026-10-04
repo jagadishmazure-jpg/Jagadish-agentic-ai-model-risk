@@ -6,8 +6,13 @@ from modelrisk.registry import inventory
 from modelrisk.schema import KINDS, errors, validator
 from tests.conftest import ALL_IDS
 
-ARTIFACTS = [("model_card", "model-card"), ("data_sheet", "data-sheet"), ("risk_cards", "risk-card"),
-             ("scenarios", "scenario"), ("approvals", "approvals")]
+ARTIFACTS = [
+    ("model_card", "model-card"),
+    ("data_sheet", "data-sheet"),
+    ("risk_cards", "risk-card"),
+    ("scenarios", "scenario"),
+    ("approvals", "approvals"),
+]
 
 
 @pytest.mark.parametrize("kind", KINDS)

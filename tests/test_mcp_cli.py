@@ -51,22 +51,48 @@ def test_query_filters():
     assert {r["model"] for r in query("pff-finops-agent")} == {"pff-finops-agent"}
 
 
-@pytest.mark.parametrize("argv", [
-    ["inventory"], ["model", "halcyon-fraud-triage"], ["risks", "--band", "high"], ["heatmap"],
-    ["scenarios", "--model", "juniper-prior-auth", "--details"], ["whatif", "--model", "marigold-pricing-demand"],
-    ["combine", "--model", "cedarhollow-underwriting-assistant"], ["validate", "--model", "bramblewood-claims-triage"],
-    ["monitor", "--model", "halcyon-fraud-triage", "--shift", "0.3"], ["lifecycle"], ["gate"], ["regmap"],
-    ["regmap", "--framework", "eu-ai-act"], ["portfolio"], ["agent", "--model", "juniper-prior-auth"], ["signoff", "verify"],
-    ["mcp-demo"],
-])
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["inventory"],
+        ["model", "halcyon-fraud-triage"],
+        ["risks", "--band", "high"],
+        ["heatmap"],
+        ["scenarios", "--model", "juniper-prior-auth", "--details"],
+        ["whatif", "--model", "marigold-pricing-demand"],
+        ["combine", "--model", "cedarhollow-underwriting-assistant"],
+        ["validate", "--model", "bramblewood-claims-triage"],
+        ["monitor", "--model", "halcyon-fraud-triage", "--shift", "0.3"],
+        ["lifecycle"],
+        ["gate"],
+        ["regmap"],
+        ["regmap", "--framework", "eu-ai-act"],
+        ["portfolio"],
+        ["agent", "--model", "juniper-prior-auth"],
+        ["signoff", "verify"],
+        ["mcp-demo"],
+    ],
+)
 def test_cli_commands_succeed(argv, capsys):
     assert main(argv) == 0
     assert capsys.readouterr().out.strip()
 
 
 def test_cli_refuses_self_signoff(capsys):
-    code = main(["signoff", "approve", "--model", "halcyon-fraud-triage", "--role", "model-risk",
-                 "--approver", "Fraud Data Science team", "--comment", "We built it, ship it."])
+    code = main(
+        [
+            "signoff",
+            "approve",
+            "--model",
+            "halcyon-fraud-triage",
+            "--role",
+            "model-risk",
+            "--approver",
+            "Fraud Data Science team",
+            "--comment",
+            "We built it, ship it.",
+        ]
+    )
     assert code == 2 and "refused" in capsys.readouterr().out
 
 

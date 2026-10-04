@@ -43,16 +43,32 @@ def collect(gate: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     if gate:
         for m in gate["models"]:
-            out.append(event("modelrisk.gate", model=m["model"], ok=m["ok"],
-                             failed=",".join(c["gate"] for c in m["checks"] if not c["ok"])))
+            out.append(event("modelrisk.gate", model=m["model"], ok=m["ok"], failed=",".join(c["gate"] for c in m["checks"] if not c["ok"])))
     for rec in load_all():
         res = scenario_results(rec)
         for r in res:
-            out.append(event("modelrisk.scenario", model=rec.id, scenario=r["id"], kind=r["kind"], status=r["status"],
-                             value=r["value"], threshold=r["threshold"]))
+            out.append(
+                event(
+                    "modelrisk.scenario",
+                    model=rec.id,
+                    scenario=r["id"],
+                    kind=r["kind"],
+                    status=r["status"],
+                    value=r["value"],
+                    threshold=r["threshold"],
+                )
+            )
         for r in update_residuals(rec, res):
-            out.append(event("modelrisk.residual", model=rec.id, risk=r["id"], residual=r["residual"],
-                             band=r["residual_band"], within_appetite=r["within_appetite"]))
+            out.append(
+                event(
+                    "modelrisk.residual",
+                    model=rec.id,
+                    risk=r["id"],
+                    residual=r["residual"],
+                    band=r["residual_band"],
+                    within_appetite=r["within_appetite"],
+                )
+            )
         if rec.kind == "domain":
             m = monitor(rec)
             psi = next(c["value"] for c in m["checks"] if c["check"] == "psi:score")

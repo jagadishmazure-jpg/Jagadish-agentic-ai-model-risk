@@ -8,8 +8,13 @@ import pytest
 
 from modelrisk.registry import load, load_all
 
-DOMAIN_IDS = ["halcyon-fraud-triage", "bramblewood-claims-triage", "cedarhollow-underwriting-assistant",
-              "juniper-prior-auth", "marigold-pricing-demand"]
+DOMAIN_IDS = [
+    "halcyon-fraud-triage",
+    "bramblewood-claims-triage",
+    "cedarhollow-underwriting-assistant",
+    "juniper-prior-auth",
+    "marigold-pricing-demand",
+]
 PORTFOLIO_IDS = ["pfa-mortgage-flow", "pfs-safety-layer", "pal-agent-labs", "pfb-fabric-data-agent", "pff-finops-agent"]
 ALL_IDS = DOMAIN_IDS + PORTFOLIO_IDS
 

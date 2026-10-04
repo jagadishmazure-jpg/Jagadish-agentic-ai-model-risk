@@ -48,18 +48,46 @@ def test_sign_and_request_append_to_a_chain(tmp_path, fresh):
     log = tmp_path / "audit.jsonl"
     rec = fresh("bramblewood-claims-triage")
     request(rec, "monitoring", "Tomas Albright", now=1, log=log)
-    s = sign(rec, "monitoring", "model-risk", "Marcus Feld (Model Risk Management)", "approve", "Monitoring evidence reviewed.", now=2, log=log, write=False)
+    s = sign(
+        rec,
+        "monitoring",
+        "model-risk",
+        "Marcus Feld (Model Risk Management)",
+        "approve",
+        "Monitoring evidence reviewed.",
+        now=2,
+        log=log,
+        write=False,
+    )
     assert len(read_log(log)) == 2 and s["audit_hash"] == read_log(log)[-1]["hash"] and verify_chain(log)["ok"]
 
 
 def test_self_signoff_is_refused(tmp_path, fresh):
     with pytest.raises(SignoffRefused):
-        sign(fresh("halcyon-fraud-triage"), "production", "model-risk", "Fraud Data Science team", "approve", "Looks fine to us.", log=tmp_path / "a", write=False)
+        sign(
+            fresh("halcyon-fraud-triage"),
+            "production",
+            "model-risk",
+            "Fraud Data Science team",
+            "approve",
+            "Looks fine to us.",
+            log=tmp_path / "a",
+            write=False,
+        )
 
 
 def test_owner_cannot_be_validator(tmp_path, fresh):
     with pytest.raises(SignoffRefused):
-        sign(fresh("halcyon-fraud-triage"), "production", "validator", "Rhea Castellano (Head of Fraud Strategy)", "approve", "Validated it myself.", log=tmp_path / "a", write=False)
+        sign(
+            fresh("halcyon-fraud-triage"),
+            "production",
+            "validator",
+            "Rhea Castellano (Head of Fraud Strategy)",
+            "approve",
+            "Validated it myself.",
+            log=tmp_path / "a",
+            write=False,
+        )
 
 
 def test_rationale_is_required(tmp_path, fresh):
@@ -69,13 +97,17 @@ def test_rationale_is_required(tmp_path, fresh):
 
 def test_bad_decision_is_refused(tmp_path, fresh):
     with pytest.raises(SignoffRefused):
-        sign(fresh("halcyon-fraud-triage"), "production", "model-risk", "Marcus Feld", "maybe", "Not sure about this.", log=tmp_path / "a", write=False)
+        sign(
+            fresh("halcyon-fraud-triage"), "production", "model-risk", "Marcus Feld", "maybe", "Not sure about this.", log=tmp_path / "a", write=False
+        )
 
 
 def test_refused_signoff_writes_nothing(tmp_path, fresh):
     log = tmp_path / "a"
     with pytest.raises(SignoffRefused):
-        sign(fresh("halcyon-fraud-triage"), "production", "model-risk", "Fraud Data Science team", "approve", "Looks fine to us.", log=log, write=False)
+        sign(
+            fresh("halcyon-fraud-triage"), "production", "model-risk", "Fraud Data Science team", "approve", "Looks fine to us.", log=log, write=False
+        )
     assert read_log(log) == []
 
 
@@ -101,6 +133,8 @@ def test_deleting_an_entry_breaks_the_chain(tmp_path):
 
 def test_rejection_does_not_count_as_approval(tmp_path, fresh, monkeypatch):
     rec = fresh("halcyon-fraud-triage")
-    s = sign(rec, "retired", "model-risk", "Marcus Feld (Model Risk Management)", "reject", "Fallback not rehearsed yet.", log=tmp_path / "a", write=False)
+    s = sign(
+        rec, "retired", "model-risk", "Marcus Feld (Model Risk Management)", "reject", "Fallback not rehearsed yet.", log=tmp_path / "a", write=False
+    )
     rec.approvals["signoffs"].append(s)
     assert "model-risk" not in valid_signoffs(rec, "retired")

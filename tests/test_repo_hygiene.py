@@ -15,7 +15,9 @@ SECTIONS = [
     "Real output", "Tests and gates", "Guardrails", "Security and governance", "Observability",
     "Failure modes", "Mapping to Azure services", "Limitations", "Interview talking points",
 ]  # fmt: skip
-FULL_DOCS = sorted(p for d in ("pillars", "domains", "scenarios", "components", "infra") for p in (ROOT / "docs" / d).glob("*.md") if p.name != "README.md")
+FULL_DOCS = sorted(
+    p for d in ("pillars", "domains", "scenarios", "components", "infra") for p in (ROOT / "docs" / d).glob("*.md") if p.name != "README.md"
+)
 MONTHS = r"\b(January|February|March|April|June|July|August|September|October|November|December)\b"
 SUFFIXES = {".md", ".py", ".json", ".yml", ".yaml", ".tf", ".bicep", ".hcl", ".sh", ".toml", ".jsonl", ".tfvars"}
 TEXT_FILES = [p for p in ROOT.rglob("*") if p.is_file() and not SKIP_PARTS & set(p.parts) and p.suffix in SUFFIXES]

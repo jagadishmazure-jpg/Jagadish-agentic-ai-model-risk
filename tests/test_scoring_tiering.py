@@ -4,7 +4,9 @@ from modelrisk.scoring import band, combined_effectiveness, heatmap, score_risk,
 from modelrisk.tiering import eu_ai_act_class, materiality, tier
 
 
-@pytest.mark.parametrize("score,name", [(1, "low"), (4, "low"), (5, "medium"), (9, "medium"), (10, "high"), (15, "high"), (16, "critical"), (25, "critical"), (0.4, "low")])
+@pytest.mark.parametrize(
+    "score,name", [(1, "low"), (4, "low"), (5, "medium"), (9, "medium"), (10, "high"), (15, "high"), (16, "critical"), (25, "critical"), (0.4, "low")]
+)
 def test_bands(score, name):
     assert band(score) == name
 
@@ -42,10 +44,16 @@ def test_heatmap_places_risks_by_impact_and_likelihood():
 
 
 EXPECTED = {
-    "halcyon-fraud-triage": (1, "minimal"), "bramblewood-claims-triage": (1, "minimal"),
-    "cedarhollow-underwriting-assistant": (1, "high-risk"), "juniper-prior-auth": (1, "high-risk"),
-    "marigold-pricing-demand": (2, "minimal"), "pfa-mortgage-flow": (1, "high-risk"), "pfs-safety-layer": (2, "minimal"),
-    "pal-agent-labs": (3, "minimal"), "pfb-fabric-data-agent": (2, "minimal"), "pff-finops-agent": (3, "minimal"),
+    "halcyon-fraud-triage": (1, "minimal"),
+    "bramblewood-claims-triage": (1, "minimal"),
+    "cedarhollow-underwriting-assistant": (1, "high-risk"),
+    "juniper-prior-auth": (1, "high-risk"),
+    "marigold-pricing-demand": (2, "minimal"),
+    "pfa-mortgage-flow": (1, "high-risk"),
+    "pfs-safety-layer": (2, "minimal"),
+    "pal-agent-labs": (3, "minimal"),
+    "pfb-fabric-data-agent": (2, "minimal"),
+    "pff-finops-agent": (3, "minimal"),
 }
 
 

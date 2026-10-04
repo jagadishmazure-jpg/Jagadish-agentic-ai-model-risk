@@ -22,7 +22,7 @@ def terraform() -> list[str]:
     variables = re.findall(r'^variable "([^"]+)"', (INFRA / "terraform/variables.tf").read_text(), re.M)
     outputs = re.findall(r'^output "([^"]+)"', (INFRA / "terraform/outputs.tf").read_text(), re.M)
     tests = re.findall(r'^run "([^"]+)"', (INFRA / "terraform/tests/plan.tftest.hcl").read_text(), re.M)
-    return out + [f"variables {', '.join(variables)}", f"outputs   {', '.join(outputs)}", f"tests     {', '.join(tests)}"]
+    return [*out, f"variables {', '.join(variables)}", f"outputs   {', '.join(outputs)}", f"tests     {', '.join(tests)}"]
 
 
 def bicep() -> list[str]:
