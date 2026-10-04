@@ -148,3 +148,23 @@ risks:
   scenarios:
   - HC-S7
   source: model-card
+- id: HC-R8
+  title: New referral pattern outside the training range
+  category: operational
+  harm: H6-automation-environment
+  description: Long, poorly documented therapy histories arrive from a new provider group.
+  impact_description: Approvals on requests the model has never seen.
+  likelihood: 3
+  impact: 3
+  owner: Model Risk Management (second line)
+  controls:
+  - id: HC-C9
+    description: Out-of-range requests pended to a clinician
+    type: preventive
+    effectiveness: 0.65
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: ood_guard
+  scenarios:
+  - HC-S8
+  source: model-card

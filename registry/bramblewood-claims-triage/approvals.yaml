@@ -1,0 +1,47 @@
+model_id: bramblewood-claims-triage
+signoffs:
+- stage: validation
+  role: model-owner
+  approver: Tomas Albright (Claims Operations Director)
+  decision: approve
+  digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
+  signed_epoch: 1791134581
+  comment: 'Reviewed the validation evidence pack for bramblewood-claims-triage: pillars, scenarios and
+    validation report.'
+  audit_hash: 8f31b6c734318da429641df269b2d88f7589ef8da8a7b09d4e782f9f428e6c22
+- stage: production
+  role: validator
+  approver: Iris Delgado (Independent Validation)
+  decision: approve
+  digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for bramblewood-claims-triage: pillars, scenarios and
+    validation report.'
+  audit_hash: f012d24aaf9e5bdc6ee279e902a3a3c0f05cbefb9c04c4a70a0439efbb00ed35
+- stage: production
+  role: model-risk
+  approver: Marcus Feld (Model Risk Management)
+  decision: approve
+  digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for bramblewood-claims-triage: pillars, scenarios and
+    validation report.'
+  audit_hash: 857d6e0bc34b2a1aab3419fbeed755e2b2165629ac990ffd7bc038f463fca866
+- stage: production
+  role: business-owner
+  approver: Victor Hale (Personal Lines Claims)
+  decision: approve
+  digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for bramblewood-claims-triage: pillars, scenarios and
+    validation report.'
+  audit_hash: 02b7cd460e16fb874e3e60e5465b14bef442b61be65c11402e14075aadfeac2f
+- stage: production
+  role: compliance
+  approver: Grace Liang (Compliance)
+  decision: approve
+  digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for bramblewood-claims-triage: pillars, scenarios and
+    validation report.'
+  audit_hash: 2887baf56c2add57ca7c91fcc3f83d71a60af2b41043ddef8ce918240e8528a7

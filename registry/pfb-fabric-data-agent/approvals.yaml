@@ -1,0 +1,38 @@
+model_id: pfb-fabric-data-agent
+signoffs:
+- stage: validation
+  role: model-owner
+  approver: Jagadish Meduri (portfolio owner)
+  decision: approve
+  digest: 7f5669259bfa7d06a4dcb39c785787069c9745a815cc4a9c3d1b6b5c9a4858d4
+  signed_epoch: 1791134581
+  comment: 'Reviewed the validation evidence pack for pfb-fabric-data-agent: pillars, scenarios and validation
+    report.'
+  audit_hash: 725634b7b1306f5c6df0425842e10aaf6ada07abb135736b69a2118fa98d6ed7
+- stage: production
+  role: validator
+  approver: Iris Delgado (Independent Validation)
+  decision: approve
+  digest: 7f5669259bfa7d06a4dcb39c785787069c9745a815cc4a9c3d1b6b5c9a4858d4
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfb-fabric-data-agent: pillars, scenarios and validation
+    report.'
+  audit_hash: 48c69e14a551cc3df499d35c3ce2b22b1790daddbeea99ac5a26156efe3bcce9
+- stage: production
+  role: model-risk
+  approver: Marcus Feld (Model Risk Management)
+  decision: approve
+  digest: 7f5669259bfa7d06a4dcb39c785787069c9745a815cc4a9c3d1b6b5c9a4858d4
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfb-fabric-data-agent: pillars, scenarios and validation
+    report.'
+  audit_hash: 90573877086eed8c2bbc892c04f3c173eea22a65157af056a3aa2f7765dae8b1
+- stage: production
+  role: business-owner
+  approver: Jagadish Meduri (portfolio owner)
+  decision: approve
+  digest: 7f5669259bfa7d06a4dcb39c785787069c9745a815cc4a9c3d1b6b5c9a4858d4
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfb-fabric-data-agent: pillars, scenarios and validation
+    report.'
+  audit_hash: f5660d4d70731975f7256c351c1ba6efe6639f3fae48148c11a2f652182182e9

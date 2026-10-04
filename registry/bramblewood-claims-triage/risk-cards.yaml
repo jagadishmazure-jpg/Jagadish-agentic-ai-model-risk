@@ -140,3 +140,23 @@ risks:
   scenarios:
   - INS-S6
   source: model-card
+- id: INS-R7
+  title: Claimant contact details in adjuster summaries
+  category: legal-regulatory
+  harm: H2-information-hazard
+  description: The summary repeats the claimant's phone and email from the loss description.
+  impact_description: Privacy complaints and notification duties.
+  likelihood: 3
+  impact: 3
+  owner: Privacy Office
+  controls:
+  - id: INS-C10
+    description: PII masking on every output
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: mask_output
+  scenarios:
+  - INS-S7
+  source: model-card

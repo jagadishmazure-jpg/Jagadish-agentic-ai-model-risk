@@ -85,7 +85,7 @@ architecture:
     max_hold_hours: 72
 training_data:
   source: modelrisk.agents.halcyon generator (seeded synthetic data)
-  rows: 1000
+  rows: 3000
   synthetic: true
   profile:
     fraud_rate: 0.095
@@ -106,13 +106,13 @@ development:
 performance:
 - metric: accuracy
   train: 0.861
-  validation: 0.866
+  validation: 0.8637
 - metric: precision
-  train: 0.6809
-  validation: 0.7049
+  train: 0.698
+  validation: 0.6948
 - metric: recall
-  train: 0.5053
-  validation: 0.4674
+  train: 0.4799
+  validation: 0.462
 outputs:
   format: decision (clear | hold | block-card), score 0-1, cited rationale, key factors
   interpretation: >-

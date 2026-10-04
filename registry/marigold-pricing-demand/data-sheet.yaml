@@ -91,7 +91,7 @@ architecture:
     max_auto_change: 0.05
 training_data:
   source: modelrisk.agents.marigold generator (seeded synthetic data)
-  rows: 1000
+  rows: 3000
   synthetic: true
   profile:
     raise_rate: 0.27
@@ -109,11 +109,11 @@ development:
   - accuracy meets the model card threshold
 performance:
 - metric: precision
-  train: 0.7778
-  validation: 0.8054
+  train: 0.7821
+  validation: 0.8093
 - metric: accuracy
-  train: 0.713
-  validation: 0.717
+  train: 0.7247
+  validation: 0.739
 outputs:
   format: decision (raise | hold | lower | refer-pricing-team), score, forecast units, cited rationale
   interpretation: >-

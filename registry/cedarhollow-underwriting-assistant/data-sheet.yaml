@@ -105,7 +105,7 @@ architecture:
     decline_below: 0.3
 training_data:
   source: modelrisk.agents.cedarhollow generator (seeded synthetic data)
-  rows: 1000
+  rows: 3000
   synthetic: true
   profile:
     approve_rate: 0.6
@@ -123,11 +123,11 @@ development:
   - precision meets the model card threshold
 performance:
 - metric: accuracy
-  train: 0.751
-  validation: 0.75
+  train: 0.754
+  validation: 0.7443
 - metric: precision
-  train: 0.8358
-  validation: 0.8121
+  train: 0.8256
+  validation: 0.8112
 outputs:
   format: >-
     recommendation (recommend-approve | refer | recommend-decline), score, principal reasons, cited guideline

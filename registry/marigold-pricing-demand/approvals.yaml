@@ -1,0 +1,47 @@
+model_id: marigold-pricing-demand
+signoffs:
+- stage: validation
+  role: model-owner
+  approver: Owen Pritchard (VP Pricing)
+  decision: approve
+  digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
+  signed_epoch: 1791134581
+  comment: 'Reviewed the validation evidence pack for marigold-pricing-demand: pillars, scenarios and
+    validation report.'
+  audit_hash: 5589b93646ced9e603223ef48bbf295a61254b07ab46fa1407ab69fbee3b0899
+- stage: production
+  role: validator
+  approver: Iris Delgado (Independent Validation)
+  decision: approve
+  digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for marigold-pricing-demand: pillars, scenarios and
+    validation report.'
+  audit_hash: bc743c2db304172ff873e6cd610de83d00894278d538416054274c3d74c66995
+- stage: production
+  role: model-risk
+  approver: Marcus Feld (Model Risk Management)
+  decision: approve
+  digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for marigold-pricing-demand: pillars, scenarios and
+    validation report.'
+  audit_hash: 1fb076ecb0034249d932c5d0659e1578f627261f61360b6855f6f629bf749343
+- stage: production
+  role: business-owner
+  approver: Ben Okoro (Category Management)
+  decision: approve
+  digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for marigold-pricing-demand: pillars, scenarios and
+    validation report.'
+  audit_hash: 1fe2ce63a3d147220fd0591104317e83ad5d8f2d40e91e493608af569cdd0f64
+- stage: monitoring
+  role: model-owner
+  approver: Owen Pritchard (VP Pricing)
+  decision: approve
+  digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
+  signed_epoch: 1791134581
+  comment: 'Reviewed the monitoring evidence pack for marigold-pricing-demand: pillars, scenarios and
+    validation report.'
+  audit_hash: 3c86945664150496590b212596370b329394d1594480cac084a6fda7b65678c1

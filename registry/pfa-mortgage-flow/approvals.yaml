@@ -1,0 +1,47 @@
+model_id: pfa-mortgage-flow
+signoffs:
+- stage: validation
+  role: model-owner
+  approver: Jagadish Meduri (portfolio owner)
+  decision: approve
+  digest: b9672d57cbfb09b4892209177492595463c629c998ea0bd818949e5d52c30ef5
+  signed_epoch: 1791134581
+  comment: 'Reviewed the validation evidence pack for pfa-mortgage-flow: pillars, scenarios and validation
+    report.'
+  audit_hash: b8c41759efa2d3c82349faf2423621d26c644921b57c268f4a4e22edb371cfb0
+- stage: production
+  role: validator
+  approver: Iris Delgado (Independent Validation)
+  decision: approve
+  digest: b9672d57cbfb09b4892209177492595463c629c998ea0bd818949e5d52c30ef5
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfa-mortgage-flow: pillars, scenarios and validation
+    report.'
+  audit_hash: 1962c4b4252a2cac54e03cf3fd74f3c742cbde61a727488459142b096cc35ab3
+- stage: production
+  role: model-risk
+  approver: Marcus Feld (Model Risk Management)
+  decision: approve
+  digest: b9672d57cbfb09b4892209177492595463c629c998ea0bd818949e5d52c30ef5
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfa-mortgage-flow: pillars, scenarios and validation
+    report.'
+  audit_hash: 42f0de7590784b073ed87e1080d008401df1f2f6713575e4154d2019fac88411
+- stage: production
+  role: business-owner
+  approver: Jagadish Meduri (portfolio owner)
+  decision: approve
+  digest: b9672d57cbfb09b4892209177492595463c629c998ea0bd818949e5d52c30ef5
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfa-mortgage-flow: pillars, scenarios and validation
+    report.'
+  audit_hash: 3c9f979f19102cabca33f8de398db2e96e23da4586e8c32fb81ebaad5f6e61ec
+- stage: production
+  role: compliance
+  approver: Grace Liang (Compliance)
+  decision: approve
+  digest: b9672d57cbfb09b4892209177492595463c629c998ea0bd818949e5d52c30ef5
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfa-mortgage-flow: pillars, scenarios and validation
+    report.'
+  audit_hash: 5e224fc70eafdb20dae37dd0ce1a035c503011dcfc3bb8f175b7c048c396f611

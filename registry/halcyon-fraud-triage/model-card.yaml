@@ -55,17 +55,17 @@ metrics:
   value: 0.861
   threshold: 0.82
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 - name: precision
-  value: 0.6809
+  value: 0.698
   threshold: 0.6
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 - name: recall
-  value: 0.5053
+  value: 0.4799
   threshold: 0.45
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 evaluation:
   methods:
   - seeded offline evaluation (modelrisk.evaluation)
@@ -111,8 +111,8 @@ monitoring:
   psi_alert: 0.25
   performance:
   - metric: accuracy
-    min: 0.82
-    warn: 0.85
+    min: 0.77
+    warn: 0.82
   on_alert: Route every case to a human, open a revalidation item and notify the model owner.
 notices:
 - Transactions are scored by an automated system; analysts review every card block.

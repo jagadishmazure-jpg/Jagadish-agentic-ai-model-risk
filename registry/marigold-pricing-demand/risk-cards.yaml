@@ -122,3 +122,23 @@ risks:
   scenarios:
   - RTL-S6
   source: model-card
+- id: RTL-R7
+  title: Instructions in supplier or buyer notes push a price rise
+  category: security
+  harm: H4-malicious-use
+  description: A supplier note carries instructions to raise a price, and the agent follows them.
+  impact_description: Unjustified price rises and margin manipulation by a third party.
+  likelihood: 3
+  impact: 3
+  owner: Security Operations
+  controls:
+  - id: RTL-C7
+    description: Note screening; flagged text withheld from the model
+    type: preventive
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: screen_injection
+  scenarios:
+  - RTL-S7
+  source: model-card

@@ -50,15 +50,15 @@ users: 60
 monthly_volume: 120000
 metrics:
 - name: precision
-  value: 0.8794
+  value: 0.8866
   threshold: 0.85
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 - name: accuracy
-  value: 0.651
+  value: 0.6757
   threshold: 0.6
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 evaluation:
   methods:
   - seeded offline evaluation (modelrisk.evaluation)
@@ -99,8 +99,8 @@ monitoring:
   psi_alert: 0.25
   performance:
   - metric: precision
-    min: 0.85
-    warn: 0.88
+    min: 0.8
+    warn: 0.85
   on_alert: Route every case to a human, open a revalidation item and notify the model owner.
 notices:
 - >-

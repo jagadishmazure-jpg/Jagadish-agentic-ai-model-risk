@@ -193,3 +193,23 @@ risks:
   scenarios:
   - BNK-S7
   source: model-card
+- id: BNK-R8
+  title: Rationale states a reason the score did not use
+  category: reputational
+  harm: H3-misinformation
+  description: The analyst rationale invents a rule or a data point that was never in the evidence.
+  impact_description: Analysts act on false reasons; customer explanations are wrong.
+  likelihood: 3
+  impact: 3
+  owner: Rhea Castellano (Head of Fraud Strategy)
+  controls:
+  - id: BNK-C14
+    description: Claims must cite supplied evidence; unsupported claims removed and the case flagged
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: verify_claims
+  scenarios:
+  - BNK-S8
+  source: model-card

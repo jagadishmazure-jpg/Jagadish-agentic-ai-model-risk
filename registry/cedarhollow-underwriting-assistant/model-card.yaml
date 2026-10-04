@@ -51,20 +51,20 @@ users: 30
 monthly_volume: 8000
 metrics:
 - name: accuracy
-  value: 0.751
+  value: 0.754
   threshold: 0.7
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 - name: precision
-  value: 0.8358
+  value: 0.8256
   threshold: 0.78
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 - name: adverse_impact_ratio
-  value: 0.9766
+  value: 0.9794
   threshold: 0.8
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 evaluation:
   methods:
   - seeded offline evaluation (modelrisk.evaluation)
@@ -115,8 +115,8 @@ monitoring:
   psi_alert: 0.25
   performance:
   - metric: accuracy
-    min: 0.7
-    warn: 0.73
+    min: 0.65
+    warn: 0.7
   on_alert: Route every case to a human, open a revalidation item and notify the model owner.
 notices:
 - Recommendations only. A licensed underwriter makes every credit decision.

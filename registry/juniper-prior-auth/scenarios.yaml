@@ -98,3 +98,20 @@ scenarios:
     op: <=
     value: 0.05
   warn: 0.03
+- id: HC-S8
+  kind: data-drift
+  title: New provider referral pattern
+  hypothesis: >-
+    With 30 percent unseen histories, error on model-supported decisions should rise by no more than 5
+    points.
+  risk_ids:
+  - HC-R8
+  params:
+    shift: 0.3
+    feature: conservative_weeks
+    n: 600
+  metric: error_rate_increase
+  threshold:
+    op: <=
+    value: 0.05
+  warn: 0.03

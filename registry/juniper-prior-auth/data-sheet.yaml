@@ -77,7 +77,7 @@ architecture:
     approve_at: 0.75
 training_data:
   source: modelrisk.agents.juniper generator (seeded synthetic data)
-  rows: 1000
+  rows: 3000
   synthetic: true
   profile:
     approve_rate: 0.25
@@ -95,11 +95,11 @@ development:
   - accuracy meets the model card threshold
 performance:
 - metric: precision
-  train: 0.8794
-  validation: 0.8683
+  train: 0.8866
+  validation: 0.8593
 - metric: accuracy
-  train: 0.651
-  validation: 0.652
+  train: 0.6757
+  validation: 0.6503
 outputs:
   format: decision (approve | pend-clinical-review), score, cited summary (PHI-masked)
   interpretation: >-

@@ -1,0 +1,29 @@
+model_id: pff-finops-agent
+signoffs:
+- stage: validation
+  role: model-owner
+  approver: Jagadish Meduri (portfolio owner)
+  decision: approve
+  digest: 439dfa77bb37ba572938b3cfa8673b1582c23aa77570f822dfbb14c132a4cbc5
+  signed_epoch: 1791134581
+  comment: 'Reviewed the validation evidence pack for pff-finops-agent: pillars, scenarios and validation
+    report.'
+  audit_hash: 076e3d7719ad9ce475ef5b167228f98a25935d37bb6c0a39ff951e0ed4f86223
+- stage: production
+  role: validator
+  approver: Iris Delgado (Independent Validation)
+  decision: approve
+  digest: 439dfa77bb37ba572938b3cfa8673b1582c23aa77570f822dfbb14c132a4cbc5
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pff-finops-agent: pillars, scenarios and validation
+    report.'
+  audit_hash: cac7561b38b2a8bd18e3ada4200eaedccfad8d7c8cb373bf9dc665b93e6f73f6
+- stage: production
+  role: business-owner
+  approver: Jagadish Meduri (portfolio owner)
+  decision: approve
+  digest: 439dfa77bb37ba572938b3cfa8673b1582c23aa77570f822dfbb14c132a4cbc5
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pff-finops-agent: pillars, scenarios and validation
+    report.'
+  audit_hash: ebf6705e2f758433a78b3712664421d575222895a09f343350c95292df78449e

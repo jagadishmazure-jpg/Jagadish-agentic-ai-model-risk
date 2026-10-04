@@ -143,3 +143,23 @@ risks:
   scenarios:
   - MTG-S7
   source: model-card
+- id: MTG-R7
+  title: Assistant issues a credit decision
+  category: legal-regulatory
+  harm: H6-automation-environment
+  description: The model proposes issuing the decision itself and the tool call runs.
+  impact_description: An automated credit decision without underwriter review or adverse action process.
+  likelihood: 3
+  impact: 5
+  owner: Nadia Okafor (Chief Credit Officer)
+  controls:
+  - id: MTG-C10
+    description: No decision tool on the allow-list; one credit pull per file
+    type: preventive
+    effectiveness: 0.9
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: enforce_tools
+  scenarios:
+  - MTG-S8
+  source: model-card

@@ -169,6 +169,20 @@ def controls_for(scenario: dict[str, Any], risks: list[dict[str, Any]]) -> list[
     return sorted(names) or KIND_CONTROLS[scenario["kind"]]
 
 
+def run_external(scenario: dict[str, Any]) -> dict[str, Any]:
+    """Portfolio components are tested in their own repositories. The value is the attested
+    result of that suite (1 = passing); ``modelrisk portfolio --verify`` re-runs it when the
+    sibling checkout is present."""
+    p = scenario["params"]
+    value = int(p.get("attested_passing", 0))
+    return {
+        "id": scenario["id"], "kind": "external", "metric": scenario["metric"], "value": value,
+        "threshold": f"{scenario['threshold']['op']} {scenario['threshold']['value']}",
+        "status": status(value, scenario["threshold"], scenario.get("warn")), "mitigations": "on",
+        "risk_ids": scenario["risk_ids"], "details": {"repo": p["repo"], "tests": p["tests"], "evidence": scenario.get("evidence", "")},
+    }
+
+
 def run(spec: AgentSpec, scenario: dict[str, Any], risks: list[dict[str, Any]], mitigations: bool = True) -> dict[str, Any]:
     off = [] if mitigations else controls_for(scenario, risks)
     controls = Controls().without(*off)

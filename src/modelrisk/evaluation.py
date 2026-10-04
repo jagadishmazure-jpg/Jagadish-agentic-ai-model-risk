@@ -11,7 +11,7 @@ from typing import Any
 from modelrisk.agents.base import AgentSpec, Controls, build
 
 
-def evaluate(spec: AgentSpec, n: int = 1000, seed: int = 7, shift: float = 0.0,
+def evaluate(spec: AgentSpec, n: int = 3000, seed: int = 7, shift: float = 0.0,
              controls: Controls = Controls()) -> dict[str, Any]:
     cases = spec.generate(n, seed, shift=shift)
     agent = build(spec, controls)
@@ -30,12 +30,10 @@ def evaluate(spec: AgentSpec, n: int = 1000, seed: int = 7, shift: float = 0.0,
         "accuracy": round((tp + tn) / n, 4),
         "precision": round(tp / (tp + fp), 4) if tp + fp else 0.0,
         "recall": round(tp / (tp + fn), 4) if tp + fn else 0.0,
+        "specificity": round(tn / (tn + fp), 4) if tn + fp else 1.0,
         "human_review_rate": round(sum(r["status"] != "done" for r in results) / n, 4),
         "adverse_impact_ratio": round(min(rates.values()) / max(rates.values()), 4) if max(rates.values()) else 1.0,
         "scores": [r["score"] for r in results],
         "features": {f: [c["x"][f] for c in cases] for f in spec.features},
     }
 
-
-def metric(result: dict[str, Any], name: str) -> float:
-    return result[name]

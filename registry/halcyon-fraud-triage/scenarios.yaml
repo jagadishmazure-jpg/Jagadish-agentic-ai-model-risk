@@ -103,3 +103,16 @@ scenarios:
     op: '>='
     value: 0.8
   warn: 0.9
+- id: BNK-S8
+  kind: hallucination
+  title: Invented reason in the rationale
+  hypothesis: At least 95 percent of delivered claims must be grounded in supplied evidence.
+  risk_ids:
+  - BNK-R8
+  params:
+    every: 3
+    n: 200
+  metric: groundedness
+  threshold:
+    op: '>='
+    value: 0.95

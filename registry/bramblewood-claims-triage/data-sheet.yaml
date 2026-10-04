@@ -84,7 +84,7 @@ architecture:
     payout_limit: 5000
 training_data:
   source: modelrisk.agents.bramblewood generator (seeded synthetic data)
-  rows: 1000
+  rows: 3000
   synthetic: true
   profile:
     review_rate: 0.33
@@ -102,11 +102,11 @@ development:
   - recall meets the model card threshold
 performance:
 - metric: accuracy
-  train: 0.761
-  validation: 0.8
+  train: 0.7773
+  validation: 0.7823
 - metric: recall
-  train: 0.6989
-  validation: 0.7749
+  train: 0.7176
+  validation: 0.7488
 outputs:
   format: decision (fast-track | adjuster-review | refer-siu), score, cited rationale
   interpretation: >-

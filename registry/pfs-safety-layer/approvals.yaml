@@ -1,0 +1,38 @@
+model_id: pfs-safety-layer
+signoffs:
+- stage: validation
+  role: model-owner
+  approver: Jagadish Meduri (portfolio owner)
+  decision: approve
+  digest: 9bdaa969671e5cf4fe13d6302dcf9daa8cc293dbaf81d33f5f752bc40b1b0ffb
+  signed_epoch: 1791134581
+  comment: 'Reviewed the validation evidence pack for pfs-safety-layer: pillars, scenarios and validation
+    report.'
+  audit_hash: b53cd1663aae91b73d791da04ce5d76a6eec94ddf17858bc5d0aedc33aaeefb5
+- stage: production
+  role: validator
+  approver: Iris Delgado (Independent Validation)
+  decision: approve
+  digest: 9bdaa969671e5cf4fe13d6302dcf9daa8cc293dbaf81d33f5f752bc40b1b0ffb
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfs-safety-layer: pillars, scenarios and validation
+    report.'
+  audit_hash: 232466429db9f796ac05a2b4a0dfc1751c42567d97964e9a5596a2584507362e
+- stage: production
+  role: model-risk
+  approver: Marcus Feld (Model Risk Management)
+  decision: approve
+  digest: 9bdaa969671e5cf4fe13d6302dcf9daa8cc293dbaf81d33f5f752bc40b1b0ffb
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfs-safety-layer: pillars, scenarios and validation
+    report.'
+  audit_hash: ccea09f905aba0d2f36efddb85ec4a64f89dbd40bb5531adbc13b888e4d9dc3d
+- stage: production
+  role: business-owner
+  approver: Jagadish Meduri (portfolio owner)
+  decision: approve
+  digest: 9bdaa969671e5cf4fe13d6302dcf9daa8cc293dbaf81d33f5f752bc40b1b0ffb
+  signed_epoch: 1791134581
+  comment: 'Reviewed the production evidence pack for pfs-safety-layer: pillars, scenarios and validation
+    report.'
+  audit_hash: 7f7b4faa9724817f8c7db862f638fbef26f0d05718fb2f3f5edb468c8e9dfbbc

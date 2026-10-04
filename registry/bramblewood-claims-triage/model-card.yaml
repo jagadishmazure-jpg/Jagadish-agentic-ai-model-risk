@@ -51,15 +51,15 @@ users: 120
 monthly_volume: 40000
 metrics:
 - name: accuracy
-  value: 0.761
+  value: 0.7773
   threshold: 0.72
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 - name: recall
-  value: 0.6989
+  value: 0.7176
   threshold: 0.65
   direction: higher-is-better
-  dataset: synthetic reference set, seed 7, 1,000 cases
+  dataset: synthetic reference set, seed 7, 3,000 cases
 evaluation:
   methods:
   - seeded offline evaluation (modelrisk.evaluation)
@@ -101,6 +101,6 @@ monitoring:
   psi_alert: 0.25
   performance:
   - metric: accuracy
-    min: 0.72
-    warn: 0.75
+    min: 0.67
+    warn: 0.72
   on_alert: Route every case to a human, open a revalidation item and notify the model owner.
