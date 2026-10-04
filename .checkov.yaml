@@ -1,0 +1,21 @@
+# Checkov config for infra/terraform. Every skip has a reason; anything not listed fails CI.
+# The storage account is the evidence registry for a demo; it holds synthetic evidence only.
+compact: true
+quiet: true
+framework:
+  - terraform
+skip-check:
+  # Public network access stays on so the GitHub runner can upload evidence without a
+  # self-hosted agent; shared keys are disabled, TLS 1.2 is enforced and access is Entra-only.
+  - CKV_AZURE_59
+  # LRS is the smallest setting on purpose; a production evidence store would use GZRS.
+  - CKV_AZURE_206
+  # Queue logging: the account has no queues.
+  - CKV_AZURE_33
+  # Private endpoint costs about $7.30 a month per endpoint and needs a VNet; out of scope.
+  - CKV2_AZURE_33
+  # Customer-managed keys need a Key Vault with purge protection; platform keys are fine for synthetic evidence.
+  - CKV2_AZURE_1
+  # Blob read, write and delete logging is enabled through azurerm_monitor_diagnostic_setting.evidence_blob
+  # (StorageRead/StorageWrite/StorageDelete to Log Analytics); this check only recognises classic analytics logging.
+  - CKV2_AZURE_21

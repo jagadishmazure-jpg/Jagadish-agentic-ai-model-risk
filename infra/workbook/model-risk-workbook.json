@@ -1,0 +1,79 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Model risk register\nScenario results, CI gate outcomes, drift and HITL sign-offs emitted by `modelrisk` (custom events `modelrisk.*`). Synthetic data only."
+      },
+      "name": "intro"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "customEvents\n| where name == 'modelrisk.gate'\n| extend model = tostring(customDimensions.model), ok = tobool(customDimensions.ok)\n| summarize runs = count(), failures = countif(ok == false) by model\n| order by failures desc",
+        "size": 1,
+        "title": "Gate outcomes by model",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components",
+        "visualization": "table"
+      },
+      "name": "gate-outcomes-by-model"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "customEvents\n| where name == 'modelrisk.scenario'\n| extend model = tostring(customDimensions.model), scenario = tostring(customDimensions.scenario), status = tostring(customDimensions.status), value = todouble(customDimensions.value)\n| where status != 'pass'\n| project timestamp, model, scenario, status, value",
+        "size": 1,
+        "title": "Scenario breaches",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components",
+        "visualization": "table"
+      },
+      "name": "scenario-breaches"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "customEvents\n| where name == 'modelrisk.drift'\n| extend model = tostring(customDimensions.model), psi = todouble(customDimensions.psi_score)\n| summarize max_psi = max(psi) by model, bin(timestamp, 1d)\n| render timechart",
+        "size": 1,
+        "title": "Drift (PSI) by model",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components",
+        "visualization": "timechart"
+      },
+      "name": "drift-(psi)-by-model"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "customEvents\n| where name == 'modelrisk.residual'\n| extend model = tostring(customDimensions.model), risk = tostring(customDimensions.risk), residual = todouble(customDimensions.residual), within = tobool(customDimensions.within_appetite)\n| where within == false\n| project timestamp, model, risk, residual",
+        "size": 1,
+        "title": "Residual risk above appetite",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components",
+        "visualization": "table"
+      },
+      "name": "residual-risk-above-appetite"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "customEvents\n| where name == 'modelrisk.signoff'\n| extend model = tostring(customDimensions.model), stage = tostring(customDimensions.stage), role = tostring(customDimensions.role), decision = tostring(customDimensions.decision)\n| project timestamp, model, stage, role, decision\n| order by timestamp desc",
+        "size": 1,
+        "title": "HITL sign-offs",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components",
+        "visualization": "table"
+      },
+      "name": "hitl-sign-offs"
+    }
+  ],
+  "styleSettings": {},
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

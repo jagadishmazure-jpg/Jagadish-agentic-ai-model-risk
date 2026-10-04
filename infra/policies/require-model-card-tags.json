@@ -1,0 +1,48 @@
+{
+  "displayName": "Model risk: require model-card tags on AI resources",
+  "description": "AI resources (Foundry and Azure OpenAI accounts, Machine Learning workspaces and endpoints, or anything tagged workload-type=ai-model) must carry model-id, model-owner, risk-tier and model-card-uri, so every deployed model can be traced to its card in the inventory.",
+  "mode": "Indexed",
+  "metadata": { "category": "AI model governance" },
+  "parameters": {
+    "tagNames": {
+      "type": "Array",
+      "metadata": { "displayName": "Required model-card tags" },
+      "defaultValue": ["model-id", "model-owner", "risk-tier", "model-card-uri"]
+    },
+    "aiResourceTypes": {
+      "type": "Array",
+      "metadata": { "displayName": "Resource types treated as AI models" },
+      "defaultValue": [
+        "Microsoft.CognitiveServices/accounts",
+        "Microsoft.MachineLearningServices/workspaces",
+        "Microsoft.MachineLearningServices/workspaces/onlineEndpoints"
+      ]
+    },
+    "effect": {
+      "type": "String",
+      "allowedValues": ["Audit", "Deny", "Disabled"],
+      "defaultValue": "Deny"
+    }
+  },
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "anyOf": [
+            { "field": "type", "in": "[parameters('aiResourceTypes')]" },
+            { "field": "tags['workload-type']", "equals": "ai-model" }
+          ]
+        },
+        {
+          "count": {
+            "value": "[parameters('tagNames')]",
+            "name": "tagName",
+            "where": { "field": "[concat('tags[', current('tagName'), ']')]", "exists": "false" }
+          },
+          "greater": 0
+        }
+      ]
+    },
+    "then": { "effect": "[parameters('effect')]" }
+  }
+}

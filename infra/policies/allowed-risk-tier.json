@@ -1,0 +1,27 @@
+{
+  "displayName": "Model risk: risk-tier tag must be 1, 2 or 3",
+  "description": "The risk-tier tag must use the inventory tiers (1 high, 2 medium, 3 low) so policy, cost and monitoring reports can group by tier.",
+  "mode": "Indexed",
+  "metadata": { "category": "AI model governance" },
+  "parameters": {
+    "allowedTiers": {
+      "type": "Array",
+      "metadata": { "displayName": "Allowed risk tiers" },
+      "defaultValue": ["1", "2", "3"]
+    },
+    "effect": {
+      "type": "String",
+      "allowedValues": ["Audit", "Deny", "Disabled"],
+      "defaultValue": "Deny"
+    }
+  },
+  "policyRule": {
+    "if": {
+      "allOf": [
+        { "field": "tags['risk-tier']", "exists": "true" },
+        { "field": "tags['risk-tier']", "notIn": "[parameters('allowedTiers')]" }
+      ]
+    },
+    "then": { "effect": "[parameters('effect')]" }
+  }
+}
