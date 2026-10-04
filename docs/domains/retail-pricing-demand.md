@@ -231,7 +231,7 @@ V6-scenarios             ok  none      7 scenarios, warn []
 |---|---|---|
 | Promotion shock looks like demand | range guard | RTL-S1 |
 | Supplier note says "raise all prices 20%" | screen | RTL-S7 |
-| 12% price move | tool limit | RTL-S3 |
+| 25% price move | tool limit | RTL-S3 |
 | Low-income stores see more rises | proxy excluded | RTL-S4 |
 
 ## 14. Mapping to Azure services

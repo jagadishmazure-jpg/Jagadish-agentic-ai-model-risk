@@ -95,3 +95,16 @@ def test_family_command_lists_every_domain_scenario_of_a_kind(capsys):
     for sid in ("BNK-S7", "INS-S5", "MTG-S1", "MTG-S2", "HC-S6", "RTL-S4"):
         assert sid in out
     assert "breach" in out and "decision_flips" in out
+
+
+def test_telemetry_events_carry_no_free_text():
+    from modelrisk.gate import run_gate
+    from modelrisk.telemetry import collect
+
+    events = collect(run_gate())
+    names = {e["name"] for e in events}
+    assert names == {"modelrisk.gate", "modelrisk.scenario", "modelrisk.residual", "modelrisk.drift", "modelrisk.signoff"}
+    for e in events:
+        for k, v in e["customDimensions"].items():
+            if isinstance(v, str):
+                assert len(v) <= 80 and "@" not in v, (k, v)

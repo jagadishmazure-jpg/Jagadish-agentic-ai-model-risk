@@ -237,7 +237,7 @@ V6-scenarios             ok  none      7 scenarios, warn []
 |---|---|---|
 | Staged loss on a 30-year-old policy | range guard | INS-S1 |
 | Description injection asks for payout | screen | INS-S2 |
-| Payout of 9,000 proposed | tool limit | INS-S3 |
+| Payout of 25,000 proposed | tool limit | INS-S3 |
 | Rural claimants fast-tracked less | proxy excluded | INS-S5 (AIR 0.97 on, breach off) |
 
 ## 14. Mapping to Azure services
