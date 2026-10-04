@@ -16,9 +16,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from modelrisk.lifecycle import STAGES, required_roles  # noqa: E402
-from modelrisk.registry import FILES, load, load_all  # noqa: E402
-from modelrisk.signoff import AUDIT_LOG, request, sign  # noqa: E402
+from modelrisk.lifecycle import STAGES, required_roles
+from modelrisk.registry import FILES, load, load_all
+from modelrisk.signoff import AUDIT_LOG, request, sign
 
 PEOPLE = {
     "validator": "Iris Delgado (Independent Validation)",
@@ -34,8 +34,7 @@ BUSINESS = {
     "juniper-prior-auth": "Priya Natarajan (Utilization Management Operations)",
     "marigold-pricing-demand": "Ben Okoro (Category Management)",
 }
-WITHHELD = {"cedarhollow-underwriting-assistant": {"compliance"},
-            "juniper-prior-auth": {"compliance", "clinical-reviewer"}}
+WITHHELD = {"cedarhollow-underwriting-assistant": {"compliance"}, "juniper-prior-auth": {"compliance", "clinical-reviewer"}}
 
 
 def who(rec, role: str) -> str:
@@ -53,7 +52,7 @@ def main() -> None:
         (rec.folder / FILES["approvals"]).unlink(missing_ok=True)
     for rec in load_all():
         idx = STAGES.index(rec.stage)
-        stages = [s for s in STAGES[1: idx + 1] if s != "retired"]
+        stages = [s for s in STAGES[1 : idx + 1] if s != "retired"]
         if rec.stage == "validation":
             stages.append("production")
         if not stages:
@@ -63,8 +62,15 @@ def main() -> None:
             for role in required_roles(rec, stage):
                 if stage == "production" and rec.stage == "validation" and role in WITHHELD.get(rec.id, set()):
                     continue
-                sign(load(rec.id), stage, role, who(rec, role), "approve",
-                     f"Reviewed the {stage} evidence pack for {rec.id}: pillars, scenarios and validation report.", now)
+                sign(
+                    load(rec.id),
+                    stage,
+                    role,
+                    who(rec, role),
+                    "approve",
+                    f"Reviewed the {stage} evidence pack for {rec.id}: pillars, scenarios and validation report.",
+                    now,
+                )
     print(f"seeded sign-offs for {len(load_all())} models; audit log {sum(1 for _ in AUDIT_LOG.open())} entries")
 
 

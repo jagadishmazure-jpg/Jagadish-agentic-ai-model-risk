@@ -42,10 +42,17 @@ def score_risk(risk: dict[str, Any], overrides: dict[str, float] | None = None) 
     eff = combined_effectiveness(risk["controls"], overrides)
     residual = round(inherent * (1 - eff), 2)
     return {
-        "id": risk["id"], "title": risk["title"], "category": risk["category"], "owner": risk["owner"],
-        "likelihood": risk["likelihood"], "impact": risk["impact"],
-        "inherent": inherent, "inherent_band": band(inherent),
-        "control_effectiveness": eff, "residual": residual, "residual_band": band(residual),
+        "id": risk["id"],
+        "title": risk["title"],
+        "category": risk["category"],
+        "owner": risk["owner"],
+        "likelihood": risk["likelihood"],
+        "impact": risk["impact"],
+        "inherent": inherent,
+        "inherent_band": band(inherent),
+        "control_effectiveness": eff,
+        "residual": residual,
+        "residual_band": band(residual),
         "implemented_controls": sum(c["status"] == "implemented" for c in risk["controls"]),
     }
 

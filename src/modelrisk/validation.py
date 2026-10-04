@@ -41,8 +41,11 @@ def validate(rec: ModelRecord, validator: str, team: str = "Independent Validati
         fresh = _eval(rec.id, VALIDATION_SEED)
         gaps = [f"{m['name']} card {m['value']} vs {fresh[m['name']]}" for m in card["metrics"] if abs(m["value"] - fresh[m["name"]]) > TOLERANCE]
         f.append(_finding("V3-re-performance", not gaps, "high", "; ".join(gaps) or f"all card metrics reproduce on seed {VALIDATION_SEED}"))
-        below = [f"{m['name']} {fresh[m['name']]} < {m['threshold']}" for m in card["metrics"]
-                 if (fresh[m["name"]] < m["threshold"] if m["direction"] == "higher-is-better" else fresh[m["name"]] > m["threshold"])]
+        below = [
+            f"{m['name']} {fresh[m['name']]} < {m['threshold']}"
+            for m in card["metrics"]
+            if (fresh[m["name"]] < m["threshold"] if m["direction"] == "higher-is-better" else fresh[m["name"]] > m["threshold"])
+        ]
         f.append(_finding("V4-outcomes", not below, "high", "; ".join(below) or "all metrics meet thresholds on fresh data"))
         bal = round((fresh["recall"] + _specificity(spec)) / 2, 4)
         f.append(_finding("V5-challenger", bal > 0.5, "medium", f"balanced accuracy {bal} vs naive challenger 0.5"))

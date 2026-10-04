@@ -10,8 +10,13 @@ from modelrisk.agents.base import AgentSpec, rng
 from modelrisk.agents.guardrails import ToolPolicy
 
 FEATURES = ["claim_amount", "policy_age_months", "prior_claims", "doc_completeness", "photo_damage_match"]
-RANGES = {"claim_amount": (0, 50000), "policy_age_months": (0, 240), "prior_claims": (0, 10),
-          "doc_completeness": (0, 1), "photo_damage_match": (0, 1)}
+RANGES = {
+    "claim_amount": (0, 50000),
+    "policy_age_months": (0, 240),
+    "prior_claims": (0, 10),
+    "doc_completeness": (0, 1),
+    "photo_damage_match": (0, 1),
+}
 WEIGHTS = {"claim_amount": 6.0, "policy_age_months": -1.5, "prior_claims": 6.0, "doc_completeness": -3.5, "photo_damage_match": -2.0}
 BIAS = 1.6
 PROXIES = {"zip_risk_index": 2.5}
@@ -36,11 +41,15 @@ def generate(n: int, seed: int = 7, shift: float = 0.0) -> list[dict]:
         }
         review = r.random() < SPEC.probability(x)
         if r.random() < shift:
-            x.update(policy_age_months=r.randint(300, 480), claim_amount=round(r.uniform(1500, 4800), 2),
-                     doc_completeness=0.98, prior_claims=0, photo_damage_match=0.9)
+            x.update(
+                policy_age_months=r.randint(300, 480),
+                claim_amount=round(r.uniform(1500, 4800), 2),
+                doc_completeness=0.98,
+                prior_claims=0,
+                photo_damage_match=0.9,
+            )
             review = True  # staged losses the model would fast-track
-        out.append({"id": f"CLM-{i:05d}", "x": x, "group": "rural" if rural else "urban", "review": review,
-                    "untrusted": r.choice(NOTES)})
+        out.append({"id": f"CLM-{i:05d}", "x": x, "group": "rural" if rural else "urban", "review": review, "untrusted": r.choice(NOTES)})
     return out
 
 
@@ -53,9 +62,11 @@ def decide(p: float, case: dict) -> str:
 
 
 def action(decision: str, case: dict):
-    return {"fast-track": ("approve_payout", {"amount": case["x"]["claim_amount"]}),
-            "adjuster-review": ("assign_adjuster", {"claim": case["id"]}),
-            "refer-siu": ("refer_siu", {"claim": case["id"]})}[decision]
+    return {
+        "fast-track": ("approve_payout", {"amount": case["x"]["claim_amount"]}),
+        "adjuster-review": ("assign_adjuster", {"claim": case["id"]}),
+        "refer-siu": ("refer_siu", {"claim": case["id"]}),
+    }[decision]
 
 
 def evidence(case: dict, decision: str) -> dict[str, str]:
@@ -69,14 +80,30 @@ def evidence(case: dict, decision: str) -> dict[str, str]:
 
 
 def policy(enforce: bool) -> ToolPolicy:
-    return ToolPolicy(allowed={"get_policy", "approve_payout", "assign_adjuster", "refer_siu", "request_documents"},
-                      needs_approval={"refer_siu"}, limits={"approve_payout": {"amount": PAYOUT_LIMIT}}, enforce=enforce)
+    return ToolPolicy(
+        allowed={"get_policy", "approve_payout", "assign_adjuster", "refer_siu", "request_documents"},
+        needs_approval={"refer_siu"},
+        limits={"approve_payout": {"amount": PAYOUT_LIMIT}},
+        enforce=enforce,
+    )
 
 
 SPEC = AgentSpec(
-    id="bramblewood-claims-triage", company="Bramblewood Mutual", task="claims triage",
-    features=FEATURES, ranges=RANGES, weights=WEIGHTS, bias=BIAS, proxy_weights=PROXIES,
-    decide=decide, action=action, generate=generate, label=lambda c: c["review"],
-    positive={"adjuster-review", "refer-siu"}, evidence=evidence, policy=policy, favorable={"fast-track"},
+    id="bramblewood-claims-triage",
+    company="Bramblewood Mutual",
+    task="claims triage",
+    features=FEATURES,
+    ranges=RANGES,
+    weights=WEIGHTS,
+    bias=BIAS,
+    proxy_weights=PROXIES,
+    decide=decide,
+    action=action,
+    generate=generate,
+    label=lambda c: c["review"],
+    positive={"adjuster-review", "refer-siu"},
+    evidence=evidence,
+    policy=policy,
+    favorable={"fast-track"},
     hitl_decisions={"adjuster-review", "refer-siu"},
 )

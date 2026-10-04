@@ -1,0 +1,117 @@
+# Regulatory and framework control mapping, written in this repository's own words.
+# Each entry says what the reference asks for (paraphrased), where it is implemented here,
+# and the command that produces the evidence. This is engineering mapping, not legal advice.
+frameworks:
+  - id: csa-ai-mrm
+    name: CSA AI Model Risk Management Framework (pillars)
+    source: https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk
+    summary: >-
+      The Cloud Security Alliance AI Technology and Risk working group describes four
+      complementary tools: model cards, data sheets, risk cards and scenario planning, used
+      together. This repository implements them as schemas, YAML artifacts and code. The
+      framework text itself is not reproduced here.
+    items:
+      - {ref: model cards, summary: A structured description of what the model is for, how it was evaluated and where it fails., implemented_by: [schemas/model-card.schema.json, src/modelrisk/tiering.py], evidence: modelrisk model halcyon-fraud-triage}
+      - {ref: data sheets, summary: The inputs, assumptions, development process and outputs behind the model., implemented_by: [schemas/data-sheet.schema.json, src/modelrisk/combine.py], evidence: modelrisk combine --model cedarhollow-underwriting-assistant}
+      - {ref: risk cards, summary: Each risk with its category, likelihood, impact, controls and owner., implemented_by: [schemas/risk-card.schema.json, src/modelrisk/scoring.py], evidence: modelrisk risks --band high}
+      - {ref: scenario planning, summary: What-if exercises that test risks before they happen and feed results back., implemented_by: [schemas/scenario.schema.json, src/modelrisk/scenarios/engine.py], evidence: modelrisk scenarios --model juniper-prior-auth}
+      - {ref: combining the pillars, summary: Each pillar feeds the next and results flow back into risk treatment., implemented_by: [src/modelrisk/combine.py], evidence: modelrisk combine --model marigold-pricing-demand}
+  - id: nist-ai-rmf
+    name: NIST AI Risk Management Framework 1.0
+    summary: >-
+      Four functions. GOVERN sets the culture, policies and accountability; MAP establishes
+      context and identifies risks; MEASURE analyses and tracks them; MANAGE prioritises and
+      treats them. GOVERN applies across the other three.
+    items:
+      - {ref: GOVERN 1, summary: Policies and processes for AI risk are documented and applied consistently., implemented_by: [src/modelrisk/lifecycle.py, docs/best-practices.md], evidence: modelrisk lifecycle}
+      - {ref: GOVERN 2, summary: Roles and accountability are clear and the people in them are named., implemented_by: [schemas/risk-card.schema.json, src/modelrisk/signoff.py], evidence: modelrisk risks --band high}
+      - {ref: GOVERN 6, summary: Risks from third-party models and components are covered by policy., implemented_by: [registry/pfa-mortgage-flow/model-card.yaml, src/modelrisk/combine.py], evidence: modelrisk portfolio}
+      - {ref: MAP 1, summary: Intended purpose, context of use and out-of-scope uses are written down., implemented_by: [schemas/model-card.schema.json], evidence: modelrisk model juniper-prior-auth}
+      - {ref: MAP 2, summary: The system is categorised, including its autonomy and the decisions it touches., implemented_by: [src/modelrisk/tiering.py], evidence: modelrisk inventory}
+      - {ref: MAP 4, summary: Risks of third-party models, data and tools are mapped., implemented_by: [schemas/model-card.schema.json], evidence: modelrisk model cedarhollow-underwriting-assistant}
+      - {ref: MAP 5, summary: Likelihood and size of impacts on people and organisations are characterised., implemented_by: [src/modelrisk/scoring.py], evidence: modelrisk heatmap}
+      - {ref: MEASURE 1, summary: Metrics and methods are chosen for the risks that were mapped., implemented_by: [src/modelrisk/scenarios/engine.py, src/modelrisk/evaluation.py], evidence: modelrisk scenarios --model halcyon-fraud-triage}
+      - {ref: MEASURE 2, summary: Trustworthiness is evaluated, including fairness, privacy, security and robustness., implemented_by: [src/modelrisk/scenarios/engine.py, src/modelrisk/validation.py], evidence: modelrisk validate --model cedarhollow-underwriting-assistant}
+      - {ref: MEASURE 3, summary: Risks are tracked over time with thresholds that trigger action., implemented_by: [src/modelrisk/monitoring.py], evidence: modelrisk monitor --model halcyon-fraud-triage --shift 0.3}
+      - {ref: MANAGE 1, summary: Risks are prioritised and each gets a response., implemented_by: [src/modelrisk/combine.py], evidence: modelrisk combine --model juniper-prior-auth}
+      - {ref: MANAGE 2, summary: There are ways to fall back, override or switch off a system that misbehaves., implemented_by: [src/modelrisk/agents/base.py], evidence: modelrisk scenarios --model halcyon-fraud-triage}
+      - {ref: MANAGE 4, summary: Treatments and monitoring are documented, and incidents feed improvement., implemented_by: [src/modelrisk/combine.py, src/modelrisk/signoff.py], evidence: modelrisk signoff verify}
+  - id: eu-ai-act
+    name: EU AI Act (the EU regulation on artificial intelligence)
+    summary: >-
+      Risk-based. Some practices are prohibited; high-risk systems (Annex III uses such as
+      creditworthiness of natural persons and life or health insurance pricing) carry the
+      heaviest duties; some systems carry transparency duties; the rest are minimal risk.
+      Fraud detection is carved out of the creditworthiness use.
+    tiers:
+      prohibited: Practices banned outright, such as social scoring by public authorities. None of the models here.
+      high-risk: cedarhollow-underwriting-assistant and pfa-mortgage-flow (creditworthiness). juniper-prior-auth is treated as high-risk by internal policy because it gates access to care.
+      limited: Transparency duties when people interact with an AI system or see generated content.
+      minimal: halcyon-fraud-triage (fraud detection carve-out), bramblewood-claims-triage (property and casualty), marigold-pricing-demand and the platform components.
+    items:
+      - {ref: Art. 9, summary: A risk management system that runs for the whole lifecycle., implemented_by: [src/modelrisk/combine.py, src/modelrisk/lifecycle.py], evidence: modelrisk gate}
+      - {ref: Art. 10, summary: Training and test data are governed, relevant and checked for bias., implemented_by: [schemas/data-sheet.schema.json, src/modelrisk/combine.py], evidence: modelrisk combine --model cedarhollow-underwriting-assistant}
+      - {ref: Art. 11, summary: Technical documentation exists before the system is placed on the market., implemented_by: [schemas/model-card.schema.json, docs/pillars/model-cards.md], evidence: modelrisk model cedarhollow-underwriting-assistant}
+      - {ref: Art. 12, summary: The system keeps logs automatically., implemented_by: [src/modelrisk/signoff.py, infra/terraform/main.tf], evidence: modelrisk signoff verify}
+      - {ref: Art. 13, summary: Deployers get clear instructions, including limitations., implemented_by: [schemas/model-card.schema.json], evidence: modelrisk model cedarhollow-underwriting-assistant}
+      - {ref: Art. 14, summary: People can oversee, override and stop the system., implemented_by: [src/modelrisk/agents/graph.py, src/modelrisk/signoff.py], evidence: modelrisk scenarios --model cedarhollow-underwriting-assistant}
+      - {ref: Art. 15, summary: Accuracy, robustness and cybersecurity are appropriate and declared., implemented_by: [src/modelrisk/scenarios/engine.py], evidence: modelrisk scenarios --model cedarhollow-underwriting-assistant}
+      - {ref: Art. 72, summary: Providers monitor the system after it is placed on the market., implemented_by: [src/modelrisk/monitoring.py], evidence: modelrisk monitor --model cedarhollow-underwriting-assistant}
+  - id: sr-11-7
+    name: SR 11-7 Supervisory Guidance on Model Risk Management
+    summary: >-
+      US banking guidance. Model risk comes from wrong models and from right models used
+      wrongly. It asks for sound development, independent validation with effective challenge,
+      and governance: an inventory, policies, roles and documentation.
+    items:
+      - {ref: development and use, summary: Purpose, data, methods and limits are documented and tested., implemented_by: [schemas/model-card.schema.json, schemas/data-sheet.schema.json], evidence: modelrisk model halcyon-fraud-triage}
+      - {ref: conceptual soundness, summary: The validator checks the design and assumptions., implemented_by: [src/modelrisk/validation.py], evidence: modelrisk validate --model halcyon-fraud-triage}
+      - {ref: ongoing monitoring, summary: Performance is tracked in production and benchmarked., implemented_by: [src/modelrisk/monitoring.py, src/modelrisk/validation.py], evidence: modelrisk monitor --model halcyon-fraud-triage}
+      - {ref: outcomes analysis, summary: Outputs are compared with actual outcomes., implemented_by: [src/modelrisk/validation.py, src/modelrisk/evaluation.py], evidence: modelrisk validate --model halcyon-fraud-triage}
+      - {ref: effective challenge, summary: Validators are independent and have the standing to block a model., implemented_by: [src/modelrisk/validation.py, src/modelrisk/signoff.py], evidence: modelrisk validate --model halcyon-fraud-triage}
+      - {ref: model inventory, summary: Every model in use is listed with its owner, use and status., implemented_by: [registry/inventory.yaml, src/modelrisk/tiering.py], evidence: modelrisk inventory}
+  - id: iso-42001
+    name: ISO/IEC 42001 AI management system
+    summary: >-
+      A certifiable management system standard. It asks an organisation to set AI policy and
+      roles, assess AI risks and impacts, treat them with controls (Annex A), operate and
+      monitor AI systems, audit, and improve.
+    items:
+      - {ref: 6.1.2 and 6.1.3, summary: Assess AI risks and choose treatments., implemented_by: [src/modelrisk/scoring.py, src/modelrisk/combine.py], evidence: modelrisk risks}
+      - {ref: 6.1.4, summary: Assess the impact of AI systems on people and society., implemented_by: [src/modelrisk/tiering.py, src/modelrisk/scenarios/engine.py], evidence: modelrisk inventory}
+      - {ref: 8, summary: Operate the planned processes and keep records., implemented_by: [src/modelrisk/lifecycle.py], evidence: modelrisk lifecycle}
+      - {ref: 9.1, summary: Monitor, measure and evaluate., implemented_by: [src/modelrisk/monitoring.py], evidence: modelrisk monitor --model marigold-pricing-demand}
+      - {ref: 10, summary: Correct nonconformities and improve., implemented_by: [src/modelrisk/combine.py], evidence: modelrisk combine --model juniper-prior-auth}
+      - {ref: Annex A.6, summary: Lifecycle controls from design to retirement., implemented_by: [src/modelrisk/lifecycle.py], evidence: modelrisk lifecycle}
+      - {ref: Annex A.7, summary: Data quality and provenance for AI systems., implemented_by: [schemas/data-sheet.schema.json], evidence: modelrisk combine --model halcyon-fraud-triage}
+      - {ref: Annex A.10, summary: Third-party and supplier relationships., implemented_by: [registry/inventory.yaml], evidence: modelrisk portfolio}
+  - id: hipaa
+    name: HIPAA Privacy and Security Rules
+    summary: >-
+      Protected health information may be used only to the minimum necessary, must be
+      safeguarded with access and audit controls, and needs a business associate agreement
+      with any cloud provider that handles it.
+    items:
+      - {ref: minimum necessary, summary: Tools and outputs carry only the PHI the task needs., implemented_by: [src/modelrisk/agents/guardrails.py, src/modelrisk/agents/healthcare.py], evidence: modelrisk scenarios --model juniper-prior-auth}
+      - {ref: audit controls, summary: Activity on systems with PHI is recorded and reviewable., implemented_by: [src/modelrisk/signoff.py, infra/terraform/main.tf], evidence: modelrisk signoff verify}
+      - {ref: not a medical device, summary: The assistant performs an administrative coverage check and never denies care; clinicians decide., implemented_by: [src/modelrisk/agents/healthcare.py], evidence: modelrisk model juniper-prior-auth}
+      - {ref: prior authorization rules, summary: Federal payer rules require specific denial reasons, and several states require a clinician to make medical-necessity denials. The assistant has no deny tool., implemented_by: [src/modelrisk/agents/healthcare.py], evidence: modelrisk scenarios --model juniper-prior-auth}
+  - id: fair-lending
+    name: Fair lending (ECOA and Regulation B, Fair Housing Act)
+    summary: >-
+      Lenders may not discriminate on protected characteristics, directly or through practices
+      with an unjustified disparate impact. Applicants who are declined must get the specific
+      principal reasons, and a complex model is no excuse for vague reasons.
+    items:
+      - {ref: disparate treatment, summary: Protected attributes never reach the model., implemented_by: [src/modelrisk/agents/mortgage.py, src/modelrisk/combine.py], evidence: modelrisk combine --model cedarhollow-underwriting-assistant}
+      - {ref: disparate impact, summary: Adverse impact ratio screening (four-fifths as a screen, not a safe harbour) and proxy exclusion., implemented_by: [src/modelrisk/scenarios/engine.py], evidence: modelrisk scenarios --model cedarhollow-underwriting-assistant}
+      - {ref: matched-pair testing, summary: Identical files that differ only in the protected attribute and its proxy get the same recommendation., implemented_by: [src/modelrisk/agents/mortgage.py, src/modelrisk/scenarios/engine.py], evidence: modelrisk scenarios --model cedarhollow-underwriting-assistant}
+      - {ref: adverse action reasons, summary: Each recommendation carries its principal reasons., implemented_by: [src/modelrisk/agents/base.py], evidence: modelrisk scenarios --model cedarhollow-underwriting-assistant}
+      - {ref: less discriminatory alternatives, summary: A periodic search for an equally effective, less discriminatory model is a planned control., implemented_by: [registry/cedarhollow-underwriting-assistant/risk-cards.yaml], evidence: modelrisk combine --model cedarhollow-underwriting-assistant}
+  - id: insurance-ai
+    name: State insurance AI expectations (NAIC model bulletin)
+    summary: >-
+      Insurers are expected to run a written AI programme with governance, risk management and
+      testing for unfair discrimination, including for third-party models.
+    items:
+      - {ref: governance and testing, summary: Claims triage has a card, risk cards, proxy exclusion and an outcome-rate test., implemented_by: [registry/bramblewood-claims-triage/risk-cards.yaml], evidence: modelrisk scenarios --model bramblewood-claims-triage}

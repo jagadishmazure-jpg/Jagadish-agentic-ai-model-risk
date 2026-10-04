@@ -86,8 +86,9 @@ def out_of_range(spec: AgentSpec, x: dict[str, float]) -> list[str]:
     return [f for f in spec.features if not (spec.ranges[f][0] <= x[f] <= spec.ranges[f][1])]
 
 
-def build(spec: AgentSpec, controls: Controls = Controls(), llm: MockLLM | None = None, max_steps: int = 20):
+def build(spec: AgentSpec, controls: Controls | None = None, llm: MockLLM | None = None, max_steps: int = 20):
     """Compile the domain agent. Returns a graph whose ``invoke(case)`` gives the final state."""
+    controls = controls or Controls()
     llm = llm or MockLLM()
 
     def intake(s):
@@ -147,7 +148,7 @@ def build(spec: AgentSpec, controls: Controls = Controls(), llm: MockLLM | None 
                 s["flags"].append("unsupported-claim-removed")
             claims = supported
         s["claims"] = claims
-        s["rationale"] = out["text"] if not controls.verify_claims else " ".join(c["text"] for c in claims)
+        s["rationale"] = out["text"] if not controls.verify_claims else f"{spec.task}: " + "; ".join(c["text"] for c in claims)
         if llm.echo_input and s["case"].get("untrusted"):
             s["rationale"] += " Input: " + s["case"]["untrusted"]
         if out["obeyed_injection"]:
@@ -182,11 +183,17 @@ def build(spec: AgentSpec, controls: Controls = Controls(), llm: MockLLM | None 
         return s
 
     g = StateGraph()
-    for name, fn in [("intake", intake), ("screen", screen_node), ("features", features), ("score", score),
-                     ("explain", explain), ("act", act), ("route", route)]:
+    for name, fn in [
+        ("intake", intake),
+        ("screen", screen_node),
+        ("features", features),
+        ("score", score),
+        ("explain", explain),
+        ("act", act),
+        ("route", route),
+    ]:
         g.add_node(name, fn)
-    for a, b in [("intake", "screen"), ("screen", "features"), ("features", "score"), ("score", "explain"),
-                 ("explain", "act"), ("act", "route")]:
+    for a, b in [("intake", "screen"), ("screen", "features"), ("features", "score"), ("score", "explain"), ("explain", "act"), ("act", "route")]:
         g.add_edge(a, b)
     app = g.compile(entry="intake", max_steps=max_steps)
 

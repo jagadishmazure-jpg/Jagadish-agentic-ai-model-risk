@@ -11,8 +11,13 @@ from modelrisk.agents.base import AgentSpec, rng
 from modelrisk.agents.guardrails import ToolPolicy
 
 FEATURES = ["price_gap_pct", "demand_index", "stock_cover_weeks", "elasticity", "margin_pct"]
-RANGES = {"price_gap_pct": (-0.3, 0.3), "demand_index": (0.5, 2.0), "stock_cover_weeks": (0, 12),
-          "elasticity": (-3.0, -0.2), "margin_pct": (0.05, 0.6)}
+RANGES = {
+    "price_gap_pct": (-0.3, 0.3),
+    "demand_index": (0.5, 2.0),
+    "stock_cover_weeks": (0, 12),
+    "elasticity": (-3.0, -0.2),
+    "margin_pct": (0.05, 0.6),
+}
 WEIGHTS = {"price_gap_pct": -4.0, "demand_index": 3.0, "stock_cover_weeks": -2.0, "elasticity": 2.5, "margin_pct": -1.5}
 BIAS = 0.0
 PROXIES = {"store_low_income": 2.5}
@@ -40,8 +45,9 @@ def generate(n: int, seed: int = 7, shift: float = 0.0) -> list[dict]:
         if r.random() < shift:
             x.update(demand_index=round(r.uniform(2.5, 4.0), 2))
             should_raise = False  # a competitor's promotion pulled traffic in; raising would lose it
-        out.append({"id": f"SKU-{i:05d}", "x": x, "group": "low-income" if low_income else "other",
-                    "raise": should_raise, "untrusted": r.choice(NOTES)})
+        out.append(
+            {"id": f"SKU-{i:05d}", "x": x, "group": "low-income" if low_income else "other", "raise": should_raise, "untrusted": r.choice(NOTES)}
+        )
     return out
 
 
@@ -74,13 +80,29 @@ def evidence(case: dict, decision: str) -> dict[str, str]:
 
 
 def policy(enforce: bool) -> ToolPolicy:
-    return ToolPolicy(allowed={"get_sales", "get_competitor_prices", "set_price", "propose_price"},
-                      limits={"set_price": {"pct_change": MAX_AUTO_CHANGE}}, enforce=enforce)
+    return ToolPolicy(
+        allowed={"get_sales", "get_competitor_prices", "set_price", "propose_price"},
+        limits={"set_price": {"pct_change": MAX_AUTO_CHANGE}},
+        enforce=enforce,
+    )
 
 
 SPEC = AgentSpec(
-    id="marigold-pricing-demand", company="Marigold Market", task="pricing and demand",
-    features=FEATURES, ranges=RANGES, weights=WEIGHTS, bias=BIAS, proxy_weights=PROXIES,
-    decide=decide, action=action, generate=generate, label=lambda c: c["raise"], positive={"raise", "refer-pricing-team"},
-    evidence=evidence, policy=policy, favorable={"hold", "lower"}, hitl_decisions={"refer-pricing-team"},
+    id="marigold-pricing-demand",
+    company="Marigold Market",
+    task="pricing and demand",
+    features=FEATURES,
+    ranges=RANGES,
+    weights=WEIGHTS,
+    bias=BIAS,
+    proxy_weights=PROXIES,
+    decide=decide,
+    action=action,
+    generate=generate,
+    label=lambda c: c["raise"],
+    positive={"raise", "refer-pricing-team"},
+    evidence=evidence,
+    policy=policy,
+    favorable={"hold", "lower"},
+    hitl_decisions={"refer-pricing-team"},
 )

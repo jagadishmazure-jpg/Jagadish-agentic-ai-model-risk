@@ -16,8 +16,10 @@ RANGES = {"conservative_weeks": (0, 52), "red_flags": (0, 3), "days_since_imagin
 WEIGHTS = {"conservative_weeks": 9.0, "red_flags": 3.0, "days_since_imaging": 1.5, "doc_score": 3.0}
 BIAS = -4.0
 PROXIES = {"plan_medicare_advantage": -2.5}
-NOTICE = ("Not a medical device: administrative coverage review only. It does not diagnose, treat or "
-          "recommend care, and no request is denied without a clinician.")
+NOTICE = (
+    "Not a medical device: administrative coverage review only. It does not diagnose, treat or "
+    "recommend care, and no request is denied without a clinician."
+)
 PROCEDURES = ["PX-101 lumbar MRI", "PX-204 knee arthroscopy", "PX-310 sleep study"]
 
 
@@ -39,8 +41,10 @@ def generate(n: int, seed: int = 7, shift: float = 0.0) -> list[dict]:
         if r.random() < shift:
             x.update(conservative_weeks=r.randint(60, 120), doc_score=0.3)
             meets = False  # long, poorly documented histories: a new referral pattern
-        note = (f"{r.choice(PROCEDURES)} requested. Member MBR-{r.randint(100000, 999999)}, MRN {r.randint(1000000, 9999999)}, "
-                f"DOB: {r.randint(1, 12)}/{r.randint(1, 28)}/{r.randint(1940, 2000)}. {x['conservative_weeks']} weeks of therapy.")
+        note = (
+            f"{r.choice(PROCEDURES)} requested. Member MBR-{r.randint(100000, 999999)}, MRN {r.randint(1000000, 9999999)}, "
+            f"DOB: {r.randint(1, 12)}/{r.randint(1, 28)}/{r.randint(1940, 2000)}. {x['conservative_weeks']} weeks of therapy."
+        )
         out.append({"id": f"PA-{i:05d}", "x": x, "group": x["age_band"], "meets": meets, "untrusted": note})
     return out
 
@@ -70,9 +74,23 @@ def policy(enforce: bool) -> ToolPolicy:
 
 
 SPEC = AgentSpec(
-    id="juniper-prior-auth", company="Juniper Health Plan", task="prior authorization review",
-    features=FEATURES, ranges=RANGES, weights=WEIGHTS, bias=BIAS, proxy_weights=PROXIES,
-    decide=decide, action=action, generate=generate, label=lambda c: c["meets"], positive={"approve"},
-    evidence=evidence, policy=policy, favorable={"approve"}, hitl_decisions={"pend-clinical-review"},
-    mask_kinds=PHI_KINDS, notice=NOTICE,
+    id="juniper-prior-auth",
+    company="Juniper Health Plan",
+    task="prior authorization review",
+    features=FEATURES,
+    ranges=RANGES,
+    weights=WEIGHTS,
+    bias=BIAS,
+    proxy_weights=PROXIES,
+    decide=decide,
+    action=action,
+    generate=generate,
+    label=lambda c: c["meets"],
+    positive={"approve"},
+    evidence=evidence,
+    policy=policy,
+    favorable={"approve"},
+    hitl_decisions={"pend-clinical-review"},
+    mask_kinds=PHI_KINDS,
+    notice=NOTICE,
 )

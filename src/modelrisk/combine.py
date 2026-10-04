@@ -11,12 +11,13 @@
 
 from __future__ import annotations
 
+import json
 from functools import cache
 from typing import Any
 
 from modelrisk.agents.registry import SPECS
 from modelrisk.evaluation import evaluate
-from modelrisk.registry import ModelRecord, load
+from modelrisk.registry import ModelRecord
 from modelrisk.scenarios.engine import KIND_CONTROLS, run, run_external
 from modelrisk.scoring import score_risk, within_appetite
 from modelrisk.tiering import tier
@@ -45,8 +46,14 @@ def required_risks(card: dict[str, Any]) -> list[dict[str, str]]:
 
 def risk_coverage(rec: ModelRecord) -> list[dict[str, Any]]:
     if rec.kind == "portfolio":
-        return [{"kind": "external", "reason": "portfolio component", "covered_by": [s["id"] for s in rec.scenario_list()],
-                 "ok": bool(rec.scenario_list())}]
+        return [
+            {
+                "kind": "external",
+                "reason": "portfolio component",
+                "covered_by": [s["id"] for s in rec.scenario_list()],
+                "ok": bool(rec.scenario_list()),
+            }
+        ]
     kinds: dict[str, list[str]] = {}
     for s in rec.scenario_list():
         kinds.setdefault(s["kind"], []).extend(s["risk_ids"])
@@ -85,18 +92,34 @@ def understanding_checks(rec: ModelRecord) -> list[dict[str, Any]]:
     leaked = [n for n, i in inputs.items() if i["sensitivity"] == "protected" and i["used_by_model"]]
     add("DS5-protected-not-used", not leaked, "protected inputs used: " + ",".join(leaked) if leaked else "no protected input reaches the model")
     undocumented = [p for p in spec.proxy_weights if p not in inputs or inputs[p]["sensitivity"] != "protected"]
-    add("DS6-proxies-documented", not undocumented, "proxies not documented as protected: " + ",".join(undocumented)
-        if undocumented else f"{len(spec.proxy_weights)} known proxies documented and excluded")
+    add(
+        "DS6-proxies-documented",
+        not undocumented,
+        "proxies not documented as protected: " + ",".join(undocumented)
+        if undocumented
+        else f"{len(spec.proxy_weights)} known proxies documented and excluded",
+    )
     ref = _eval(rec.id, 7)
     outside = [f for f in spec.features if not all(spec.ranges[f][0] <= v <= spec.ranges[f][1] for v in ref["features"][f])]
-    add("DS7-training-in-range", not outside, "reference data outside documented range: " + ",".join(outside) if outside else "reference data inside every range")
+    add(
+        "DS7-training-in-range",
+        not outside,
+        "reference data outside documented range: " + ",".join(outside) if outside else "reference data inside every range",
+    )
     val = _eval(rec.id, 11)
-    drift = [p["metric"] for p in sheet["performance"]
-             if abs(p["train"] - ref[p["metric"]]) > 0.02 or abs(p["validation"] - val[p["metric"]]) > 0.02]
-    add("DS8-performance-reproduces", not drift, "not reproduced: " + ",".join(drift) if drift else "train and validation figures reproduce within 0.02")
+    drift = [p["metric"] for p in sheet["performance"] if abs(p["train"] - ref[p["metric"]]) > 0.02 or abs(p["validation"] - val[p["metric"]]) > 0.02]
+    add(
+        "DS8-performance-reproduces",
+        not drift,
+        "not reproduced: " + ",".join(drift) if drift else "train and validation figures reproduce within 0.02",
+    )
     card_vals = {m["name"]: m["value"] for m in card["metrics"]}
     mismatch = [p["metric"] for p in sheet["performance"] if p["metric"] in card_vals and abs(card_vals[p["metric"]] - p["train"]) > 0.02]
-    add("DS9-card-matches-sheet", not mismatch, "model card and data sheet disagree: " + ",".join(mismatch) if mismatch else "model card metrics match the data sheet")
+    add(
+        "DS9-card-matches-sheet",
+        not mismatch,
+        "model card and data sheet disagree: " + ",".join(mismatch) if mismatch else "model card metrics match the data sheet",
+    )
     return checks
 
 
@@ -112,8 +135,15 @@ def scenario_links(rec: ModelRecord) -> list[dict[str, Any]]:
         linked = [s for s in r["scenarios"] if s in scen]
         dangling = [s for s in r["scenarios"] if s not in scen]
         ok = (bool(linked) or not material) and not dangling
-        out.append({"risk": r["id"], "material": material, "scenarios": linked, "ok": ok,
-                    "detail": "dangling: " + ",".join(dangling) if dangling else ("no scenario for a material risk" if not ok else "linked")})
+        out.append(
+            {
+                "risk": r["id"],
+                "material": material,
+                "scenarios": linked,
+                "ok": ok,
+                "detail": "dangling: " + ",".join(dangling) if dangling else ("no scenario for a material risk" if not ok else "linked"),
+            }
+        )
     for s in scen.values():
         missing = [rid for rid in s["risk_ids"] if rid not in risks]
         if missing:
@@ -121,25 +151,34 @@ def scenario_links(rec: ModelRecord) -> list[dict[str, Any]]:
         elif s["kind"] != "external" and rec.kind == "domain":
             ctl = {c.get("runtime_control") for rid in s["risk_ids"] for c in risks[rid]["controls"]}
             if not ctl & set(KIND_CONTROLS[s["kind"]]):
-                out.append({"risk": ",".join(s["risk_ids"]), "material": True, "scenarios": [s["id"]], "ok": False,
-                            "detail": f"no linked control implements {KIND_CONTROLS[s['kind']]}"})
+                out.append(
+                    {
+                        "risk": ",".join(s["risk_ids"]),
+                        "material": True,
+                        "scenarios": [s["id"]],
+                        "ok": False,
+                        "detail": f"no linked control implements {KIND_CONTROLS[s['kind']]}",
+                    }
+                )
     return out
 
 
 # --- 4. scenario results -> residual risk + backlog --------------------------------------
 
 
-@cache
-def _scenario(model_id: str, scenario_id: str, mitigations: bool) -> dict[str, Any]:
-    rec = load(model_id)
-    s = next(x for x in rec.scenario_list() if x["id"] == scenario_id)
-    if s["kind"] == "external":
-        return run_external(s)
-    return run(SPECS[model_id], s, rec.risks(), mitigations=mitigations)
+_RESULTS: dict[tuple, dict[str, Any]] = {}
+
+
+def run_scenario(rec: ModelRecord, s: dict[str, Any], mitigations: bool = True) -> dict[str, Any]:
+    """Run one scenario, memoised on its exact content (and the risk cards for what-ifs)."""
+    key = (rec.id, json.dumps(s, sort_keys=True), "" if mitigations else json.dumps(rec.risks(), sort_keys=True), mitigations)
+    if key not in _RESULTS:
+        _RESULTS[key] = run_external(s) if s["kind"] == "external" else run(SPECS[rec.id], s, rec.risks(), mitigations=mitigations)
+    return _RESULTS[key]
 
 
 def scenario_results(rec: ModelRecord, mitigations: bool = True) -> list[dict[str, Any]]:
-    return [_scenario(rec.id, s["id"], mitigations) for s in rec.scenario_list()]
+    return [run_scenario(rec, s, mitigations) for s in rec.scenario_list()]
 
 
 CREDIT = {"pass": 1.0, "warn": 0.5, "breach": 0.0}
@@ -159,36 +198,55 @@ def update_residuals(rec: ModelRecord, results: list[dict[str, Any]] | None = No
     for r in rec.risks():
         before = score_risk(r)
         credit = CREDIT[worst.get(r["id"], "pass")]
-        overrides = {c["id"]: c["effectiveness"] * credit for c in r["controls"]
-                     if c.get("runtime_control") or rec.kind == "portfolio"}
+        overrides = {c["id"]: c["effectiveness"] * credit for c in r["controls"] if c.get("runtime_control") or rec.kind == "portfolio"}
         after = score_risk(r, overrides)
-        out.append({**after, "residual_before": before["residual"], "scenario_status": worst.get(r["id"], "not-tested"),
-                    "within_appetite": within_appetite(after["residual_band"], t)})
+        out.append(
+            {
+                **after,
+                "residual_before": before["residual"],
+                "scenario_status": worst.get(r["id"], "not-tested"),
+                "within_appetite": within_appetite(after["residual_band"], t),
+            }
+        )
     return out
 
 
-def backlog(rec: ModelRecord, results: list[dict[str, Any]] | None = None,
-            what_if: list[dict[str, Any]] | None = None) -> list[dict[str, str]]:
+def backlog(rec: ModelRecord, results: list[dict[str, Any]] | None = None, what_if: list[dict[str, Any]] | None = None) -> list[dict[str, str]]:
     """Development backlog generated from scenario results, what-ifs and the risk cards."""
     results = results if results is not None else scenario_results(rec)
     what_if = what_if if what_if is not None else (scenario_results(rec, mitigations=False) if rec.kind == "domain" else [])
     items: list[dict[str, str]] = []
     for res in results:
         if res["status"] == "breach":
-            items.append({"priority": "P1", "source": res["id"], "item": f"Fix: {res['metric']} {res['value']} breaches {res['threshold']}; block promotion"})
+            items.append(
+                {"priority": "P1", "source": res["id"], "item": f"Fix: {res['metric']} {res['value']} breaches {res['threshold']}; block promotion"}
+            )
         elif res["status"] == "warn":
-            items.append({"priority": "P2", "source": res["id"], "item": f"Tune: {res['metric']} {res['value']} is inside the warn band ({res['threshold']})"})
+            items.append(
+                {"priority": "P2", "source": res["id"], "item": f"Tune: {res['metric']} {res['value']} is inside the warn band ({res['threshold']})"}
+            )
     for res in what_if:
         if res["status"] == "pass":
-            items.append({"priority": "P3", "source": res["id"],
-                          "item": f"Strengthen scenario: still passes with {res['mitigations']}, so it does not prove the control is needed"})
+            items.append(
+                {
+                    "priority": "P3",
+                    "source": res["id"],
+                    "item": f"Strengthen scenario: still passes with {res['mitigations']}, so it does not prove the control is needed",
+                }
+            )
     for r in rec.risks():
         for c in r["controls"]:
             if c["status"] == "planned":
                 items.append({"priority": "P2", "source": c["id"], "item": f"Implement planned control for {r['id']}: {c['description']}"})
     for r in update_residuals(rec, results):
         if not r["within_appetite"]:
-            items.append({"priority": "P1", "source": r["id"], "item": f"Residual {r['residual']} ({r['residual_band']}) exceeds tier appetite; add controls or record acceptance"})
+            items.append(
+                {
+                    "priority": "P1",
+                    "source": r["id"],
+                    "item": f"Residual {r['residual']} ({r['residual_band']}) exceeds tier appetite; add controls or record acceptance",
+                }
+            )
     return items
 
 

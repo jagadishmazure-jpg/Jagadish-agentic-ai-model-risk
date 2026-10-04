@@ -67,9 +67,7 @@ def main() -> int:
         for sh in sorted(common):
             hits += 1
             print(f"{f.relative_to(ROOT)}  <->  {ref[sh]}:  {' '.join(sh)}")
-    print(
-        f"checked {len(files)} files against {len(a.refs)} reference file(s), n={a.n}: {hits} overlapping {a.n}-word run(s)"
-    )
+    print(f"checked {len(files)} files against {len(a.refs)} reference file(s), n={a.n}: {hits} overlapping {a.n}-word run(s)")
     return 1 if hits else 0
 
 

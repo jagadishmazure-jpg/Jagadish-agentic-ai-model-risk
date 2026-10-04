@@ -10,8 +10,13 @@ import yaml
 
 from modelrisk import REGISTRY
 
-FILES = {"model_card": "model-card.yaml", "data_sheet": "data-sheet.yaml", "risk_cards": "risk-cards.yaml",
-         "scenarios": "scenarios.yaml", "approvals": "approvals.yaml"}
+FILES = {
+    "model_card": "model-card.yaml",
+    "data_sheet": "data-sheet.yaml",
+    "risk_cards": "risk-cards.yaml",
+    "scenarios": "scenarios.yaml",
+    "approvals": "approvals.yaml",
+}
 PILLARS = ("model_card", "data_sheet", "risk_cards", "scenarios")
 
 

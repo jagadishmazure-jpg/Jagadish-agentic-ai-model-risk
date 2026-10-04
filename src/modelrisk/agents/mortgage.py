@@ -73,15 +73,26 @@ def evidence(case: dict, decision: str) -> dict[str, str]:
 
 
 def policy(enforce: bool) -> ToolPolicy:
-    return ToolPolicy(allowed={"get_application", "pull_credit", "record_recommendation"},
-                      limits={"pull_credit": {"count": 1}}, enforce=enforce)
+    return ToolPolicy(allowed={"get_application", "pull_credit", "record_recommendation"}, limits={"pull_credit": {"count": 1}}, enforce=enforce)
 
 
 SPEC = AgentSpec(
-    id="cedarhollow-underwriting-assistant", company="Cedar Hollow Lending", task="underwriting recommendation",
-    features=FEATURES, ranges=RANGES, weights=WEIGHTS, bias=BIAS, proxy_weights=PROXIES,
-    decide=decide, action=action, generate=generate, label=lambda c: c["good"], positive={"recommend-approve"},
-    evidence=evidence, policy=policy, favorable={"recommend-approve"},
+    id="cedarhollow-underwriting-assistant",
+    company="Cedar Hollow Lending",
+    task="underwriting recommendation",
+    features=FEATURES,
+    ranges=RANGES,
+    weights=WEIGHTS,
+    bias=BIAS,
+    proxy_weights=PROXIES,
+    decide=decide,
+    action=action,
+    generate=generate,
+    label=lambda c: c["good"],
+    positive={"recommend-approve"},
+    evidence=evidence,
+    policy=policy,
+    favorable={"recommend-approve"},
     hitl_decisions={"recommend-approve", "refer", "recommend-decline"},
     notice="Recommendations only. A licensed underwriter makes every credit decision.",
 )

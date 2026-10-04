@@ -72,12 +72,30 @@ def verify_chain(path: Path = AUDIT_LOG) -> dict[str, Any]:
 
 
 def request(rec: ModelRecord, stage: str, requested_by: str, now: int | None = None, log: Path = AUDIT_LOG) -> dict[str, Any]:
-    return append({"event": "signoff-requested", "model_id": rec.id, "stage": stage, "actor": requested_by,
-                   "digest": digest(rec), "epoch": int(now or time.time())}, log)
+    return append(
+        {
+            "event": "signoff-requested",
+            "model_id": rec.id,
+            "stage": stage,
+            "actor": requested_by,
+            "digest": digest(rec),
+            "epoch": int(now or time.time()),
+        },
+        log,
+    )
 
 
-def sign(rec: ModelRecord, stage: str, role: str, approver: str, decision: str, comment: str,
-         now: int | None = None, log: Path = AUDIT_LOG, write: bool = True) -> dict[str, Any]:
+def sign(
+    rec: ModelRecord,
+    stage: str,
+    role: str,
+    approver: str,
+    decision: str,
+    comment: str,
+    now: int | None = None,
+    log: Path = AUDIT_LOG,
+    write: bool = True,
+) -> dict[str, Any]:
     """Record a human decision. Raises ``SignoffRefused`` for self sign-off or an empty comment."""
     card = rec.model_card
     team = card["developer"].lower()
@@ -91,10 +109,20 @@ def sign(rec: ModelRecord, stage: str, role: str, approver: str, decision: str, 
         raise SignoffRefused("a sign-off needs a written rationale")
     epoch = int(now or time.time())
     d = digest(rec)
-    entry = append({"event": "signoff", "model_id": rec.id, "stage": stage, "role": role, "actor": approver,
-                    "decision": decision, "digest": d, "epoch": epoch}, log)
-    record = {"stage": stage, "role": role, "approver": approver, "decision": decision, "digest": d,
-              "signed_epoch": epoch, "comment": comment, "audit_hash": entry["hash"]}
+    entry = append(
+        {"event": "signoff", "model_id": rec.id, "stage": stage, "role": role, "actor": approver, "decision": decision, "digest": d, "epoch": epoch},
+        log,
+    )
+    record = {
+        "stage": stage,
+        "role": role,
+        "approver": approver,
+        "decision": decision,
+        "digest": d,
+        "signed_epoch": epoch,
+        "comment": comment,
+        "audit_hash": entry["hash"],
+    }
     if write:
         path = rec.folder / FILES["approvals"]
         doc = yaml.safe_load(path.read_text()) if path.exists() else {"model_id": rec.id, "signoffs": []}
@@ -119,9 +147,11 @@ def valid_signoffs(rec: ModelRecord, stage: str, now: int | None = None) -> dict
 def stale_signoffs(rec: ModelRecord, now: int | None = None) -> list[str]:
     now = int(now or time.time())
     d = digest(rec)
-    return [f"{s['stage']}/{s['role']}" + (" digest changed" if s["digest"] != d else " expired")
-            for s in (rec.approvals or {}).get("signoffs", [])
-            if s["digest"] != d or now - s["signed_epoch"] > MAX_AGE_DAYS * 86400]
+    return [
+        f"{s['stage']}/{s['role']}" + (" digest changed" if s["digest"] != d else " expired")
+        for s in (rec.approvals or {}).get("signoffs", [])
+        if s["digest"] != d or now - s["signed_epoch"] > MAX_AGE_DAYS * 86400
+    ]
 
 
 def reload(model_id: str) -> ModelRecord:

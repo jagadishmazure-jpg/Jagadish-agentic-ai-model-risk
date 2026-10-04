@@ -34,10 +34,10 @@ class MockLLM:
             raise ModelUnavailable(self.name)
         self.calls += 1
         cited = sorted(evidence)
-        claims = [{"text": f"{task}: {evidence[k]}", "cites": [k]} for k in cited]
+        claims = [{"text": evidence[k], "cites": [k]} for k in cited]
         if self.hallucinate_every and self.calls % self.hallucinate_every == 0:
-            claims.append({"text": f"{task}: an exception applies under section 9.9", "cites": ["policy-9.9"]})
-        text = " ".join(c["text"] for c in claims)
+            claims.append({"text": "an exception applies under section 9.9", "cites": ["policy-9.9"]})
+        text = f"{task}: " + "; ".join(c["text"] for c in claims)
         obeyed = self.follow_injections and "ignore" in untrusted.lower()
         words = len(text.split()) + len(untrusted.split())
         return {"text": text, "claims": claims, "obeyed_injection": obeyed, "tokens": int(words * 1.3 * self.retry_storm) + 200}

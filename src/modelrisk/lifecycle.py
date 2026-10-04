@@ -22,8 +22,11 @@ STAGES = ["development", "validation", "production", "monitoring", "retired"]
 # Roles that must approve entry into each stage, by tier.
 REQUIRED_ROLES: dict[str, dict[int, list[str]]] = {
     "validation": {1: ["model-owner"], 2: ["model-owner"], 3: ["model-owner"]},
-    "production": {1: ["validator", "model-risk", "business-owner", "compliance"],
-                   2: ["validator", "model-risk", "business-owner"], 3: ["validator", "business-owner"]},
+    "production": {
+        1: ["validator", "model-risk", "business-owner", "compliance"],
+        2: ["validator", "model-risk", "business-owner"],
+        3: ["validator", "business-owner"],
+    },
     "monitoring": {1: ["model-risk"], 2: ["model-owner"], 3: ["model-owner"]},
     "retired": {1: ["model-owner", "model-risk"], 2: ["model-owner", "model-risk"], 3: ["model-owner"]},
 }
@@ -43,8 +46,9 @@ def required_roles(rec: ModelRecord, stage: str) -> list[str]:
     return REQUIRED_ROLES[stage][tier(rec.model_card)] + extra_roles(rec, stage)
 
 
-def gate_checks(rec: ModelRecord, stage: str, scenario_status: list[str] | None = None,
-                validation_outcome: str | None = None, now: int | None = None) -> list[dict[str, Any]]:
+def gate_checks(
+    rec: ModelRecord, stage: str, scenario_status: list[str] | None = None, validation_outcome: str | None = None, now: int | None = None
+) -> list[dict[str, Any]]:
     checks: list[dict[str, Any]] = []
 
     def add(name: str, ok: bool, detail: str = "") -> None:
@@ -62,8 +66,11 @@ def gate_checks(rec: ModelRecord, stage: str, scenario_status: list[str] | None 
         add("no scenario breaches", not breaches, f"{len(breaches)} breach(es)")
     if stage == "monitoring":
         mon = (rec.model_card or {}).get("monitoring", {})
-        add("monitoring thresholds defined", bool(mon.get("performance")) and mon.get("psi_alert", 0) > mon.get("psi_warn", 1),
-            f"psi warn {mon.get('psi_warn')} / alert {mon.get('psi_alert')}")
+        add(
+            "monitoring thresholds defined",
+            bool(mon.get("performance")) and mon.get("psi_alert", 0) > mon.get("psi_warn", 1),
+            f"psi warn {mon.get('psi_warn')} / alert {mon.get('psi_alert')}",
+        )
     if stage == "retired":
         add("fallback documented", bool(rec.model_card["system"]["fallback"]), rec.model_card["system"]["fallback"])
     have = valid_signoffs(rec, stage, now)
@@ -75,9 +82,16 @@ def gate_checks(rec: ModelRecord, stage: str, scenario_status: list[str] | None 
 def stage_status(rec: ModelRecord, scenario_status: list[str], validation_outcome: str, now: int | None = None) -> dict[str, Any]:
     """Checks for every gate up to the current stage, plus the next gate (informational)."""
     idx = STAGES.index(rec.stage)
-    path = [s for s in STAGES[1: idx + 1] if s != "retired" or rec.stage == "retired"]
+    path = [s for s in STAGES[1 : idx + 1] if s != "retired" or rec.stage == "retired"]
     current = [c for s in path for c in gate_checks(rec, s, scenario_status, validation_outcome, now)]
     nxt = STAGES[idx + 1] if idx + 1 < len(STAGES) and rec.stage != "monitoring" else None
     upcoming = gate_checks(rec, nxt, scenario_status, validation_outcome, now) if nxt else []
-    return {"model": rec.id, "stage": rec.stage, "tier": tier(rec.model_card), "ok": all(c["ok"] for c in current),
-            "checks": current, "next_stage": nxt, "next_blockers": [c for c in upcoming if not c["ok"]]}
+    return {
+        "model": rec.id,
+        "stage": rec.stage,
+        "tier": tier(rec.model_card),
+        "ok": all(c["ok"] for c in current),
+        "checks": current,
+        "next_stage": nxt,
+        "next_blockers": [c for c in upcoming if not c["ok"]],
+    }

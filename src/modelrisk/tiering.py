@@ -28,8 +28,9 @@ def materiality(card: dict[str, Any]) -> dict[str, int]:
         "irreversible": 0 if d["reversible"] else 1,
         "financial_exposure": {"high": 2, "medium": 1}.get(d["financial_exposure"], 0),
         "autonomy": {"act": 3, "act-with-approval": 1}.get(card["system"]["autonomy"], 0),
-        "sensitivity": min(2, sum(2 if s in ("phi", "protected-attributes") else 1 if s in ("pii", "financial") else 0
-                                  for s in card["data_sensitivity"])),
+        "sensitivity": min(
+            2, sum(2 if s in ("phi", "protected-attributes") else 1 if s in ("pii", "financial") else 0 for s in card["data_sensitivity"])
+        ),
         "scale": 1 if card.get("monthly_volume", 0) >= 100_000 else 0,
     }
     return pts

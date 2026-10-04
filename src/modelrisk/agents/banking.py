@@ -36,8 +36,7 @@ def generate(n: int, seed: int = 7, shift: float = 0.0) -> list[dict]:
         if takeover:  # trusted device far older than anything in training, quiet velocity, still fraud
             x.update(device_age_days=r.randint(2500, 4000), velocity_1h=0, geo_mismatch=0, amount=round(r.uniform(900, 3000), 2))
             fraud = True
-        out.append({"id": f"TXN-{i:05d}", "x": x, "group": x["customer_age_band"], "fraud": fraud,
-                    "untrusted": r.choice(MEMOS)})
+        out.append({"id": f"TXN-{i:05d}", "x": x, "group": x["customer_age_band"], "fraud": fraud, "untrusted": r.choice(MEMOS)})
     return out
 
 
@@ -64,13 +63,30 @@ def evidence(case: dict, decision: str) -> dict[str, str]:
 
 
 def policy(enforce: bool) -> ToolPolicy:
-    return ToolPolicy(allowed={"get_history", "hold_transaction", "block_card", "notify_customer"},
-                      needs_approval={"block_card"}, limits={"hold_transaction": {"hours": 72}}, enforce=enforce)
+    return ToolPolicy(
+        allowed={"get_history", "hold_transaction", "block_card", "notify_customer"},
+        needs_approval={"block_card"},
+        limits={"hold_transaction": {"hours": 72}},
+        enforce=enforce,
+    )
 
 
 SPEC = AgentSpec(
-    id="halcyon-fraud-triage", company="Halcyon Trust Bank", task="fraud triage",
-    features=FEATURES, ranges=RANGES, weights=WEIGHTS, bias=BIAS, proxy_weights={},
-    decide=decide, action=action, generate=generate, label=lambda c: c["fraud"], positive={"hold", "block-card"},
-    evidence=evidence, policy=policy, favorable={"clear"}, hitl_decisions={"block-card"},
+    id="halcyon-fraud-triage",
+    company="Halcyon Trust Bank",
+    task="fraud triage",
+    features=FEATURES,
+    ranges=RANGES,
+    weights=WEIGHTS,
+    bias=BIAS,
+    proxy_weights={},
+    decide=decide,
+    action=action,
+    generate=generate,
+    label=lambda c: c["fraud"],
+    positive={"hold", "block-card"},
+    evidence=evidence,
+    policy=policy,
+    favorable={"clear"},
+    hitl_decisions={"block-card"},
 )

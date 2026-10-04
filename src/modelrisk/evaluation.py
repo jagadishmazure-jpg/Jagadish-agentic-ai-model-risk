@@ -11,14 +11,13 @@ from typing import Any
 from modelrisk.agents.base import AgentSpec, Controls, build
 
 
-def evaluate(spec: AgentSpec, n: int = 3000, seed: int = 7, shift: float = 0.0,
-             controls: Controls = Controls()) -> dict[str, Any]:
+def evaluate(spec: AgentSpec, n: int = 3000, seed: int = 7, shift: float = 0.0, controls: Controls | None = None) -> dict[str, Any]:
     cases = spec.generate(n, seed, shift=shift)
     agent = build(spec, controls)
     results = [agent.invoke(c) for c in cases]
     tp = fp = fn = tn = 0
     fav: dict[str, list[int]] = {}
-    for r, c in zip(results, cases):
+    for r, c in zip(results, cases, strict=True):
         pred, truth = r["decision"] in spec.positive, spec.label(c)
         tp += pred and truth
         fp += pred and not truth
@@ -36,4 +35,3 @@ def evaluate(spec: AgentSpec, n: int = 3000, seed: int = 7, shift: float = 0.0,
         "scores": [r["score"] for r in results],
         "features": {f: [c["x"][f] for c in cases] for f in spec.features},
     }
-

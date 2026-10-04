@@ -45,6 +45,5 @@ def monitor(rec: ModelRecord, seed: int = 101, shift: float = 0.0) -> dict[str, 
         st = "alert" if val < p["min"] else "warn" if val < p["warn"] else "ok"
         checks.append({"check": f"perf:{p['metric']}", "value": val, "status": st, "min": p["min"], "warn": p["warn"]})
     overall = max((c["status"] for c in checks), key=LEVEL.get)
-    action = {"ok": "none", "warn": "watch next window; P2 backlog item",
-              "alert": cfg["on_alert"]}[overall]
+    action = {"ok": "none", "warn": "watch next window; P2 backlog item", "alert": cfg["on_alert"]}[overall]
     return {"model": rec.id, "window": cfg["window"], "seed": seed, "shift": shift, "status": overall, "checks": checks, "action": action}
