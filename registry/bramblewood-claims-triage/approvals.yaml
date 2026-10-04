@@ -5,43 +5,43 @@ signoffs:
   approver: Tomas Albright (Claims Operations Director)
   decision: approve
   digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the validation evidence pack for bramblewood-claims-triage: pillars, scenarios and
     validation report.'
-  audit_hash: e78509293c63b684ddc377650186e47e42c9c0f3d8c588da041678ed74cea69f
+  audit_hash: 7338dc343b6a4b9d83ccb89ad4b606fb800f717e291846da4bf9409ae2ea3026
 - stage: production
   role: validator
   approver: Iris Delgado (Independent Validation)
   decision: approve
   digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for bramblewood-claims-triage: pillars, scenarios and
     validation report.'
-  audit_hash: bc27aacb6c473c9cbaf5ef1bf598b7c66e6f3edf374eee0fadc6f6f6645ac7b1
+  audit_hash: 93d65e9f726aab38997678e30ccb44964d72da28322a5d3bf9cc5680e777fa8e
 - stage: production
   role: model-risk
   approver: Marcus Feld (Model Risk Management)
   decision: approve
   digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for bramblewood-claims-triage: pillars, scenarios and
     validation report.'
-  audit_hash: 56ac27984f443704f876fb8deee197a79a79a042c4da4eba6c399523e07568e2
+  audit_hash: 22a9652c7dd584fe98b447b6f38e22aa4643be51056f88f0f5c2ddac93902763
 - stage: production
   role: business-owner
   approver: Victor Hale (Personal Lines Claims)
   decision: approve
   digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for bramblewood-claims-triage: pillars, scenarios and
     validation report.'
-  audit_hash: 80621eaca4fc1b8edaf089ec288f8d47f05902d92a240f23403a0c6926f8b147
+  audit_hash: 3cf3e17df24066e3093adabde22388de90db44303da7089e54a29de0f5e5b6d5
 - stage: production
   role: compliance
   approver: Grace Liang (Compliance)
   decision: approve
   digest: ca6b442d4a35ef0506fd95d52c6aa4ad26173b42ce203c38a7ca903214a3ca1f
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for bramblewood-claims-triage: pillars, scenarios and
     validation report.'
-  audit_hash: b1c70eb8be58dce2aec4afd01cd829eaa674cb9edb1f5800d173bcd53a8a9b4a
+  audit_hash: a5198c6b263ee42891b6ce853488a629829aae9d78c1b8c87bac711e0a821d55

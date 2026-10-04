@@ -86,7 +86,7 @@ scenarios:
 - id: HC-S7
   kind: cost-spike
   title: Verbose notes with re-asks
-  hypothesis: Maximum cost per request should stay under 5 cents.
+  hypothesis: Maximum cost per request should stay under 5 cents; above 2.5 cents is a tuning signal.
   risk_ids:
   - HC-R7
   params:
@@ -97,7 +97,7 @@ scenarios:
   threshold:
     op: <=
     value: 0.05
-  warn: 0.03
+  warn: 0.025
 - id: HC-S8
   kind: data-drift
   title: New provider referral pattern

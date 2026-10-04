@@ -5,34 +5,34 @@ signoffs:
   approver: Nadia Okafor (Chief Credit Officer)
   decision: approve
   digest: f5ebfc2aa31c90950a239de73c7c888a84f50dcedd997103dcb10c137ef7852a
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the validation evidence pack for cedarhollow-underwriting-assistant: pillars, scenarios
     and validation report.'
-  audit_hash: 167ce371899d57a761394731517d90545251132ceda506fa639a68e637451811
+  audit_hash: e7438d31744db20793ef51cdc019d51836a2b167b25e7ced3a5d253f7bd2382e
 - stage: production
   role: validator
   approver: Iris Delgado (Independent Validation)
   decision: approve
   digest: f5ebfc2aa31c90950a239de73c7c888a84f50dcedd997103dcb10c137ef7852a
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for cedarhollow-underwriting-assistant: pillars, scenarios
     and validation report.'
-  audit_hash: 0dfcc536641ff5841685364bfa5a498658d91e89fa93b6f4135e3b87361bf4a8
+  audit_hash: 06c50f505dfce10257ef0f1d5284f85d7a313313f40f2faa3178dec853f2470b
 - stage: production
   role: model-risk
   approver: Marcus Feld (Model Risk Management)
   decision: approve
   digest: f5ebfc2aa31c90950a239de73c7c888a84f50dcedd997103dcb10c137ef7852a
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for cedarhollow-underwriting-assistant: pillars, scenarios
     and validation report.'
-  audit_hash: 8c137e20a2be90142bd0b119cdceb819d08fe0bd7d9e77bdacbc4c050038f819
+  audit_hash: ab78d2ce575db4453ead3446856f9b07a487d5a60bf9cddde4c247c3934e8ea6
 - stage: production
   role: business-owner
   approver: Dana Whitfield (Head of Mortgage Operations)
   decision: approve
   digest: f5ebfc2aa31c90950a239de73c7c888a84f50dcedd997103dcb10c137ef7852a
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for cedarhollow-underwriting-assistant: pillars, scenarios
     and validation report.'
-  audit_hash: 0cf191ac10e4793d6675dc06310a567e1c8d0623fa68655974ba0c1ea046ddb1
+  audit_hash: 6b62b302f202ef235c378aee34133fc581979cf96e5c907133eab7396c48e084

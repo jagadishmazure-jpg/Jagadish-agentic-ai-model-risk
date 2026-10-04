@@ -5,43 +5,43 @@ signoffs:
   approver: Owen Pritchard (VP Pricing)
   decision: approve
   digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the validation evidence pack for marigold-pricing-demand: pillars, scenarios and
     validation report.'
-  audit_hash: 7c32f0af554b0550e8b9c67ae643affec6f009893b59965a1487e04613d89622
+  audit_hash: 91e8b910e3ea6d8aa528435c90223aa62e0d379d08d0029046ec52b3072c1589
 - stage: production
   role: validator
   approver: Iris Delgado (Independent Validation)
   decision: approve
   digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for marigold-pricing-demand: pillars, scenarios and
     validation report.'
-  audit_hash: 60b7fd23410228be6fbebc6fee4d94b27a5d2ed5321eaf5f0097ae3201419a4a
+  audit_hash: 79bb2a7ddd774455c6a1fe7852e818cb8fd56917f8e19ee63d01462a11ab560e
 - stage: production
   role: model-risk
   approver: Marcus Feld (Model Risk Management)
   decision: approve
   digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for marigold-pricing-demand: pillars, scenarios and
     validation report.'
-  audit_hash: 0221434b5bf4cb3acf90d7cb9f83fdc0291e8868b6f384c8acd5182aff7eccfd
+  audit_hash: d860328297675eaf7ea7fada6224ad3c1901f17d60e9dc7c541e7f3147ff74bc
 - stage: production
   role: business-owner
   approver: Ben Okoro (Category Management)
   decision: approve
   digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the production evidence pack for marigold-pricing-demand: pillars, scenarios and
     validation report.'
-  audit_hash: 493578623968ed14dff17d4e0005defd24a01513e06fb0ec1cc926ddb1c151b7
+  audit_hash: f85d57398447987d0878319ab26112ffedcf513802ddb45ee2aa77fa82ea5a3c
 - stage: monitoring
   role: model-owner
   approver: Owen Pritchard (VP Pricing)
   decision: approve
   digest: 8ad86c0cb6d465d7880aceb38920ba1354ac2383fea3cad8254ee17ed3042ee6
-  signed_epoch: 1791135129
+  signed_epoch: 1791135259
   comment: 'Reviewed the monitoring evidence pack for marigold-pricing-demand: pillars, scenarios and
     validation report.'
-  audit_hash: 08e17e1e53f5b70036d3d6279960ae163f5dc2861e93c1617a2775ccd7f5f821
+  audit_hash: c7a3b676cfbe52f3f4b688e6816d6c922ad9ea26cc4e4986077d23b5473cca00
