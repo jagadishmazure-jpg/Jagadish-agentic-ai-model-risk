@@ -30,7 +30,7 @@
 - **Terraform + Bicep** evidence plane (Azure Policy for required model-card tags, Log Analytics
   workbook, keyless evidence storage, smallest SKUs). GitHub Actions use OIDC with dev → prod
   approval, and deployment is switched off.
-- **592 automated tests**, all offline, plus 33 complete component docs whose outputs and code
+- **591 automated tests**, all offline, plus 33 complete component docs whose outputs and code
   excerpts are regenerated and drift-checked in CI.
 
 **Skills demonstrated:** AI governance and model risk management (SR 11-7, NIST AI RMF, EU AI Act,
@@ -122,7 +122,7 @@ flowchart LR
 | `regulatory/` | Framework mapping |
 | `infra/` | Terraform, Bicep, policies, workbook |
 | `docs/` | Pillars, domains, scenarios, components, infra, guides, ADRs |
-| `tests/` | 592 tests |
+| `tests/` | 591 tests |
 
 Start with [docs/implementation-guide.md](docs/implementation-guide.md), then
 [docs/pillars/combining-the-pillars.md](docs/pillars/combining-the-pillars.md),
