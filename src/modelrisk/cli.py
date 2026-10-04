@@ -333,6 +333,14 @@ def cmd_telemetry(a) -> int:
     return 0
 
 
+def cmd_iac(a) -> int:
+    from modelrisk.iac import PARTS
+
+    for line in PARTS[a.part]():
+        _p(line.rstrip())
+    return 0
+
+
 def cmd_mcp(a) -> int:
     from modelrisk.mcp_server import build_server
 
@@ -410,6 +418,9 @@ def parser() -> argparse.ArgumentParser:
     s = sub.add_parser("telemetry")
     s.add_argument("--out")
     s.set_defaults(fn=cmd_telemetry)
+    s = sub.add_parser("iac")
+    s.add_argument("--part", choices=["terraform", "bicep", "policies", "workbook", "workflows"], required=True)
+    s.set_defaults(fn=cmd_iac)
     sub.add_parser("mcp").set_defaults(fn=cmd_mcp)
     sub.add_parser("mcp-demo").set_defaults(fn=cmd_mcp_demo)
     return p
