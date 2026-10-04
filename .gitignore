@@ -16,7 +16,6 @@ evidence/*.jsonl
 
 # Terraform
 .terraform/
-.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfplan
