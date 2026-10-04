@@ -19,6 +19,7 @@ import yaml
 
 from modelrisk import REGULATORY, ROOT
 from modelrisk.report import heatmap_text, table
+from modelrisk.scenarios.engine import KIND_CONTROLS
 
 
 def _p(text: str = "") -> None:
@@ -122,6 +123,27 @@ def cmd_whatif(a) -> int:
         for x, y in zip(on, off, strict=True)
     ]
     _p(table(rows, ["id", "kind", "metric", "on", "off", "controls_off"], ["id", "kind", "metric", "controls on", "controls off", "switched off"]))
+    return 0
+
+
+def cmd_family(a) -> int:
+    """One scenario family across every domain model: value with controls on and off, plus details."""
+    from modelrisk.agents.registry import SPECS
+
+    rows, details = [], []
+    for model_id in SPECS:
+        on = [x for x in _scen_rows(model_id, True) if x["kind"] == a.kind]
+        off = {y["id"]: y for y in _scen_rows(model_id, False) if y["kind"] == a.kind}
+        for x in on:
+            y = off[x["id"]]
+            rows.append({"model": model_id, "id": x["id"], "metric": x["metric"], "threshold": x["threshold"],
+                         "on": f"{x['value']} {x['status']}", "off": f"{y['value']} {y['status']}"})
+            details.append(f"{x['id']} on:  {json.dumps(x['details'], sort_keys=True)}")
+            details.append(f"{x['id']} off: {json.dumps(y['details'], sort_keys=True)}")
+    _p(table(rows, ["model", "id", "metric", "threshold", "on", "off"], ["model", "id", "metric", "threshold", "controls on", "controls off"]))
+    if a.details:
+        for line in details:
+            _p(line)
     return 0
 
 
@@ -375,6 +397,10 @@ def parser() -> argparse.ArgumentParser:
     s.add_argument("--mitigations", choices=["on", "off"], default="on")
     s.add_argument("--details", action="store_true")
     s.set_defaults(fn=cmd_scenarios)
+    s = sub.add_parser("family")
+    s.add_argument("--kind", required=True, choices=sorted(KIND_CONTROLS))
+    s.add_argument("--details", action="store_true")
+    s.set_defaults(fn=cmd_family)
     for name, fn in [("whatif", cmd_whatif), ("combine", cmd_combine)]:
         s = sub.add_parser(name)
         s.add_argument("--model", required=True)
