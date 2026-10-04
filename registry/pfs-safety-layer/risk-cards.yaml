@@ -1,0 +1,42 @@
+model_id: pfs-safety-layer
+risks:
+- id: PFS-R1
+  title: Monitor misses an exfiltration pattern
+  category: security
+  harm: H4-malicious-use
+  description: A novel exfiltration path is not matched by the detectors.
+  impact_description: Data leaves the boundary before containment.
+  likelihood: 3
+  impact: 4
+  owner: Security Operations
+  controls:
+  - id: PFS-C1
+    description: Out-of-band detectors plus default-deny egress policy
+    type: detective
+    effectiveness: 0.6
+    owner: Security Operations
+    status: implemented
+    evidence: Jagadish-azure-ai-integration-platform/src/aiip/safety/monitor.py
+  scenarios:
+  - PFS-X1
+  source: manual
+- id: PFS-R2
+  title: Kill switch not honoured by a gateway
+  category: operational
+  harm: H6-automation-environment
+  description: One enforcement point ignores the quarantine flag.
+  impact_description: A contained agent keeps acting.
+  likelihood: 2
+  impact: 5
+  owner: Security Operations
+  controls:
+  - id: PFS-C2
+    description: Kill switch checked by supervisor and every gateway, with tests
+    type: preventive
+    effectiveness: 0.85
+    owner: Security Operations
+    status: implemented
+    evidence: Jagadish-azure-ai-integration-platform/src/aiip/safety/killswitch.py
+  scenarios:
+  - PFS-X1
+  source: manual

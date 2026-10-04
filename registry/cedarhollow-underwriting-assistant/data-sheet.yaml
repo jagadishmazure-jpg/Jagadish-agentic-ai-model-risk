@@ -1,0 +1,140 @@
+id: cedarhollow-underwriting-assistant-data
+model_id: cedarhollow-underwriting-assistant
+purpose_scope: Recommendation support for conforming residential mortgage files at the underwriting stage.
+inputs:
+- name: credit_score
+  type: numeric
+  source: credit bureau (one pull)
+  range:
+  - 300
+  - 850
+  preprocessing: none
+  sensitivity: financial
+  used_by_model: true
+- name: dti
+  type: numeric
+  source: income and liabilities calculators
+  range:
+  - 0
+  - 0.65
+  preprocessing: monthly debt over gross monthly income
+  sensitivity: financial
+  used_by_model: true
+- name: ltv
+  type: numeric
+  source: appraisal and loan amount
+  range:
+  - 0.3
+  - 1.0
+  preprocessing: loan over appraised value
+  sensitivity: financial
+  used_by_model: true
+- name: income_k
+  type: numeric
+  source: verified income
+  range:
+  - 15
+  - 400
+  preprocessing: annual, thousands
+  sensitivity: financial
+  used_by_model: true
+- name: reserves_months
+  type: numeric
+  source: asset statements
+  range:
+  - 0
+  - 36
+  preprocessing: months of payments in liquid assets
+  sensitivity: financial
+  used_by_model: true
+- name: applicant_group
+  type: categorical
+  source: HMDA-style demographic collection
+  categories:
+  - A
+  - B
+  preprocessing: test harness only
+  sensitivity: protected
+  used_by_model: false
+- name: age_62_plus
+  type: boolean
+  source: application
+  preprocessing: test harness only
+  sensitivity: protected
+  used_by_model: false
+- name: sex
+  type: categorical
+  source: HMDA-style demographic collection
+  categories:
+  - F
+  - M
+  preprocessing: test harness only
+  sensitivity: protected
+  used_by_model: false
+- name: tract_minority_share
+  type: numeric
+  source: census tract table
+  range:
+  - 0
+  - 1
+  preprocessing: 'excluded: known proxy for group'
+  sensitivity: protected
+  used_by_model: false
+- name: applicant_letter
+  type: document
+  source: borrower upload
+  preprocessing: screened for instructions; masked
+  sensitivity: pii
+  used_by_model: false
+assumptions:
+- Credit features are distributed the same way in both groups in the synthetic data.
+- Stated income above 400k was not in training.
+- Uploaded letters are attacker-controlled.
+architecture:
+  kind: logistic scorer + fixed decision thresholds + LLM rationale + tool policy
+  components:
+  - intake
+  - screen
+  - features
+  - score
+  - explain
+  - act
+  - route
+  settings:
+    approve_at: 0.6
+    decline_below: 0.3
+training_data:
+  source: modelrisk.agents.cedarhollow generator (seeded synthetic data)
+  rows: 1000
+  synthetic: true
+  profile:
+    approve_rate: 0.6
+    group_b_share: 0.4
+  quality_checks:
+  - every model input inside its documented range
+  - no protected attribute or proxy in the model feature list
+  - labels generated independently of the decision thresholds
+development:
+  process: >-
+    Weights were set from the synthetic generating process, then checked on a seeded reference set and
+    a separate validation seed.
+  success_criteria:
+  - accuracy meets the model card threshold
+  - precision meets the model card threshold
+performance:
+- metric: accuracy
+  train: 0.751
+  validation: 0.75
+- metric: precision
+  train: 0.8358
+  validation: 0.8121
+outputs:
+  format: >-
+    recommendation (recommend-approve | refer | recommend-decline), score, principal reasons, cited guideline
+    checks
+  interpretation: >-
+    Score is the estimated probability the file meets credit policy. Recommend approve at 0.6 and above,
+    decline below 0.3, refer in between. The underwriter decides.
+limitations:
+- >-
+  The adverse impact ratio is measured on synthetic groups and does not replace a full fair-lending review.

@@ -1,0 +1,21 @@
+model_id: pfb-fabric-data-agent
+scenarios:
+- id: PFB-X1
+  kind: external
+  title: Semantic agent, guardrail and MCP tests
+  hypothesis: The component's own tests for this risk pass in Jagadish-fabric-enterprise-bi CI.
+  risk_ids:
+  - PFB-R1
+  - PFB-R2
+  params:
+    repo: Jagadish-fabric-enterprise-bi
+    tests:
+    - tests/test_07_semantic_agent.py
+    - tests/test_08_mcp_a2a.py
+    attested_passing: 1
+  metric: suite_passing
+  threshold:
+    op: '>='
+    value: 1
+  evidence: >-
+    https://github.com/jagadishmazure-jpg/Jagadish-fabric-enterprise-bi/blob/main/tests/test_07_semantic_agent.py

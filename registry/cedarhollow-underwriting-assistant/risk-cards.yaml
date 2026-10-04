@@ -1,0 +1,145 @@
+model_id: cedarhollow-underwriting-assistant
+risks:
+- id: MTG-R1
+  title: Disparate impact through a geographic proxy
+  category: legal-regulatory
+  harm: H1-discrimination
+  description: >-
+    If the census-tract minority share reaches the model, approval recommendations drop sharply for group
+    B even though credit profiles match.
+  impact_description: Fair-lending violation, redlining exposure, remediation and enforcement.
+  likelihood: 4
+  impact: 5
+  owner: Compliance
+  controls:
+  - id: MTG-C1
+    description: Protected attributes and known proxies excluded from model inputs
+    type: preventive
+    effectiveness: 0.8
+    owner: Lending AI team
+    status: implemented
+    evidence: src/modelrisk/agents/mortgage.py::FEATURES
+    runtime_control: exclude_proxies
+  - id: MTG-C2
+    description: Adverse impact ratio and matched-pair tests on every change (CI gate)
+    type: detective
+    effectiveness: 0.6
+    owner: Model Risk Management (second line)
+    status: implemented
+    evidence: src/modelrisk/gate.py
+  - id: MTG-C3
+    description: Annual less-discriminatory-alternative search
+    type: corrective
+    effectiveness: 0.3
+    owner: Compliance
+    status: planned
+  scenarios:
+  - MTG-S1
+  - MTG-S2
+  source: model-card
+- id: MTG-R2
+  title: Recommendation cites a guideline that does not apply
+  category: legal-regulatory
+  harm: H3-misinformation
+  description: The narrative invents a guideline section to justify a decline.
+  impact_description: Wrong principal reasons on an adverse action file.
+  likelihood: 3
+  impact: 4
+  owner: Nadia Okafor (Chief Credit Officer)
+  controls:
+  - id: MTG-C4
+    description: Claims must cite supplied guideline evidence; unsupported claims are removed and flagged
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: verify_claims
+  scenarios:
+  - MTG-S3
+  source: model-card
+- id: MTG-R3
+  title: Borrower letter injection pushes an approval
+  category: security
+  harm: H4-malicious-use
+  description: Instructions in an uploaded letter try to make the assistant recommend approval.
+  impact_description: Underwriter anchored on a manipulated recommendation.
+  likelihood: 3
+  impact: 4
+  owner: Security Operations
+  controls:
+  - id: MTG-C5
+    description: Upload screening; flagged text withheld from the model
+    type: preventive
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: screen_injection
+  - id: MTG-C6
+    description: Underwriter decides every file
+    type: preventive
+    effectiveness: 0.5
+    owner: Nadia Okafor (Chief Credit Officer)
+    status: implemented
+  scenarios:
+  - MTG-S4
+  source: model-card
+- id: MTG-R4
+  title: Borrower SSN or contact data in recommendations
+  category: legal-regulatory
+  harm: H2-information-hazard
+  description: The narrative repeats the uploaded letter, including the SSN.
+  impact_description: Privacy breach and notification duties.
+  likelihood: 3
+  impact: 4
+  owner: Privacy Office
+  controls:
+  - id: MTG-C7
+    description: PII masking on every output
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: mask_output
+  scenarios:
+  - MTG-S5
+  source: model-card
+- id: MTG-R5
+  title: Unseen income profiles scored with false confidence
+  category: operational
+  harm: H6-automation-environment
+  description: Very high stated income with thin reserves sits outside the training range.
+  impact_description: Bad recommendations on the riskiest files.
+  likelihood: 3
+  impact: 4
+  owner: Model Risk Management (second line)
+  controls:
+  - id: MTG-C8
+    description: Out-of-range files flagged for manual underwriting
+    type: preventive
+    effectiveness: 0.65
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: ood_guard
+  scenarios:
+  - MTG-S6
+  source: model-card
+- id: MTG-R6
+  title: Outage leaves files without a recommendation
+  category: operational
+  harm: H6-automation-environment
+  description: The hosted model is unavailable.
+  impact_description: Underwriter queue slows; closing dates slip.
+  likelihood: 2
+  impact: 3
+  owner: AI Platform Engineering
+  controls:
+  - id: MTG-C9
+    description: Score and principal reasons still produced; narrative skipped
+    type: corrective
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: fallback
+  scenarios:
+  - MTG-S7
+  source: model-card

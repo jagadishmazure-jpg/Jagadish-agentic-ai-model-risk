@@ -1,0 +1,54 @@
+id: pfs-safety-layer-data
+model_id: pfs-safety-layer
+purpose_scope: >-
+  Inputs and assumptions of Integration platform: runtime safety layer as built in Jagadish-azure-ai-integration-platform.
+inputs:
+- name: audit_streams
+  type: text
+  source: signed hash chains
+  preprocessing: as documented in the source repository
+  sensitivity: none
+  used_by_model: true
+- name: egress_tap
+  type: text
+  source: mirrored payloads
+  preprocessing: as documented in the source repository
+  sensitivity: none
+  used_by_model: true
+- name: policy
+  type: document
+  source: policy.yaml
+  preprocessing: as documented in the source repository
+  sensitivity: none
+  used_by_model: true
+assumptions:
+- All data in the source repository is synthetic or mocked.
+- The component runs offline in CI with stand-ins for Azure services.
+architecture:
+  kind: rules
+  components:
+  - src/aiip/safety
+  settings: {}
+training_data:
+  source: 'none: rules and hosted models; fixtures are synthetic'
+  rows: 0
+  synthetic: true
+  profile: {}
+  quality_checks:
+  - fixtures are generated from seeds in the source repository
+development:
+  process: >-
+    Built and tested in Jagadish-azure-ai-integration-platform; governed here through cards and attested
+    scenarios.
+  success_criteria:
+  - detector_recall_on_fixtures meets its threshold
+performance:
+- metric: detector_recall_on_fixtures
+  train: 1.0
+  validation: 1.0
+outputs:
+  format: see the component README
+  interpretation: Outputs are reviewed by a human before any irreversible step.
+limitations:
+- Software-only boundary; no hardware isolation.
+- Detectors are heuristics tuned on fixtures.

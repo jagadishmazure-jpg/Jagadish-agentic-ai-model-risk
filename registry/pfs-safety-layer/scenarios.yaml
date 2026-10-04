@@ -1,0 +1,21 @@
+model_id: pfs-safety-layer
+scenarios:
+- id: PFS-X1
+  kind: external
+  title: Runtime safety and out-of-band monitor tests
+  hypothesis: The component's own tests for this risk pass in Jagadish-azure-ai-integration-platform CI.
+  risk_ids:
+  - PFS-R1
+  - PFS-R2
+  params:
+    repo: Jagadish-azure-ai-integration-platform
+    tests:
+    - tests/test_37_runtime_safety.py
+    - tests/test_38_out_of_band_monitor.py
+    attested_passing: 1
+  metric: suite_passing
+  threshold:
+    op: '>='
+    value: 1
+  evidence: >-
+    https://github.com/jagadishmazure-jpg/Jagadish-azure-ai-integration-platform/blob/main/tests/test_37_runtime_safety.py

@@ -1,0 +1,78 @@
+id: pfs-safety-layer
+name: 'Integration platform: runtime safety layer'
+version: 1.0.0
+kind: portfolio
+domain: platform-safety
+company: Portfolio reference implementation (fictional tenants)
+owner: Jagadish Meduri (portfolio owner)
+developer: Jagadish-azure-ai-integration-platform maintainers
+purpose: >-
+  Inline policy prover, sandbox and kill switch in the agent's path, plus an out-of-band monitor that
+  reads signed audit streams and quarantines agents.
+intended_uses:
+- Default-deny policy enforcement for agent actions
+- Out-of-band detection and containment
+out_of_scope_uses:
+- Content moderation of end-user chat
+- Replacing identity or network controls
+system:
+  type: rules
+  framework: Supervisor + policy prover + out-of-band monitor
+  base_models:
+  - name: none
+    provider: n/a
+    role: rules and detectors only
+  tools:
+  - kill switch
+  - sandbox
+  - tool gateway
+  autonomy: act
+  fallback: 'Fail closed: if the policy cannot be proven the action is denied'
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: false
+  decision: allow, deny or quarantine an agent action
+  reversible: true
+  financial_exposure: medium
+data_sensitivity:
+- none
+users: 10
+monthly_volume: 200000
+metrics:
+- name: detector_recall_on_fixtures
+  value: 1.0
+  threshold: 0.95
+  direction: higher-is-better
+  dataset: source repository test fixtures
+evaluation:
+  methods:
+  - the component's own pytest suite in Jagadish-azure-ai-integration-platform
+  - external scenarios below, attested from that repository's CI
+  adversarial: []
+explainability: Each decision writes a proof hash to a signed chain.
+fairness:
+  protected_attributes: []
+  metrics: []
+  notes: No protected attributes are processed by this component.
+limitations:
+- Software-only boundary; no hardware isolation.
+- Detectors are heuristics tuned on fixtures.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - iso-42001
+  eu_ai_act_uses:
+  - platform-control
+monitoring:
+  window: 200
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: detector_recall_on_fixtures
+    min: 0.95
+    warn: 1.0
+  on_alert: Freeze releases of the component and open a revalidation item.
+governs: >-
+  https://github.com/jagadishmazure-jpg/Jagadish-azure-ai-integration-platform/tree/main/src/aiip/safety

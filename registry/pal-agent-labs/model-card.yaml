@@ -1,0 +1,76 @@
+id: pal-agent-labs
+name: 'Agent labs: five research agents'
+version: 1.0.0
+kind: portfolio
+domain: research
+company: Portfolio reference implementation (fictional tenants)
+owner: Jagadish Meduri (portfolio owner)
+developer: Jagadish-azure-agent-labs maintainers
+purpose: >-
+  Five offline research labs: disaster signal fusion, legal document compliance, medical eye scan (multimodal),
+  road network maintenance graph and wind turbine continual learning.
+intended_uses:
+- Research and teaching demos on synthetic data
+out_of_scope_uses:
+- Any production or clinical use
+- Real patient images or real legal advice
+system:
+  type: hybrid
+  framework: Microsoft Agent Framework style labs with shared labcore
+  base_models:
+  - name: gpt-4o
+    provider: Azure OpenAI in Foundry (mocked offline)
+    role: drafting and extraction
+  tools:
+  - lab-specific mock tools
+  autonomy: suggest
+  fallback: Labs are offline; no hosted dependency
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: false
+  decision: 'none: research output only'
+  reversible: true
+  financial_exposure: none
+data_sensitivity:
+- none
+users: 10
+monthly_volume: 0
+metrics:
+- name: lab_eval_pass_rate
+  value: 1.0
+  threshold: 1.0
+  direction: higher-is-better
+  dataset: source repository test fixtures
+evaluation:
+  methods:
+  - the component's own pytest suite in Jagadish-azure-agent-labs
+  - external scenarios below, attested from that repository's CI
+  adversarial: []
+explainability: Each lab ships its own explain module and eval set.
+fairness:
+  protected_attributes: []
+  metrics: []
+  notes: No protected attributes are processed by this component.
+limitations:
+- Research only.
+- The medical eye scan lab is not a medical device and uses synthetic images.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - iso-42001
+  eu_ai_act_uses:
+  - research
+monitoring:
+  window: 200
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: lab_eval_pass_rate
+    min: 1.0
+    warn: 1.0
+  on_alert: Freeze releases of the component and open a revalidation item.
+governs: https://github.com/jagadishmazure-jpg/Jagadish-azure-agent-labs/tree/main/labs
+notices:
+- Research only. The medical eye scan lab is not a medical device.

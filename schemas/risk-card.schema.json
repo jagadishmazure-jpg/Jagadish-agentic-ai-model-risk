@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "risk-card.schema.json",
+  "title": "Risk cards",
+  "description": "The risks of one model: likelihood x impact, controls, owners, linked scenarios.",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "type": "string"
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "safety-ethics",
+              "security",
+              "societal",
+              "environmental",
+              "operational",
+              "legal-regulatory",
+              "financial",
+              "supply-chain",
+              "reputational"
+            ]
+          },
+          "harm": {
+            "type": "string",
+            "enum": [
+              "H1-discrimination",
+              "H2-information-hazard",
+              "H3-misinformation",
+              "H4-malicious-use",
+              "H5-human-interaction",
+              "H6-automation-environment"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 20
+          },
+          "impact_description": {
+            "type": "string"
+          },
+          "likelihood": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "impact": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "owner": {
+            "type": "string"
+          },
+          "controls": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "preventive",
+                    "detective",
+                    "corrective"
+                  ]
+                },
+                "effectiveness": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 0.9
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "implemented",
+                    "planned"
+                  ]
+                },
+                "evidence": {
+                  "type": "string"
+                },
+                "runtime_control": {
+                  "type": "string",
+                  "description": "Controls flag in modelrisk.agents.base that implements this control; scenarios switch it off for the what-if run.",
+                  "enum": [
+                    "screen_injection",
+                    "enforce_tools",
+                    "fallback",
+                    "verify_claims",
+                    "mask_output",
+                    "budget",
+                    "ood_guard",
+                    "exclude_proxies"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "description",
+                "type",
+                "effectiveness",
+                "owner",
+                "status"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "scenarios": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "model-card",
+              "data-sheet",
+              "scenario",
+              "validation",
+              "monitoring",
+              "manual"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "category",
+          "harm",
+          "description",
+          "impact_description",
+          "likelihood",
+          "impact",
+          "owner",
+          "controls",
+          "scenarios",
+          "source"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "model_id",
+    "risks"
+  ],
+  "additionalProperties": false
+}

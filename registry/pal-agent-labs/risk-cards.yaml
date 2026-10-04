@@ -1,0 +1,40 @@
+model_id: pal-agent-labs
+risks:
+- id: PAL-R1
+  title: Medical eye scan lab mistaken for a diagnostic tool
+  category: safety-ethics
+  harm: H5-human-interaction
+  description: A reader treats the multimodal eye-scan lab output as clinical advice.
+  impact_description: Misplaced reliance on a research demo.
+  likelihood: 2
+  impact: 4
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PAL-C1
+    description: Research-only and not-a-medical-device notices in the lab docs and outputs
+    type: preventive
+    effectiveness: 0.6
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+  scenarios:
+  - PAL-X1
+  source: manual
+- id: PAL-R2
+  title: Continual-learning lab forgets earlier regimes
+  category: operational
+  harm: H6-automation-environment
+  description: The wind turbine lab's continual learner degrades on earlier operating regimes.
+  impact_description: Wrong maintenance signals in the demo.
+  likelihood: 3
+  impact: 2
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PAL-C2
+    description: Replay and regression evals in the lab tests
+    type: detective
+    effectiveness: 0.6
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+  scenarios:
+  - PAL-X1
+  source: manual

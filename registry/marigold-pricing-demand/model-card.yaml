@@ -1,0 +1,107 @@
+id: marigold-pricing-demand
+name: Pricing and demand agent
+version: 1.2.0
+kind: domain
+domain: retail
+company: Marigold Market
+owner: Owen Pritchard (VP Pricing)
+developer: Pricing Analytics team
+purpose: >-
+  Forecast weekly demand per item and store and recommend small price moves within guardrails; larger
+  moves and any increase on essentials during an emergency go to the pricing team.
+intended_uses:
+- Weekly demand forecasts for grocery items
+- Price moves of up to 5 percent applied automatically
+- Proposals for larger moves to the pricing team
+out_of_scope_uses:
+- Personalised prices for individual shoppers
+- Price increases on essential items during an emergency declaration
+- Any use of neighbourhood income or demographics
+- Promotions planning
+system:
+  type: agentic-llm
+  framework: LangGraph-style state graph (offline mock runtime in modelrisk.agents.graph)
+  base_models:
+  - name: gpt-4o (mock)
+    provider: Azure OpenAI in Foundry (mocked offline)
+    role: evidence-cited rationale only; never sets the decision
+  - name: marigold-pricing-demand scorer
+    provider: in-house logistic model
+    role: scores the case; the decision comes from fixed thresholds
+  tools:
+  - get_sales
+  - get_competitor_prices
+  - set_price (max 5 percent)
+  - propose_price
+  autonomy: act
+  fallback: >-
+    Prices stay unchanged while the model is unavailable; the week's moves are queued for the pricing
+    team.
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: false
+  decision: shelf price move for an item in a store
+  reversible: true
+  financial_exposure: medium
+data_sensitivity:
+- none
+users: 25
+monthly_volume: 250000
+metrics:
+- name: precision
+  value: 0.7778
+  threshold: 0.7
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+- name: accuracy
+  value: 0.713
+  threshold: 0.65
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+evaluation:
+  methods:
+  - seeded offline evaluation (modelrisk.evaluation)
+  - scenario suite with controls on and off (modelrisk.scenarios)
+  - independent re-performance on seed 11 (modelrisk.validation)
+  adversarial:
+  - attack: instruction injection in untrusted free text
+    attempts: 200
+    success_rate: 0.0
+explainability: >-
+  The rationale cites the demand forecast, the competitor price gap, stock cover and the pricing-policy
+  rule that applied.
+fairness:
+  protected_attributes:
+  - store neighbourhood income band (used only for testing)
+  metrics:
+  - adverse impact ratio of hold-or-lower outcomes, low-income stores vs others
+  notes: >-
+    Store income band is never a model input; the test proves prices are not raised more often in low-income
+    areas.
+limitations:
+- Synthetic sales; no cannibalisation or halo effects.
+- Forecast uses a constant elasticity per item.
+- Promotion shocks push demand outside the training range.
+environment:
+  est_kwh_per_1k_requests: 0.3
+  notes: >-
+    Rough figure for a hosted model call plus scoring; used for comparison between versions, not reporting.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - eu-ai-act
+  - iso-42001
+  - ftc-act
+  eu_ai_act_uses:
+  - dynamic-pricing
+monitoring:
+  window: 500
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: precision
+    min: 0.7
+    warn: 0.73
+  on_alert: Route every case to a human, open a revalidation item and notify the model owner.

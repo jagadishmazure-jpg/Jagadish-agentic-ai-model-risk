@@ -1,0 +1,123 @@
+id: cedarhollow-underwriting-assistant
+name: Mortgage underwriting assistant
+version: 1.2.0
+kind: domain
+domain: mortgage
+company: Cedar Hollow Lending
+owner: Nadia Okafor (Chief Credit Officer)
+developer: Lending AI team
+purpose: >-
+  Prepare an underwriting recommendation (approve, refer or decline) with principal reasons and cited
+  guidelines so a licensed underwriter can decide faster. The assistant never issues a credit decision.
+intended_uses:
+- Recommendation and principal reasons for conforming purchase and refinance files
+- Guideline-cited summaries for the underwriter
+out_of_scope_uses:
+- Issuing approvals, denials or adverse action notices
+- Pricing or rate setting
+- Any use of protected characteristics or geographic proxies
+- Jumbo or commercial loans
+system:
+  type: agentic-llm
+  framework: LangGraph-style state graph (offline mock runtime in modelrisk.agents.graph)
+  base_models:
+  - name: gpt-4o (mock)
+    provider: Azure OpenAI in Foundry (mocked offline)
+    role: evidence-cited rationale only; never sets the decision
+  - name: cedarhollow-underwriting-assistant scorer
+    provider: in-house logistic model
+    role: scores the case; the decision comes from fixed thresholds
+  tools:
+  - get_application
+  - pull_credit (one pull per file)
+  - record_recommendation
+  autonomy: act-with-approval
+  fallback: >-
+    Without the hosted model the score and principal reasons are still produced and the file goes to the
+    underwriter without a narrative.
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: true
+  decision: credit recommendation to a human underwriter
+  reversible: false
+  financial_exposure: high
+data_sensitivity:
+- pii
+- financial
+- protected-attributes
+users: 30
+monthly_volume: 8000
+metrics:
+- name: accuracy
+  value: 0.751
+  threshold: 0.7
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+- name: precision
+  value: 0.8358
+  threshold: 0.78
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+- name: adverse_impact_ratio
+  value: 0.9766
+  threshold: 0.8
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+evaluation:
+  methods:
+  - seeded offline evaluation (modelrisk.evaluation)
+  - scenario suite with controls on and off (modelrisk.scenarios)
+  - independent re-performance on seed 11 (modelrisk.validation)
+  adversarial:
+  - attack: instruction injection in untrusted free text
+    attempts: 200
+    success_rate: 0.0
+explainability: >-
+  Principal reasons are the three features that pulled the score down the most, in the style of adverse
+  action reasons, plus cited guideline checks (DTI, LTV).
+fairness:
+  protected_attributes:
+  - applicant_group
+  - age_62_plus
+  - sex
+  metrics:
+  - adverse impact ratio of approve recommendations by group
+  - matched-pair decision flip rate
+  notes: >-
+    Protected attributes and the census-tract proxy are kept out of the model. Group labels exist only
+    in the test harness so disparate impact can be measured.
+limitations:
+- >-
+  Synthetic applications with identical credit distributions across groups; real disparities in the input
+  data would need a less discriminatory alternative search.
+- 'No document verification: income is taken as stated.'
+- Very high stated income with thin reserves is outside the training range.
+environment:
+  est_kwh_per_1k_requests: 0.4
+  notes: >-
+    Rough figure for a hosted model call plus scoring; used for comparison between versions, not reporting.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - eu-ai-act
+  - sr-11-7
+  - iso-42001
+  - ecoa-reg-b
+  - fair-housing
+  - glba
+  eu_ai_act_uses:
+  - creditworthiness
+monitoring:
+  window: 500
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: accuracy
+    min: 0.7
+    warn: 0.73
+  on_alert: Route every case to a human, open a revalidation item and notify the model owner.
+notices:
+- Recommendations only. A licensed underwriter makes every credit decision.
+- Fair-lending testing (adverse impact ratio and matched pairs) runs on every change.

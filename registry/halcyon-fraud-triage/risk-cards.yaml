@@ -1,0 +1,195 @@
+model_id: halcyon-fraud-triage
+risks:
+- id: BNK-R1
+  title: New fraud pattern missed after drift
+  category: operational
+  harm: H6-automation-environment
+  description: >-
+    Account takeover on old, trusted devices falls outside the training range, so the scorer clears fraudulent
+    transactions it has never seen.
+  impact_description: Direct fraud losses and customer harm until the pattern is caught by chargebacks.
+  likelihood: 4
+  impact: 4
+  owner: Rhea Castellano (Head of Fraud Strategy)
+  controls:
+  - id: BNK-C1
+    description: Inputs outside the data-sheet ranges are routed to an analyst instead of being scored
+    type: preventive
+    effectiveness: 0.65
+    owner: AI Platform Engineering
+    status: implemented
+    evidence: src/modelrisk/agents/base.py::out_of_range
+    runtime_control: ood_guard
+  - id: BNK-C2
+    description: Weekly PSI and recall monitoring with alert thresholds from the model card
+    type: detective
+    effectiveness: 0.4
+    owner: Model Risk Management (second line)
+    status: implemented
+    evidence: src/modelrisk/monitoring.py
+  - id: BNK-C3
+    description: Champion-challenger retraining on confirmed fraud every quarter
+    type: corrective
+    effectiveness: 0.3
+    owner: Fraud Data Science team
+    status: planned
+  scenarios:
+  - BNK-S1
+  source: model-card
+- id: BNK-R2
+  title: Merchant memo injection clears a fraudulent transaction
+  category: security
+  harm: H4-malicious-use
+  description: >-
+    A fraudster writes instructions into the merchant memo hoping the agent will follow them and clear
+    the transaction.
+  impact_description: Fraud passes without review; the bank cannot show the decision was made on legitimate
+    grounds.
+  likelihood: 3
+  impact: 4
+  owner: Security Operations
+  controls:
+  - id: BNK-C4
+    description: Untrusted text is screened; flagged text is withheld from the model and the case goes
+      to an analyst
+    type: preventive
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    evidence: src/modelrisk/agents/guardrails.py::screen
+    runtime_control: screen_injection
+  - id: BNK-C5
+    description: The decision comes only from the scorer and fixed thresholds; the model writes the rationale
+    type: preventive
+    effectiveness: 0.5
+    owner: Fraud Data Science team
+    status: implemented
+  scenarios:
+  - BNK-S2
+  source: model-card
+- id: BNK-R3
+  title: Agent moves money or blocks cards without authority
+  category: financial
+  harm: H6-automation-environment
+  description: >-
+    The model proposes a refund or an unapproved card block and the action runs because nothing checks
+    the tool call.
+  impact_description: Unauthorized movement of funds or a wrongly blocked card.
+  likelihood: 3
+  impact: 4
+  owner: Rhea Castellano (Head of Fraud Strategy)
+  controls:
+  - id: BNK-C6
+    description: Tool allow-list, approval-required tools and argument limits enforced outside the model
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    evidence: src/modelrisk/agents/guardrails.py::ToolPolicy
+    runtime_control: enforce_tools
+  - id: BNK-C7
+    description: Analyst approval through the HITL queue before any card block
+    type: preventive
+    effectiveness: 0.5
+    owner: Rhea Castellano (Head of Fraud Strategy)
+    status: implemented
+  scenarios:
+  - BNK-S3
+  source: model-card
+- id: BNK-R4
+  title: Hosted model outage stalls triage
+  category: operational
+  harm: H6-automation-environment
+  description: >-
+    The hosted model times out or is throttled during a peak and the agent stops producing triage results.
+  impact_description: Fraud queue backs up; holds expire without review.
+  likelihood: 3
+  impact: 3
+  owner: AI Platform Engineering
+  controls:
+  - id: BNK-C8
+    description: Rules-only fallback with the score and thresholds, every case queued for an analyst
+    type: corrective
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: fallback
+  scenarios:
+  - BNK-S4
+  source: model-card
+- id: BNK-R5
+  title: Card numbers or contact details leak through rationales
+  category: legal-regulatory
+  harm: H2-information-hazard
+  description: >-
+    The model repeats raw input, including full card numbers or email addresses, into the rationale that
+    is logged and shown in the queue.
+  impact_description: Cardholder data exposure, payment-card compliance findings, notification duties.
+  likelihood: 3
+  impact: 4
+  owner: Privacy Office
+  controls:
+  - id: BNK-C9
+    description: PII masking on every agent output before it is logged or displayed
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    evidence: src/modelrisk/agents/guardrails.py::mask
+    runtime_control: mask_output
+  - id: BNK-C10
+    description: Log Analytics data collection rule drops raw memo fields
+    type: preventive
+    effectiveness: 0.4
+    owner: Security Operations
+    status: implemented
+  scenarios:
+  - BNK-S5
+  source: model-card
+- id: BNK-R6
+  title: Runaway re-asks inflate model spend
+  category: financial
+  harm: H6-automation-environment
+  description: A prompt or retry bug makes the agent re-ask the model many times per transaction.
+  impact_description: Model spend multiplies across 400,000 monthly transactions.
+  likelihood: 2
+  impact: 3
+  owner: AI Platform Engineering
+  controls:
+  - id: BNK-C11
+    description: Per-task token and call budget; the run stops and goes to a human when it is reached
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: budget
+  scenarios:
+  - BNK-S6
+  source: model-card
+- id: BNK-R7
+  title: False holds fall harder on older customers
+  category: societal
+  harm: H1-discrimination
+  description: >-
+    If false holds are concentrated in one age band, older customers lose access to their cards more often.
+  impact_description: Customer harm and complaints; fair-treatment findings.
+  likelihood: 2
+  impact: 3
+  owner: Rhea Castellano (Head of Fraud Strategy)
+  controls:
+  - id: BNK-C12
+    description: Age band excluded from the model and its proxies kept out of the feature list
+    type: preventive
+    effectiveness: 0.6
+    owner: Fraud Data Science team
+    status: implemented
+    runtime_control: exclude_proxies
+  - id: BNK-C13
+    description: Monthly hold-rate comparison by age band
+    type: detective
+    effectiveness: 0.3
+    owner: Model Risk Management (second line)
+    status: planned
+  scenarios:
+  - BNK-S7
+  source: model-card

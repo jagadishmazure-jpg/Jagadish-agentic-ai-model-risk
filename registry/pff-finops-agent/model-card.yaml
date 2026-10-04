@@ -1,0 +1,74 @@
+id: pff-finops-agent
+name: FinOps agent
+version: 1.0.0
+kind: portfolio
+domain: finops
+company: Portfolio reference implementation (fictional tenants)
+owner: Jagadish Meduri (portfolio owner)
+developer: Jagadish-azure-finops maintainers
+purpose: >-
+  Ranks cost-saving recommendations, turns them into change plans with rollbacks and digests, and runs
+  only approved plans in dry-run mode.
+intended_uses:
+- Ranking and planning Azure cost optimisations
+out_of_scope_uses:
+- Applying changes without an approver
+- Deleting production resources
+system:
+  type: hybrid
+  framework: rules plus MCP server
+  base_models:
+  - name: none
+    provider: n/a
+    role: deterministic analyzers
+  tools:
+  - MCP server with seven tools
+  - dry-run executor
+  autonomy: act-with-approval
+  fallback: Plans remain queued; nothing executes
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: false
+  decision: approve a cost change plan
+  reversible: true
+  financial_exposure: medium
+data_sensitivity:
+- financial
+users: 10
+monthly_volume: 500
+metrics:
+- name: plans_with_rollback
+  value: 1.0
+  threshold: 1.0
+  direction: higher-is-better
+  dataset: source repository test fixtures
+evaluation:
+  methods:
+  - the component's own pytest suite in Jagadish-azure-finops
+  - external scenarios below, attested from that repository's CI
+  adversarial: []
+explainability: Every plan lists the commands, rollback and digest an approver signs.
+fairness:
+  protected_attributes: []
+  metrics: []
+  notes: No protected attributes are processed by this component.
+limitations:
+- Pricing tables are snapshots.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - iso-42001
+  eu_ai_act_uses:
+  - operations
+monitoring:
+  window: 200
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: plans_with_rollback
+    min: 1.0
+    warn: 1.0
+  on_alert: Freeze releases of the component and open a revalidation item.
+governs: https://github.com/jagadishmazure-jpg/Jagadish-azure-finops/tree/main/src/finops/agent

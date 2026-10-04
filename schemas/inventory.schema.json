@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "inventory.schema.json",
+  "title": "Model inventory",
+  "type": "object",
+  "properties": {
+    "company": {
+      "type": "string"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "development",
+              "validation",
+              "production",
+              "monitoring",
+              "retired"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "stage"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "company",
+    "models"
+  ],
+  "additionalProperties": false
+}

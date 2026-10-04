@@ -1,0 +1,76 @@
+id: pfb-fabric-data-agent
+name: Fabric data agent (NL to SQL)
+version: 1.0.0
+kind: portfolio
+domain: analytics
+company: Portfolio reference implementation (fictional tenants)
+owner: Jagadish Meduri (portfolio owner)
+developer: Jagadish-fabric-enterprise-bi maintainers
+purpose: >-
+  Natural-language questions over a governed semantic model, compiled to SQL and run in a sandboxed session
+  with row-level, object-level security and masking.
+intended_uses:
+- Answering business questions over the gold layer
+out_of_scope_uses:
+- Writes of any kind
+- Questions about individuals outside RLS scope
+system:
+  type: agentic-llm
+  framework: pipeline with input, SQL and output guards
+  base_models:
+  - name: NL-to-plan model (mock)
+    provider: offline mock
+    role: question to semantic plan
+  tools:
+  - semantic compiler
+  - sandboxed DuckDB session
+  - MCP server
+  autonomy: suggest
+  fallback: Refuse with a guided message when the plan cannot be compiled
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: false
+  decision: answer an analytics question
+  reversible: true
+  financial_exposure: low
+data_sensitivity:
+- pii
+users: 10
+monthly_volume: 20000
+metrics:
+- name: guardrail_block_rate_on_attacks
+  value: 1.0
+  threshold: 1.0
+  direction: higher-is-better
+  dataset: source repository test fixtures
+evaluation:
+  methods:
+  - the component's own pytest suite in Jagadish-fabric-enterprise-bi
+  - external scenarios below, attested from that repository's CI
+  adversarial: []
+explainability: Answers show the compiled SQL and the semantic measures used.
+fairness:
+  protected_attributes: []
+  metrics: []
+  notes: No protected attributes are processed by this component.
+limitations:
+- Mock NL model; real phrasing variety is wider.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - iso-42001
+  eu_ai_act_uses:
+  - analytics
+  tier_floor: 2
+monitoring:
+  window: 200
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: guardrail_block_rate_on_attacks
+    min: 1.0
+    warn: 1.0
+  on_alert: Freeze releases of the component and open a revalidation item.
+governs: https://github.com/jagadishmazure-jpg/Jagadish-fabric-enterprise-bi/tree/main/src/fabricbi/serve

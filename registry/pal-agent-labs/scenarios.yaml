@@ -1,0 +1,21 @@
+model_id: pal-agent-labs
+scenarios:
+- id: PAL-X1
+  kind: external
+  title: Lab workflow and eval tests
+  hypothesis: The component's own tests for this risk pass in Jagadish-azure-agent-labs CI.
+  risk_ids:
+  - PAL-R1
+  - PAL-R2
+  params:
+    repo: Jagadish-azure-agent-labs
+    tests:
+    - labs/medical-eye-scan-multimodal/tests
+    - labs/wind-turbine-continual-learning/tests/test_turbine_learning.py
+    attested_passing: 1
+  metric: suite_passing
+  threshold:
+    op: '>='
+    value: 1
+  evidence: >-
+    https://github.com/jagadishmazure-jpg/Jagadish-azure-agent-labs/blob/main/labs/medical-eye-scan-multimodal/tests

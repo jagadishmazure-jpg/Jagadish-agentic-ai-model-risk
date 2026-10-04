@@ -1,0 +1,20 @@
+model_id: pff-finops-agent
+scenarios:
+- id: PFF-X1
+  kind: external
+  title: Agent, approval and MCP tests
+  hypothesis: The component's own tests for this risk pass in Jagadish-azure-finops CI.
+  risk_ids:
+  - PFF-R1
+  - PFF-R2
+  params:
+    repo: Jagadish-azure-finops
+    tests:
+    - tests/test_agent.py
+    - tests/test_mcp_and_cli.py
+    attested_passing: 1
+  metric: suite_passing
+  threshold:
+    op: '>='
+    value: 1
+  evidence: https://github.com/jagadishmazure-jpg/Jagadish-azure-finops/blob/main/tests/test_agent.py

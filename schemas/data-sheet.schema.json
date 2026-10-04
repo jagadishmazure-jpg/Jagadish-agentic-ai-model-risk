@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "data-sheet.schema.json",
+  "title": "Data sheet",
+  "description": "How the model is built: inputs, assumptions, architecture, training data and outputs.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "model_id": {
+      "type": "string"
+    },
+    "purpose_scope": {
+      "type": "string",
+      "minLength": 20
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "numeric",
+              "categorical",
+              "text",
+              "document",
+              "boolean"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "range": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "preprocessing": {
+            "type": "string"
+          },
+          "sensitivity": {
+            "type": "string",
+            "enum": [
+              "none",
+              "pii",
+              "phi",
+              "financial",
+              "protected"
+            ]
+          },
+          "used_by_model": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "source",
+          "preprocessing",
+          "sensitivity",
+          "used_by_model"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "architecture": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "settings": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "components",
+        "settings"
+      ],
+      "additionalProperties": false
+    },
+    "training_data": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "synthetic": {
+          "type": "boolean"
+        },
+        "profile": {
+          "type": "object"
+        },
+        "quality_checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "source",
+        "rows",
+        "synthetic",
+        "profile",
+        "quality_checks"
+      ],
+      "additionalProperties": false
+    },
+    "development": {
+      "type": "object",
+      "properties": {
+        "process": {
+          "type": "string"
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "process",
+        "success_criteria"
+      ],
+      "additionalProperties": false
+    },
+    "performance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string"
+          },
+          "train": {
+            "type": "number"
+          },
+          "validation": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "metric",
+          "train",
+          "validation"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string"
+        },
+        "interpretation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "format",
+        "interpretation"
+      ],
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "id",
+    "model_id",
+    "purpose_scope",
+    "inputs",
+    "assumptions",
+    "architecture",
+    "training_data",
+    "development",
+    "performance",
+    "outputs",
+    "limitations"
+  ],
+  "additionalProperties": false
+}

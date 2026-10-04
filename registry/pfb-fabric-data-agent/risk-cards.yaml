@@ -1,0 +1,42 @@
+model_id: pfb-fabric-data-agent
+risks:
+- id: PFB-R1
+  title: Row-level security bypass through generated SQL
+  category: security
+  harm: H2-information-hazard
+  description: Generated SQL reads rows outside the caller's RLS scope.
+  impact_description: Data exposure across business units.
+  likelihood: 3
+  impact: 4
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PFB-C1
+    description: SQL guard plus RLS/OLS enforced in the sandboxed session
+    type: preventive
+    effectiveness: 0.85
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+    evidence: Jagadish-fabric-enterprise-bi/src/fabricbi/serve/access.py
+  scenarios:
+  - PFB-X1
+  source: manual
+- id: PFB-R2
+  title: Write or DDL statement executed
+  category: operational
+  harm: H6-automation-environment
+  description: The plan compiles to a write statement.
+  impact_description: Data loss in the gold layer.
+  likelihood: 2
+  impact: 5
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PFB-C2
+    description: Read-only session and statement allow-list
+    type: preventive
+    effectiveness: 0.9
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+    evidence: Jagadish-fabric-enterprise-bi/src/fabricbi/serve/guardrails.py
+  scenarios:
+  - PFB-X1
+  source: manual

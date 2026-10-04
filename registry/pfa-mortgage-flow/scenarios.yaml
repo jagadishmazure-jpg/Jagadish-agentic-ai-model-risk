@@ -1,0 +1,21 @@
+model_id: pfa-mortgage-flow
+scenarios:
+- id: PFA-X1
+  kind: external
+  title: Mortgage workflow, critic and HITL checkpoint tests
+  hypothesis: The component's own tests for this risk pass in Jagadish-azure-agent-platform CI.
+  risk_ids:
+  - PFA-R1
+  - PFA-R2
+  - PFA-R3
+  params:
+    repo: Jagadish-azure-agent-platform
+    tests:
+    - tests/test_mortgage_workflow.py
+    attested_passing: 1
+  metric: suite_passing
+  threshold:
+    op: '>='
+    value: 1
+  evidence: >-
+    https://github.com/jagadishmazure-jpg/Jagadish-azure-agent-platform/blob/main/tests/test_mortgage_workflow.py

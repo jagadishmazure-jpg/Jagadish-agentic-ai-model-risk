@@ -1,0 +1,123 @@
+id: halcyon-fraud-triage-data
+model_id: halcyon-fraud-triage
+purpose_scope: >-
+  Transaction-level fraud scoring for the analyst queue. Covers card transactions only; ACH, wires and
+  account opening are out of scope.
+inputs:
+- name: amount
+  type: numeric
+  source: card authorization message
+  range:
+  - 0
+  - 5000
+  preprocessing: none, USD
+  sensitivity: financial
+  used_by_model: true
+- name: velocity_1h
+  type: numeric
+  source: authorization stream, rolling one-hour count
+  range:
+  - 0
+  - 10
+  preprocessing: count of transactions in the trailing hour
+  sensitivity: none
+  used_by_model: true
+- name: geo_mismatch
+  type: numeric
+  source: merchant country vs home country
+  range:
+  - 0
+  - 1
+  preprocessing: 1 if they differ
+  sensitivity: none
+  used_by_model: true
+- name: device_age_days
+  type: numeric
+  source: device fingerprint service
+  range:
+  - 0
+  - 2000
+  preprocessing: days since the device was first seen
+  sensitivity: none
+  used_by_model: true
+- name: mcc_risk
+  type: numeric
+  source: merchant category risk table
+  range:
+  - 0
+  - 1
+  preprocessing: category fraud rate scaled to 0-1
+  sensitivity: none
+  used_by_model: true
+- name: merchant_memo
+  type: text
+  source: merchant descriptor and memo fields
+  preprocessing: screened for instructions; withheld from the model when flagged
+  sensitivity: none
+  used_by_model: false
+- name: customer_age_band
+  type: categorical
+  source: customer master
+  categories:
+  - 18-34
+  - 35-64
+  - 65+
+  preprocessing: monitoring only
+  sensitivity: protected
+  used_by_model: false
+assumptions:
+- Fraud labels arrive within 30 days of the transaction (chargebacks and confirmed reports).
+- Device age above 2,000 days was not seen in training.
+- Merchant memo text is attacker-controlled.
+architecture:
+  kind: logistic scorer + fixed decision thresholds + LLM rationale + tool policy
+  components:
+  - intake
+  - screen
+  - features
+  - score
+  - explain
+  - act
+  - route
+  settings:
+    hold_threshold: 0.5
+    block_threshold: 0.85
+    max_hold_hours: 72
+training_data:
+  source: modelrisk.agents.halcyon generator (seeded synthetic data)
+  rows: 1000
+  synthetic: true
+  profile:
+    fraud_rate: 0.095
+    share_geo_mismatch: 0.12
+    amount_p50: 205.0
+  quality_checks:
+  - every model input inside its documented range
+  - no protected attribute or proxy in the model feature list
+  - labels generated independently of the decision thresholds
+development:
+  process: >-
+    Weights were set from the synthetic generating process, then checked on a seeded reference set and
+    a separate validation seed.
+  success_criteria:
+  - accuracy meets the model card threshold
+  - precision meets the model card threshold
+  - recall meets the model card threshold
+performance:
+- metric: accuracy
+  train: 0.861
+  validation: 0.866
+- metric: precision
+  train: 0.6809
+  validation: 0.7049
+- metric: recall
+  train: 0.5053
+  validation: 0.4674
+outputs:
+  format: decision (clear | hold | block-card), score 0-1, cited rationale, key factors
+  interpretation: >-
+    Score is the probability the transaction is fraud. Hold at 0.5 and above, propose a block at 0.85
+    and above. The rationale explains; it never changes the decision.
+limitations:
+- Probability calibration only holds on the synthetic distribution.
+- No network features (shared devices, mule rings).

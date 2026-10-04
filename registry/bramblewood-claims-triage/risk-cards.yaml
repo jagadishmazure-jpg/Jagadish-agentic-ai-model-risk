@@ -1,0 +1,142 @@
+model_id: bramblewood-claims-triage
+risks:
+- id: INS-R1
+  title: Staged losses on shelf policies are fast-tracked
+  category: financial
+  harm: H4-malicious-use
+  description: A fraud ring buys aged policies and files small, clean claims that the scorer fast-tracks.
+  impact_description: Paid fraudulent claims up to the payout limit each.
+  likelihood: 4
+  impact: 3
+  owner: Tomas Albright (Claims Operations Director)
+  controls:
+  - id: INS-C1
+    description: Out-of-range inputs go to an adjuster
+    type: preventive
+    effectiveness: 0.65
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: ood_guard
+  - id: INS-C2
+    description: Weekly PSI on policy age and claim amount
+    type: detective
+    effectiveness: 0.4
+    owner: Model Risk Management (second line)
+    status: implemented
+  scenarios:
+  - INS-S1
+  source: model-card
+- id: INS-R2
+  title: Injected instructions in loss descriptions
+  category: security
+  harm: H4-malicious-use
+  description: Claimants write instructions into the loss description to get a fast-track.
+  impact_description: Unreviewed payouts.
+  likelihood: 3
+  impact: 4
+  owner: Security Operations
+  controls:
+  - id: INS-C3
+    description: Instruction screening on loss descriptions
+    type: preventive
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: screen_injection
+  - id: INS-C4
+    description: Decision comes from the scorer and thresholds only
+    type: preventive
+    effectiveness: 0.5
+    owner: Claims AI team
+    status: implemented
+  scenarios:
+  - INS-S2
+  source: model-card
+- id: INS-R3
+  title: Payout above the fast-track limit
+  category: financial
+  harm: H6-automation-environment
+  description: The model proposes a payout above the 5,000 limit and the tool call runs.
+  impact_description: Overpayment without adjuster review.
+  likelihood: 3
+  impact: 4
+  owner: Tomas Albright (Claims Operations Director)
+  controls:
+  - id: INS-C5
+    description: Argument limit on approve_payout enforced in the tool policy
+    type: preventive
+    effectiveness: 0.85
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: enforce_tools
+  scenarios:
+  - INS-S3
+  source: model-card
+- id: INS-R4
+  title: Model outage stops first notice of loss
+  category: operational
+  harm: H6-automation-environment
+  description: The hosted model is unavailable during a storm surge.
+  impact_description: Claim backlog during the period customers need help most.
+  likelihood: 3
+  impact: 3
+  owner: AI Platform Engineering
+  controls:
+  - id: INS-C6
+    description: Rules fallback routes every claim to an adjuster
+    type: corrective
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: fallback
+  scenarios:
+  - INS-S4
+  source: model-card
+- id: INS-R5
+  title: Rural claimants fast-tracked less often
+  category: societal
+  harm: H1-discrimination
+  description: If the zip risk index reaches the model, rural claims are routed to adjusters far more
+    often.
+  impact_description: Slower payment for rural customers; unfair-discrimination findings.
+  likelihood: 3
+  impact: 4
+  owner: Compliance
+  controls:
+  - id: INS-C7
+    description: Location proxies excluded from model inputs
+    type: preventive
+    effectiveness: 0.75
+    owner: Claims AI team
+    status: implemented
+    runtime_control: exclude_proxies
+  - id: INS-C8
+    description: Quarterly fast-track rate review by region
+    type: detective
+    effectiveness: 0.3
+    owner: Model Risk Management (second line)
+    status: implemented
+  scenarios:
+  - INS-S5
+  source: model-card
+- id: INS-R6
+  title: Rationale cites a policy clause that does not exist
+  category: reputational
+  harm: H3-misinformation
+  description: The model invents an exclusion or a clause number in the adjuster summary.
+  impact_description: Wrong coverage advice reaches a claimant.
+  likelihood: 3
+  impact: 3
+  owner: Tomas Albright (Claims Operations Director)
+  controls:
+  - id: INS-C9
+    description: Every claim must cite supplied evidence; unsupported claims are removed and the case
+      is flagged
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: verify_claims
+  scenarios:
+  - INS-S6
+  source: model-card

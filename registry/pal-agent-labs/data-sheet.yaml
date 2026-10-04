@@ -1,0 +1,39 @@
+id: pal-agent-labs-data
+model_id: pal-agent-labs
+purpose_scope: 'Inputs and assumptions of Agent labs: five research agents as built in Jagadish-azure-agent-labs.'
+inputs:
+- name: lab_fixtures
+  type: document
+  source: synthetic per-lab generators
+  preprocessing: as documented in the source repository
+  sensitivity: none
+  used_by_model: true
+assumptions:
+- All data in the source repository is synthetic or mocked.
+- The component runs offline in CI with stand-ins for Azure services.
+architecture:
+  kind: hybrid
+  components:
+  - labs
+  settings: {}
+training_data:
+  source: 'none: rules and hosted models; fixtures are synthetic'
+  rows: 0
+  synthetic: true
+  profile: {}
+  quality_checks:
+  - fixtures are generated from seeds in the source repository
+development:
+  process: Built and tested in Jagadish-azure-agent-labs; governed here through cards and attested scenarios.
+  success_criteria:
+  - lab_eval_pass_rate meets its threshold
+performance:
+- metric: lab_eval_pass_rate
+  train: 1.0
+  validation: 1.0
+outputs:
+  format: see the component README
+  interpretation: Outputs are reviewed by a human before any irreversible step.
+limitations:
+- Research only.
+- The medical eye scan lab is not a medical device and uses synthetic images.

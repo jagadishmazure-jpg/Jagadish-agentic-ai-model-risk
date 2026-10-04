@@ -1,0 +1,109 @@
+id: juniper-prior-auth-data
+model_id: juniper-prior-auth
+purpose_scope: Administrative prior authorization checks for three outpatient procedure families.
+inputs:
+- name: conservative_weeks
+  type: numeric
+  source: clinical documentation extract
+  range:
+  - 0
+  - 52
+  preprocessing: weeks of documented conservative therapy
+  sensitivity: phi
+  used_by_model: true
+- name: red_flags
+  type: numeric
+  source: clinical documentation extract
+  range:
+  - 0
+  - 3
+  preprocessing: count of red-flag findings
+  sensitivity: phi
+  used_by_model: true
+- name: days_since_imaging
+  type: numeric
+  source: claims history
+  range:
+  - 0
+  - 730
+  preprocessing: days since the last related imaging
+  sensitivity: phi
+  used_by_model: true
+- name: doc_score
+  type: numeric
+  source: document intake
+  range:
+  - 0
+  - 1
+  preprocessing: completeness 0-1
+  sensitivity: none
+  used_by_model: true
+- name: clinical_note
+  type: text
+  source: provider submission
+  preprocessing: PHI-masked on output; screened for instructions
+  sensitivity: phi
+  used_by_model: false
+- name: plan_medicare_advantage
+  type: boolean
+  source: eligibility
+  preprocessing: 'excluded: proxy for age'
+  sensitivity: protected
+  used_by_model: false
+- name: age_band
+  type: categorical
+  source: eligibility
+  categories:
+  - 18-64
+  - 65+
+  preprocessing: monitoring only
+  sensitivity: protected
+  used_by_model: false
+assumptions:
+- Coverage policy criteria are administrative and versioned.
+- Therapy durations above 52 weeks were not in training.
+- Clinical notes contain PHI and may contain instructions.
+architecture:
+  kind: logistic scorer + fixed decision thresholds + LLM rationale + tool policy
+  components:
+  - intake
+  - screen
+  - features
+  - score
+  - explain
+  - act
+  - route
+  settings:
+    approve_at: 0.75
+training_data:
+  source: modelrisk.agents.juniper generator (seeded synthetic data)
+  rows: 1000
+  synthetic: true
+  profile:
+    approve_rate: 0.25
+    senior_share: 0.3
+  quality_checks:
+  - every model input inside its documented range
+  - no protected attribute or proxy in the model feature list
+  - labels generated independently of the decision thresholds
+development:
+  process: >-
+    Weights were set from the synthetic generating process, then checked on a seeded reference set and
+    a separate validation seed.
+  success_criteria:
+  - precision meets the model card threshold
+  - accuracy meets the model card threshold
+performance:
+- metric: precision
+  train: 0.8794
+  validation: 0.8683
+- metric: accuracy
+  train: 0.651
+  validation: 0.652
+outputs:
+  format: decision (approve | pend-clinical-review), score, cited summary (PHI-masked)
+  interpretation: >-
+    Score is the probability the request meets the coverage policy. Approve at 0.75 and above; everything
+    else is pended. There is no deny outcome.
+limitations:
+- No clinical judgement; no deny path by design.

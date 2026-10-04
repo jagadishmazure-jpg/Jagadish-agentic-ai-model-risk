@@ -1,0 +1,118 @@
+id: halcyon-fraud-triage
+name: Card fraud triage agent
+version: 1.2.0
+kind: domain
+domain: banking
+company: Halcyon Trust Bank
+owner: Rhea Castellano (Head of Fraud Strategy)
+developer: Fraud Data Science team
+purpose: >-
+  Score card transactions for fraud, write an evidence-cited rationale for the fraud analyst queue, and
+  place short reversible holds on suspicious transactions.
+intended_uses:
+- Triage of card-present and card-not-present transactions for the fraud analyst queue
+- Temporary holds of up to 72 hours on transactions scoring above the hold threshold
+- Proposing a card block for an analyst to approve
+out_of_scope_uses:
+- Closing accounts or changing credit limits
+- Refunds, chargebacks or any movement of money
+- Credit decisions or any use as a creditworthiness signal
+- Fully automated card blocks
+system:
+  type: agentic-llm
+  framework: LangGraph-style state graph (offline mock runtime in modelrisk.agents.graph)
+  base_models:
+  - name: gpt-4o (mock)
+    provider: Azure OpenAI in Foundry (mocked offline)
+    role: evidence-cited rationale only; never sets the decision
+  - name: halcyon-fraud-triage scorer
+    provider: in-house logistic model
+    role: scores the case; the decision comes from fixed thresholds
+  tools:
+  - get_history
+  - hold_transaction
+  - block_card (analyst approval)
+  - notify_customer
+  autonomy: act
+  fallback: >-
+    If the hosted model is unavailable the score and thresholds still decide; the case is queued for an
+    analyst with a rules-only rationale.
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: true
+  decision: hold or block a customer's card transaction
+  reversible: true
+  financial_exposure: high
+data_sensitivity:
+- pii
+- financial
+users: 45
+monthly_volume: 400000
+metrics:
+- name: accuracy
+  value: 0.861
+  threshold: 0.82
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+- name: precision
+  value: 0.6809
+  threshold: 0.6
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+- name: recall
+  value: 0.5053
+  threshold: 0.45
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+evaluation:
+  methods:
+  - seeded offline evaluation (modelrisk.evaluation)
+  - scenario suite with controls on and off (modelrisk.scenarios)
+  - independent re-performance on seed 11 (modelrisk.validation)
+  adversarial:
+  - attack: instruction injection in untrusted free text
+    attempts: 200
+    success_rate: 0.0
+explainability: >-
+  Each rationale cites the feature values behind the score (velocity, geography, device age) and the threshold
+  that applied. Analysts see the top contributing features.
+fairness:
+  protected_attributes:
+  - customer_age_band
+  metrics:
+  - adverse impact ratio of 'clear' outcomes across age bands
+  notes: >-
+    Age band is never a model input; it is collected only for monitoring holds by age group (elder customers
+    are the group most hurt by false holds).
+limitations:
+- Trained on synthetic transactions only; real fraud patterns change weekly.
+- 'Low recall by design: the hold threshold favours fewer false holds over catching every fraud.'
+- >-
+  Account takeover on long-trusted devices is outside the training range and is routed to analysts, not
+  scored.
+environment:
+  est_kwh_per_1k_requests: 0.4
+  notes: >-
+    Rough figure for a hosted model call plus scoring; used for comparison between versions, not reporting.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - eu-ai-act
+  - sr-11-7
+  - iso-42001
+  - glba
+  eu_ai_act_uses:
+  - fraud-detection
+monitoring:
+  window: 500
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: accuracy
+    min: 0.82
+    warn: 0.85
+  on_alert: Route every case to a human, open a revalidation item and notify the model owner.
+notices:
+- Transactions are scored by an automated system; analysts review every card block.

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "approvals.schema.json",
+  "title": "Sign-offs",
+  "description": "HITL sign-offs bound to the digest of the pillar artifacts they approved.",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "type": "string"
+    },
+    "signoffs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": [
+              "validation",
+              "production",
+              "monitoring",
+              "retired"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "model-owner",
+              "validator",
+              "model-risk",
+              "compliance",
+              "business-owner",
+              "privacy",
+              "clinical-reviewer"
+            ]
+          },
+          "approver": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "reject"
+            ]
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "signed_epoch": {
+            "type": "integer"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "audit_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "stage",
+          "role",
+          "approver",
+          "decision",
+          "digest",
+          "signed_epoch",
+          "comment",
+          "audit_hash"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "model_id",
+    "signoffs"
+  ],
+  "additionalProperties": false
+}

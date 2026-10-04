@@ -1,0 +1,116 @@
+id: bramblewood-claims-triage-data
+model_id: bramblewood-claims-triage
+purpose_scope: >-
+  Claims triage at first notice of loss for personal auto and home lines. Commercial lines and injury
+  claims are out of scope.
+inputs:
+- name: claim_amount
+  type: numeric
+  source: FNOL form
+  range:
+  - 0
+  - 50000
+  preprocessing: none, USD
+  sensitivity: financial
+  used_by_model: true
+- name: policy_age_months
+  type: numeric
+  source: policy admin system
+  range:
+  - 0
+  - 240
+  preprocessing: months since inception
+  sensitivity: none
+  used_by_model: true
+- name: prior_claims
+  type: numeric
+  source: claims history
+  range:
+  - 0
+  - 10
+  preprocessing: count over five years
+  sensitivity: none
+  used_by_model: true
+- name: doc_completeness
+  type: numeric
+  source: document intake
+  range:
+  - 0
+  - 1
+  preprocessing: share of required documents received
+  sensitivity: none
+  used_by_model: true
+- name: photo_damage_match
+  type: numeric
+  source: image service
+  range:
+  - 0
+  - 1
+  preprocessing: consistency score 0-1
+  sensitivity: none
+  used_by_model: true
+- name: loss_description
+  type: text
+  source: claimant free text
+  preprocessing: screened for instructions
+  sensitivity: pii
+  used_by_model: false
+- name: zip_risk_index
+  type: numeric
+  source: geo table
+  range:
+  - 0
+  - 1
+  preprocessing: excluded from the model; kept for proxy testing
+  sensitivity: protected
+  used_by_model: false
+assumptions:
+- Claim amount is the claimant's estimate, not the final loss.
+- Policies older than 240 months were not in training.
+- Loss descriptions are attacker-controlled.
+architecture:
+  kind: logistic scorer + fixed decision thresholds + LLM rationale + tool policy
+  components:
+  - intake
+  - screen
+  - features
+  - score
+  - explain
+  - act
+  - route
+  settings:
+    fast_track_below: 0.4
+    siu_at: 0.85
+    payout_limit: 5000
+training_data:
+  source: modelrisk.agents.bramblewood generator (seeded synthetic data)
+  rows: 1000
+  synthetic: true
+  profile:
+    review_rate: 0.33
+    rural_share: 0.35
+  quality_checks:
+  - every model input inside its documented range
+  - no protected attribute or proxy in the model feature list
+  - labels generated independently of the decision thresholds
+development:
+  process: >-
+    Weights were set from the synthetic generating process, then checked on a seeded reference set and
+    a separate validation seed.
+  success_criteria:
+  - accuracy meets the model card threshold
+  - recall meets the model card threshold
+performance:
+- metric: accuracy
+  train: 0.761
+  validation: 0.8
+- metric: recall
+  train: 0.6989
+  validation: 0.7749
+outputs:
+  format: decision (fast-track | adjuster-review | refer-siu), score, cited rationale
+  interpretation: >-
+    Score is the probability the claim needs a human. Fast-track only below 0.4 and under the payout limit;
+    refer at 0.85 and above.
+limitations:
+- Recall on staged losses is low without the out-of-range guard.

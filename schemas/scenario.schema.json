@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scenario.schema.json",
+  "title": "Scenarios",
+  "description": "What-if simulations linked to risk cards, each with a metric and a threshold.",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "type": "string"
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "data-drift",
+              "prompt-injection",
+              "tool-misuse",
+              "model-outage",
+              "bias",
+              "hallucination",
+              "pii-leak",
+              "cost-spike",
+              "external"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "hypothesis": {
+            "type": "string",
+            "minLength": 20
+          },
+          "risk_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "params": {
+            "type": "object"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "threshold": {
+            "type": "object",
+            "properties": {
+              "op": {
+                "type": "string",
+                "enum": [
+                  "<=",
+                  ">="
+                ]
+              },
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "op",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          "warn": {
+            "type": "number"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "hypothesis",
+          "risk_ids",
+          "params",
+          "metric",
+          "threshold"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "model_id",
+    "scenarios"
+  ],
+  "additionalProperties": false
+}

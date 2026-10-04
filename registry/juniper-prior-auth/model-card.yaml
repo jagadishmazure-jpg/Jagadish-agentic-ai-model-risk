@@ -1,0 +1,109 @@
+id: juniper-prior-auth
+name: Prior authorization assistant
+version: 1.2.0
+kind: domain
+domain: healthcare
+company: Juniper Health Plan
+owner: Dr. Lena Moravec (Utilization Management Medical Director)
+developer: Clinical AI Engineering team
+purpose: >-
+  Check prior authorization requests against the plan's administrative coverage policy, approve requests
+  that clearly meet it, and pend everything else to a clinician with a cited summary.
+intended_uses:
+- Administrative coverage checks for outpatient imaging, arthroscopy and sleep studies
+- Auto-approval when the policy is clearly met
+- Cited summaries for clinical reviewers
+out_of_scope_uses:
+- Diagnosis, treatment or any clinical recommendation
+- Denying a request (only a clinician can deny)
+- Emergency or inpatient requests
+- Use as a medical device
+system:
+  type: agentic-llm
+  framework: LangGraph-style state graph (offline mock runtime in modelrisk.agents.graph)
+  base_models:
+  - name: gpt-4o (mock)
+    provider: Azure OpenAI in Foundry (mocked offline)
+    role: evidence-cited rationale only; never sets the decision
+  - name: juniper-prior-auth scorer
+    provider: in-house logistic model
+    role: scores the case; the decision comes from fixed thresholds
+  tools:
+  - lookup_policy
+  - approve_request
+  - route_to_clinician
+  - request_records
+  autonomy: act
+  fallback: Every request is pended to a clinician while the model is unavailable.
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: true
+  decision: approve or pend a prior authorization request
+  reversible: true
+  financial_exposure: medium
+data_sensitivity:
+- phi
+- pii
+users: 60
+monthly_volume: 120000
+metrics:
+- name: precision
+  value: 0.8794
+  threshold: 0.85
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+- name: accuracy
+  value: 0.651
+  threshold: 0.6
+  direction: higher-is-better
+  dataset: synthetic reference set, seed 7, 1,000 cases
+evaluation:
+  methods:
+  - seeded offline evaluation (modelrisk.evaluation)
+  - scenario suite with controls on and off (modelrisk.scenarios)
+  - independent re-performance on seed 11 (modelrisk.validation)
+  adversarial:
+  - attack: instruction injection in untrusted free text
+    attempts: 200
+    success_rate: 0.0
+explainability: >-
+  The summary cites the coverage policy sections (therapy duration, red flags) and the documented facts.
+  Clinicians see which criteria were met.
+fairness:
+  protected_attributes:
+  - age_band
+  metrics:
+  - adverse impact ratio of approvals, 65+ vs 18-64
+  notes: Plan type (Medicare Advantage) correlates with age and is excluded from the model.
+limitations:
+- Administrative policy check only; clinical nuance is left to clinicians.
+- Low recall is acceptable because pended requests go to a clinician, never to denial.
+- Long, poorly documented histories are outside the training range.
+environment:
+  est_kwh_per_1k_requests: 0.5
+  notes: >-
+    Rough figure for a hosted model call plus scoring; used for comparison between versions, not reporting.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - eu-ai-act
+  - iso-42001
+  - hipaa
+  eu_ai_act_uses:
+  - essential-services-eligibility
+monitoring:
+  window: 500
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: precision
+    min: 0.85
+    warn: 0.88
+  on_alert: Route every case to a human, open a revalidation item and notify the model owner.
+notices:
+- >-
+  Not a medical device: administrative coverage review only. It does not diagnose, treat or recommend
+  care, and no request is denied without a clinician.
+- Outputs are PHI-masked; the minimum necessary standard applies to every tool call.

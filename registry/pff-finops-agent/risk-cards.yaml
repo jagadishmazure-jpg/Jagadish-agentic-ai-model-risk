@@ -1,0 +1,42 @@
+model_id: pff-finops-agent
+risks:
+- id: PFF-R1
+  title: Change plan executed without approval
+  category: operational
+  harm: H6-automation-environment
+  description: A plan runs before an approver signs its digest.
+  impact_description: Unplanned outage or cost change.
+  likelihood: 2
+  impact: 4
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PFF-C1
+    description: Digest-bound approval rules and audit log; dry-run executor
+    type: preventive
+    effectiveness: 0.85
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+    evidence: Jagadish-azure-finops/src/finops/agent/approval.py
+  scenarios:
+  - PFF-X1
+  source: manual
+- id: PFF-R2
+  title: Savings overstated
+  category: financial
+  harm: H3-misinformation
+  description: Ranking double counts overlapping recommendations.
+  impact_description: Wrong investment decisions.
+  likelihood: 3
+  impact: 2
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PFF-C2
+    description: Dedupe and reconcile step in the analyzer
+    type: preventive
+    effectiveness: 0.7
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+    evidence: Jagadish-azure-finops/src/finops/agent/analyzer.py
+  scenarios:
+  - PFF-X1
+  source: manual

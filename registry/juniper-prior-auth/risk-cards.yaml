@@ -1,0 +1,150 @@
+model_id: juniper-prior-auth
+risks:
+- id: HC-R1
+  title: PHI exposure in summaries or logs
+  category: legal-regulatory
+  harm: H2-information-hazard
+  description: >-
+    Member ids, MRNs and dates of birth from the clinical note are repeated in the summary that is logged.
+  impact_description: HIPAA breach, notification and penalties.
+  likelihood: 4
+  impact: 5
+  owner: Privacy Office
+  controls:
+  - id: HC-C1
+    description: PHI masking (MRN, member id, DOB, contacts) on every output
+    type: preventive
+    effectiveness: 0.85
+    owner: AI Platform Engineering
+    status: implemented
+    evidence: src/modelrisk/agents/guardrails.py::PHI_KINDS
+    runtime_control: mask_output
+  - id: HC-C2
+    description: Diagnostic logs sampled and scanned for PHI patterns
+    type: detective
+    effectiveness: 0.4
+    owner: Privacy Office
+    status: implemented
+  scenarios:
+  - HC-S1
+  source: model-card
+- id: HC-R2
+  title: Summary cites a coverage criterion that does not exist
+  category: safety-ethics
+  harm: H3-misinformation
+  description: The model invents an exception in the coverage policy.
+  impact_description: Inappropriate approval or a misleading summary for a clinician.
+  likelihood: 3
+  impact: 4
+  owner: Dr. Lena Moravec (Utilization Management Medical Director)
+  controls:
+  - id: HC-C3
+    description: Claims must cite supplied policy evidence; unsupported claims removed and flagged
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: verify_claims
+  scenarios:
+  - HC-S2
+  source: model-card
+- id: HC-R3
+  title: Instructions in clinical notes force an approval
+  category: security
+  harm: H4-malicious-use
+  description: A submitted note contains instructions to approve the request.
+  impact_description: Approvals outside policy; audit findings.
+  likelihood: 3
+  impact: 4
+  owner: Security Operations
+  controls:
+  - id: HC-C4
+    description: Note screening; flagged text withheld
+    type: preventive
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: screen_injection
+  scenarios:
+  - HC-S3
+  source: model-card
+- id: HC-R4
+  title: Agent denies care
+  category: safety-ethics
+  harm: H6-automation-environment
+  description: The model proposes a denial and the tool call runs.
+  impact_description: 'Patient harm and regulatory violation: denials need clinician review.'
+  likelihood: 3
+  impact: 5
+  owner: Dr. Lena Moravec (Utilization Management Medical Director)
+  controls:
+  - id: HC-C5
+    description: No deny tool on the allow-list; only clinicians can deny
+    type: preventive
+    effectiveness: 0.9
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: enforce_tools
+  scenarios:
+  - HC-S4
+  source: model-card
+- id: HC-R5
+  title: Outage delays time-sensitive requests
+  category: operational
+  harm: H6-automation-environment
+  description: The hosted model is unavailable and requests wait.
+  impact_description: Missed turnaround standards.
+  likelihood: 3
+  impact: 3
+  owner: AI Platform Engineering
+  controls:
+  - id: HC-C6
+    description: Pend everything to clinicians with a rules summary
+    type: corrective
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: fallback
+  scenarios:
+  - HC-S5
+  source: model-card
+- id: HC-R6
+  title: Older members approved less often
+  category: societal
+  harm: H1-discrimination
+  description: Plan type acts as an age proxy if it reaches the model.
+  impact_description: Unequal access to care for older members.
+  likelihood: 3
+  impact: 4
+  owner: Compliance
+  controls:
+  - id: HC-C7
+    description: Plan type excluded from model inputs
+    type: preventive
+    effectiveness: 0.75
+    owner: Clinical AI Engineering team
+    status: implemented
+    runtime_control: exclude_proxies
+  scenarios:
+  - HC-S6
+  source: model-card
+- id: HC-R7
+  title: Retry storms raise cost per request
+  category: financial
+  harm: H6-automation-environment
+  description: Verbose notes and re-asks multiply tokens per request.
+  impact_description: Spend overrun at 120,000 requests a month.
+  likelihood: 2
+  impact: 3
+  owner: AI Platform Engineering
+  controls:
+  - id: HC-C8
+    description: Per-request token and call budget
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: budget
+  scenarios:
+  - HC-S7
+  source: model-card

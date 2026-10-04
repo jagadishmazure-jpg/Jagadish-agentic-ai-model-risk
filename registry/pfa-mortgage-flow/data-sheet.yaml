@@ -1,0 +1,53 @@
+id: pfa-mortgage-flow-data
+model_id: pfa-mortgage-flow
+purpose_scope: >-
+  Inputs and assumptions of Agent platform: mortgage underwriting-conditions flow as built in Jagadish-azure-agent-platform.
+inputs:
+- name: loan_file
+  type: document
+  source: synthetic LOS
+  preprocessing: as documented in the source repository
+  sensitivity: pii
+  used_by_model: true
+- name: credit_report
+  type: document
+  source: MCP credit server (mock)
+  preprocessing: as documented in the source repository
+  sensitivity: financial
+  used_by_model: true
+- name: guidelines
+  type: document
+  source: versioned guideline store
+  preprocessing: as documented in the source repository
+  sensitivity: none
+  used_by_model: true
+assumptions:
+- All data in the source repository is synthetic or mocked.
+- The component runs offline in CI with stand-ins for Azure services.
+architecture:
+  kind: agentic-llm
+  components:
+  - src/agentplatform/mortgage
+  settings: {}
+training_data:
+  source: 'none: rules and hosted models; fixtures are synthetic'
+  rows: 0
+  synthetic: true
+  profile: {}
+  quality_checks:
+  - fixtures are generated from seeds in the source repository
+development:
+  process: >-
+    Built and tested in Jagadish-azure-agent-platform; governed here through cards and attested scenarios.
+  success_criteria:
+  - critic_citation_pass_rate meets its threshold
+performance:
+- metric: critic_citation_pass_rate
+  train: 1.0
+  validation: 1.0
+outputs:
+  format: see the component README
+  interpretation: Outputs are reviewed by a human before any irreversible step.
+limitations:
+- Money is computed by deterministic calculators; the model never does arithmetic.
+- Guideline corpus is synthetic.

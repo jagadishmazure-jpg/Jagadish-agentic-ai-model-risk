@@ -1,0 +1,446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model-card.schema.json",
+  "title": "Model card",
+  "description": "What the model or agent is, what it is for, how well it works and where it fails.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "domain",
+        "portfolio"
+      ]
+    },
+    "domain": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "developer": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 20
+    },
+    "intended_uses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "out_of_scope_uses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "system": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "agentic-llm",
+            "ml",
+            "rules",
+            "hybrid"
+          ]
+        },
+        "framework": {
+          "type": "string"
+        },
+        "base_models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "provider",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "autonomy": {
+          "type": "string",
+          "enum": [
+            "suggest",
+            "act-with-approval",
+            "act"
+          ]
+        },
+        "fallback": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "framework",
+        "base_models",
+        "tools",
+        "autonomy",
+        "fallback"
+      ],
+      "additionalProperties": false
+    },
+    "data_sheet": {
+      "type": "string"
+    },
+    "risk_cards": {
+      "type": "string"
+    },
+    "scenarios": {
+      "type": "string"
+    },
+    "decision_impact": {
+      "type": "object",
+      "properties": {
+        "affects_individuals": {
+          "type": "boolean"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "reversible": {
+          "type": "boolean"
+        },
+        "financial_exposure": {
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      },
+      "required": [
+        "affects_individuals",
+        "decision",
+        "reversible",
+        "financial_exposure"
+      ],
+      "additionalProperties": false
+    },
+    "data_sensitivity": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "pii",
+          "phi",
+          "financial",
+          "protected-attributes",
+          "none"
+        ]
+      },
+      "minItems": 1
+    },
+    "users": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "monthly_volume": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "threshold": {
+            "type": "number"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "higher-is-better",
+              "lower-is-better"
+            ]
+          },
+          "dataset": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "value",
+          "threshold",
+          "direction",
+          "dataset"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "evaluation": {
+      "type": "object",
+      "properties": {
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "adversarial": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "attack": {
+                "type": "string"
+              },
+              "attempts": {
+                "type": "integer"
+              },
+              "success_rate": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "attack",
+              "attempts",
+              "success_rate"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "methods",
+        "adversarial"
+      ],
+      "additionalProperties": false
+    },
+    "explainability": {
+      "type": "string"
+    },
+    "fairness": {
+      "type": "object",
+      "properties": {
+        "protected_attributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "protected_attributes",
+        "metrics"
+      ],
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "est_kwh_per_1k_requests": {
+          "type": "number",
+          "minimum": 0
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "est_kwh_per_1k_requests"
+      ],
+      "additionalProperties": false
+    },
+    "regulatory": {
+      "type": "object",
+      "properties": {
+        "frameworks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "nist-ai-rmf",
+              "eu-ai-act",
+              "sr-11-7",
+              "iso-42001",
+              "hipaa",
+              "ecoa-reg-b",
+              "fair-housing",
+              "glba",
+              "state-insurance-ai",
+              "ftc-act"
+            ]
+          },
+          "minItems": 1
+        },
+        "eu_ai_act_uses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tier_floor": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        }
+      },
+      "required": [
+        "frameworks",
+        "eu_ai_act_uses"
+      ],
+      "additionalProperties": false
+    },
+    "notices": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "governs": {
+      "type": "string"
+    },
+    "monitoring": {
+      "type": "object",
+      "description": "Ongoing monitoring thresholds.",
+      "properties": {
+        "window": {
+          "type": "integer",
+          "minimum": 100,
+          "description": "cases per monitoring window"
+        },
+        "psi_warn": {
+          "type": "number",
+          "minimum": 0
+        },
+        "psi_alert": {
+          "type": "number",
+          "minimum": 0
+        },
+        "performance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "metric": {
+                "type": "string"
+              },
+              "min": {
+                "type": "number"
+              },
+              "warn": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "metric",
+              "min",
+              "warn"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "on_alert": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "window",
+        "psi_warn",
+        "psi_alert",
+        "performance",
+        "on_alert"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "version",
+    "kind",
+    "domain",
+    "company",
+    "owner",
+    "developer",
+    "purpose",
+    "intended_uses",
+    "out_of_scope_uses",
+    "system",
+    "data_sheet",
+    "risk_cards",
+    "scenarios",
+    "decision_impact",
+    "data_sensitivity",
+    "users",
+    "monthly_volume",
+    "metrics",
+    "evaluation",
+    "explainability",
+    "fairness",
+    "limitations",
+    "regulatory",
+    "monitoring"
+  ],
+  "additionalProperties": false
+}

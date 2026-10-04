@@ -1,0 +1,51 @@
+id: pfb-fabric-data-agent-data
+model_id: pfb-fabric-data-agent
+purpose_scope: Inputs and assumptions of Fabric data agent (NL to SQL) as built in Jagadish-fabric-enterprise-bi.
+inputs:
+- name: question
+  type: text
+  source: user
+  preprocessing: as documented in the source repository
+  sensitivity: none
+  used_by_model: true
+- name: semantic_model
+  type: document
+  source: TMDL-style model
+  preprocessing: as documented in the source repository
+  sensitivity: none
+  used_by_model: true
+- name: gold_tables
+  type: document
+  source: synthetic gold layer
+  preprocessing: as documented in the source repository
+  sensitivity: pii
+  used_by_model: true
+assumptions:
+- All data in the source repository is synthetic or mocked.
+- The component runs offline in CI with stand-ins for Azure services.
+architecture:
+  kind: agentic-llm
+  components:
+  - src/fabricbi/serve
+  settings: {}
+training_data:
+  source: 'none: rules and hosted models; fixtures are synthetic'
+  rows: 0
+  synthetic: true
+  profile: {}
+  quality_checks:
+  - fixtures are generated from seeds in the source repository
+development:
+  process: >-
+    Built and tested in Jagadish-fabric-enterprise-bi; governed here through cards and attested scenarios.
+  success_criteria:
+  - guardrail_block_rate_on_attacks meets its threshold
+performance:
+- metric: guardrail_block_rate_on_attacks
+  train: 1.0
+  validation: 1.0
+outputs:
+  format: see the component README
+  interpretation: Outputs are reviewed by a human before any irreversible step.
+limitations:
+- Mock NL model; real phrasing variety is wider.

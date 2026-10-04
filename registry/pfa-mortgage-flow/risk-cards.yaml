@@ -1,0 +1,62 @@
+model_id: pfa-mortgage-flow
+risks:
+- id: PFA-R1
+  title: Uncited or out-of-force guideline in a condition
+  category: legal-regulatory
+  harm: H3-misinformation
+  description: A drafted condition cites a guideline version not in force on the application date.
+  impact_description: Wrong conditions on a credit file.
+  likelihood: 3
+  impact: 4
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PFA-C1
+    description: critic.py fail-closed citation check with one repair pass
+    type: preventive
+    effectiveness: 0.8
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+    evidence: Jagadish-azure-agent-platform/src/agentplatform/mortgage/critic.py
+  scenarios:
+  - PFA-X1
+  source: manual
+- id: PFA-R2
+  title: Write to the loan system before underwriter approval
+  category: operational
+  harm: H6-automation-environment
+  description: The workflow queues LOS writes before the HITL checkpoint resolves.
+  impact_description: Unapproved changes to a credit file.
+  likelihood: 2
+  impact: 5
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PFA-C2
+    description: request_info checkpoint; decision letter and LOS writes only after approval
+    type: preventive
+    effectiveness: 0.85
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+    evidence: Jagadish-azure-agent-platform/src/agentplatform/mortgage/workflow.py
+  scenarios:
+  - PFA-X1
+  source: manual
+- id: PFA-R3
+  title: Model computes income or DTI
+  category: financial
+  harm: H6-automation-environment
+  description: The model, rather than the calculators, produces money figures.
+  impact_description: Mis-stated DTI on a credit file.
+  likelihood: 2
+  impact: 4
+  owner: Jagadish Meduri (portfolio owner)
+  controls:
+  - id: PFA-C3
+    description: Deterministic calculators for every money figure
+    type: preventive
+    effectiveness: 0.85
+    owner: Jagadish Meduri (portfolio owner)
+    status: implemented
+    evidence: Jagadish-azure-agent-platform/src/agentplatform/mortgage/calculators.py
+  scenarios:
+  - PFA-X1
+  source: manual

@@ -1,0 +1,82 @@
+id: pfa-mortgage-flow
+name: 'Agent platform: mortgage underwriting-conditions flow'
+version: 1.0.0
+kind: portfolio
+domain: mortgage
+company: Portfolio reference implementation (fictional tenants)
+owner: Jagadish Meduri (portfolio owner)
+developer: Jagadish-azure-agent-platform maintainers
+purpose: >-
+  Multi-agent Microsoft Agent Framework workflow that drafts cited underwriting conditions for a loan
+  file and parks the run at a HITL checkpoint for an underwriter.
+intended_uses:
+- Drafting cited underwriting conditions
+- Assembling an evidence pack for the underwriter
+out_of_scope_uses:
+- Issuing credit decisions
+- Denials (rules never return one)
+system:
+  type: agentic-llm
+  framework: Microsoft Agent Framework workflow
+  base_models:
+  - name: gpt-4o
+    provider: Azure OpenAI in Foundry (mocked offline)
+    role: drafting and extraction
+  tools:
+  - MCP credit pull
+  - A2A CRM profile
+  - guideline retrieval
+  - LOS write queue (after approval)
+  autonomy: act-with-approval
+  fallback: Fallback deployment, then a deterministic draft from rules.py
+data_sheet: data-sheet.yaml
+risk_cards: risk-cards.yaml
+scenarios: scenarios.yaml
+decision_impact:
+  affects_individuals: true
+  decision: underwriting conditions for a credit file
+  reversible: false
+  financial_exposure: high
+data_sensitivity:
+- pii
+- financial
+users: 10
+monthly_volume: 5000
+metrics:
+- name: critic_citation_pass_rate
+  value: 1.0
+  threshold: 1.0
+  direction: higher-is-better
+  dataset: source repository test fixtures
+evaluation:
+  methods:
+  - the component's own pytest suite in Jagadish-azure-agent-platform
+  - external scenarios below, attested from that repository's CI
+  adversarial: []
+explainability: Every condition cites an in-force guideline; critic.py fails closed.
+fairness:
+  protected_attributes: []
+  metrics: []
+  notes: No protected attributes are processed by this component.
+limitations:
+- Money is computed by deterministic calculators; the model never does arithmetic.
+- Guideline corpus is synthetic.
+regulatory:
+  frameworks:
+  - nist-ai-rmf
+  - eu-ai-act
+  - sr-11-7
+  - ecoa-reg-b
+  eu_ai_act_uses:
+  - creditworthiness
+monitoring:
+  window: 200
+  psi_warn: 0.1
+  psi_alert: 0.25
+  performance:
+  - metric: critic_citation_pass_rate
+    min: 1.0
+    warn: 1.0
+  on_alert: Freeze releases of the component and open a revalidation item.
+governs: >-
+  https://github.com/jagadishmazure-jpg/Jagadish-azure-agent-platform/tree/main/src/agentplatform/mortgage

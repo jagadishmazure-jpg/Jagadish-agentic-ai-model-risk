@@ -1,0 +1,14 @@
+# Model inventory: every governed model and component, with its lifecycle stage.
+# Tiers are not stored here; they are computed from each model card (modelrisk.tiering).
+company: Jagadish model risk portfolio (all companies fictional)
+models:
+  - {id: halcyon-fraud-triage, path: halcyon-fraud-triage, stage: monitoring}
+  - {id: bramblewood-claims-triage, path: bramblewood-claims-triage, stage: production}
+  - {id: cedarhollow-underwriting-assistant, path: cedarhollow-underwriting-assistant, stage: validation}
+  - {id: juniper-prior-auth, path: juniper-prior-auth, stage: validation}
+  - {id: marigold-pricing-demand, path: marigold-pricing-demand, stage: monitoring}
+  - {id: pfa-mortgage-flow, path: pfa-mortgage-flow, stage: production}
+  - {id: pfs-safety-layer, path: pfs-safety-layer, stage: production}
+  - {id: pal-agent-labs, path: pal-agent-labs, stage: development}
+  - {id: pfb-fabric-data-agent, path: pfb-fabric-data-agent, stage: production}
+  - {id: pff-finops-agent, path: pff-finops-agent, stage: production}

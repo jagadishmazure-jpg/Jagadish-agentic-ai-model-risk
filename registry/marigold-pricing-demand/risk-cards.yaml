@@ -1,0 +1,124 @@
+model_id: marigold-pricing-demand
+risks:
+- id: RTL-R1
+  title: Promotion shock misread as demand growth
+  category: financial
+  harm: H6-automation-environment
+  description: A competitor promotion pushes demand far above the baseline and the agent raises prices
+    into it.
+  impact_description: Lost volume and margin across stores.
+  likelihood: 3
+  impact: 3
+  owner: Owen Pritchard (VP Pricing)
+  controls:
+  - id: RTL-C1
+    description: Out-of-range demand goes to the pricing team
+    type: preventive
+    effectiveness: 0.65
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: ood_guard
+  scenarios:
+  - RTL-S1
+  source: model-card
+- id: RTL-R2
+  title: Re-ask loops inflate model spend
+  category: financial
+  harm: H6-automation-environment
+  description: A retry bug makes the agent re-ask the model many times per item.
+  impact_description: Spend overrun at 250,000 item-weeks a month.
+  likelihood: 3
+  impact: 3
+  owner: AI Platform Engineering
+  controls:
+  - id: RTL-C2
+    description: Per-task token and call budget
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: budget
+  scenarios:
+  - RTL-S2
+  source: model-card
+- id: RTL-R3
+  title: Price move beyond the guardrail
+  category: reputational
+  harm: H6-automation-environment
+  description: The model proposes a 25 percent move and it is applied.
+  impact_description: Customer backlash and price-gouging complaints.
+  likelihood: 3
+  impact: 4
+  owner: Owen Pritchard (VP Pricing)
+  controls:
+  - id: RTL-C3
+    description: set_price argument limit of 5 percent enforced in the tool policy
+    type: preventive
+    effectiveness: 0.85
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: enforce_tools
+  scenarios:
+  - RTL-S3
+  source: model-card
+- id: RTL-R4
+  title: Higher prices in low-income neighbourhoods
+  category: societal
+  harm: H1-discrimination
+  description: If store income band reaches the model, prices are raised far more often in low-income
+    areas.
+  impact_description: Consumer-protection complaints and reputational harm.
+  likelihood: 3
+  impact: 4
+  owner: Compliance
+  controls:
+  - id: RTL-C4
+    description: Store demographics excluded from model inputs
+    type: preventive
+    effectiveness: 0.75
+    owner: Pricing Analytics team
+    status: implemented
+    runtime_control: exclude_proxies
+  scenarios:
+  - RTL-S4
+  source: model-card
+- id: RTL-R5
+  title: Outage freezes the weekly price run
+  category: operational
+  harm: H6-automation-environment
+  description: The hosted model is unavailable on price-run day.
+  impact_description: Stale prices for a week.
+  likelihood: 2
+  impact: 2
+  owner: AI Platform Engineering
+  controls:
+  - id: RTL-C5
+    description: Prices held and moves queued for the pricing team
+    type: corrective
+    effectiveness: 0.7
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: fallback
+  scenarios:
+  - RTL-S5
+  source: model-card
+- id: RTL-R6
+  title: Rationale cites a forecast that was never produced
+  category: reputational
+  harm: H3-misinformation
+  description: The narrative invents a policy section or a forecast figure.
+  impact_description: Pricing team acts on false reasons.
+  likelihood: 2
+  impact: 3
+  owner: Owen Pritchard (VP Pricing)
+  controls:
+  - id: RTL-C6
+    description: Claims must cite supplied evidence
+    type: preventive
+    effectiveness: 0.8
+    owner: AI Platform Engineering
+    status: implemented
+    runtime_control: verify_claims
+  scenarios:
+  - RTL-S6
+  source: model-card

@@ -1,0 +1,123 @@
+id: marigold-pricing-demand-data
+model_id: marigold-pricing-demand
+purpose_scope: Weekly shelf-price recommendations for grocery items across stores.
+inputs:
+- name: price_gap_pct
+  type: numeric
+  source: competitor price feed
+  range:
+  - -0.3
+  - 0.3
+  preprocessing: our price over competitor minus 1
+  sensitivity: none
+  used_by_model: true
+- name: demand_index
+  type: numeric
+  source: sales history
+  range:
+  - 0.5
+  - 2.0
+  preprocessing: last four weeks over seasonal baseline
+  sensitivity: none
+  used_by_model: true
+- name: stock_cover_weeks
+  type: numeric
+  source: inventory
+  range:
+  - 0
+  - 12
+  preprocessing: weeks of stock at current demand
+  sensitivity: none
+  used_by_model: true
+- name: elasticity
+  type: numeric
+  source: elasticity table
+  range:
+  - -3.0
+  - -0.2
+  preprocessing: own-price elasticity per item
+  sensitivity: none
+  used_by_model: true
+- name: margin_pct
+  type: numeric
+  source: cost and price
+  range:
+  - 0.05
+  - 0.6
+  preprocessing: gross margin
+  sensitivity: none
+  used_by_model: true
+- name: store_low_income
+  type: boolean
+  source: store attributes
+  preprocessing: 'excluded: testing only'
+  sensitivity: protected
+  used_by_model: false
+- name: essential
+  type: boolean
+  source: item master
+  preprocessing: rule input, not a model feature
+  sensitivity: none
+  used_by_model: false
+- name: emergency
+  type: boolean
+  source: regional emergency feed
+  preprocessing: rule input, not a model feature
+  sensitivity: none
+  used_by_model: false
+- name: buyer_note
+  type: text
+  source: buyer and supplier notes
+  preprocessing: screened for instructions
+  sensitivity: none
+  used_by_model: false
+assumptions:
+- Elasticities are stable within a quarter.
+- Demand above twice the baseline was not in training.
+- Competitor feeds can be wrong or manipulated.
+architecture:
+  kind: logistic scorer + fixed decision thresholds + LLM rationale + tool policy
+  components:
+  - intake
+  - screen
+  - features
+  - score
+  - explain
+  - act
+  - route
+  settings:
+    raise_at: 0.65
+    lower_at: 0.35
+    max_auto_change: 0.05
+training_data:
+  source: modelrisk.agents.marigold generator (seeded synthetic data)
+  rows: 1000
+  synthetic: true
+  profile:
+    raise_rate: 0.27
+    low_income_store_share: 0.3
+  quality_checks:
+  - every model input inside its documented range
+  - no protected attribute or proxy in the model feature list
+  - labels generated independently of the decision thresholds
+development:
+  process: >-
+    Weights were set from the synthetic generating process, then checked on a seeded reference set and
+    a separate validation seed.
+  success_criteria:
+  - precision meets the model card threshold
+  - accuracy meets the model card threshold
+performance:
+- metric: precision
+  train: 0.7778
+  validation: 0.8054
+- metric: accuracy
+  train: 0.713
+  validation: 0.717
+outputs:
+  format: decision (raise | hold | lower | refer-pricing-team), score, forecast units, cited rationale
+  interpretation: >-
+    Score is the probability a raise improves margin without losing volume. Raise at 0.65 and above, lower
+    at 0.35 and below.
+limitations:
+- No price-gouging rules beyond the essential-item emergency rule.

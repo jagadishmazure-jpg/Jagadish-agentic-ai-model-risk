@@ -1,0 +1,44 @@
+id: pff-finops-agent-data
+model_id: pff-finops-agent
+purpose_scope: Inputs and assumptions of FinOps agent as built in Jagadish-azure-finops.
+inputs:
+- name: cost_exports
+  type: document
+  source: synthetic cost data
+  preprocessing: as documented in the source repository
+  sensitivity: financial
+  used_by_model: true
+- name: price_sheets
+  type: document
+  source: snapshot pricing tables
+  preprocessing: as documented in the source repository
+  sensitivity: none
+  used_by_model: true
+assumptions:
+- All data in the source repository is synthetic or mocked.
+- The component runs offline in CI with stand-ins for Azure services.
+architecture:
+  kind: hybrid
+  components:
+  - src/finops/agent
+  settings: {}
+training_data:
+  source: 'none: rules and hosted models; fixtures are synthetic'
+  rows: 0
+  synthetic: true
+  profile: {}
+  quality_checks:
+  - fixtures are generated from seeds in the source repository
+development:
+  process: Built and tested in Jagadish-azure-finops; governed here through cards and attested scenarios.
+  success_criteria:
+  - plans_with_rollback meets its threshold
+performance:
+- metric: plans_with_rollback
+  train: 1.0
+  validation: 1.0
+outputs:
+  format: see the component README
+  interpretation: Outputs are reviewed by a human before any irreversible step.
+limitations:
+- Pricing tables are snapshots.
