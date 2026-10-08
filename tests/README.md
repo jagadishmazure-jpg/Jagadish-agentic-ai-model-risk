@@ -10,7 +10,7 @@ pytest suite, offline.
 | `test_gate.py` | Each gate check failing |
 | `test_graph.py` | Graph runtime |
 | `test_guardrails.py` | Screen, masks, tools, budget |
-| `test_iac.py` | Terraform, Bicep, policies, workflows |
+| `test_iac.py` | Terraform, Bicep, policies, workflows (including the supply-chain guard: pinned actions, permissions, gitleaks, CodeQL, Dependabot) |
 | `test_lifecycle_validation_monitoring.py` | Lifecycle, validation, monitoring |
 | `test_mcp_cli.py` | MCP tools, CLI, telemetry |
 | `test_regulatory_portfolio.py` | Regulatory mapping and portfolio cards |

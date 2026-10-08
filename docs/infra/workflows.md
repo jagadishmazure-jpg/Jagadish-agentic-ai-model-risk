@@ -1,6 +1,6 @@
 # Infrastructure: GitHub Actions workflows
 
-Four workflows: `ci` (lint, tests, gate, doc drift, bicep build), `infra` (Terraform fmt, validate, test, tflint, checkov, and a credential-gated plan), `deploy` (preflight, then dev and prod with OIDC and environment approval, Terraform or Bicep) and `teardown` (manual, confirmation required). Deploy and teardown are gated by `DEPLOY_ENABLED`.
+Five workflows: `ci` (lint, tests, gate, doc drift, bicep build, gitleaks), `codeql` (CodeQL for Python and the workflows), `infra` (Terraform fmt, validate, test, tflint, checkov, and a credential-gated plan), `deploy` (preflight, then dev and prod with OIDC and environment approval, Terraform or Bicep) and `teardown` (manual, confirmation required). Deploy and teardown are gated by `DEPLOY_ENABLED`.
 
 **Nothing is deployed.** Every deploy path is gated by the repository variable `DEPLOY_ENABLED`, which is not set.
 
@@ -14,7 +14,8 @@ Sections: [1. Purpose](#1-purpose) · [2. Architecture](#2-architecture) · [3. 
 
 ```mermaid
 flowchart LR
-  PUSH[push / PR] --> CI[ci: ruff, pytest, gate, render --check, bicep build]
+  PUSH[push / PR] --> CI[ci: ruff, pytest, gate, render --check, bicep build, gitleaks]
+  PUSH --> CQL[codeql: python, actions]
   PUSH --> INF[infra: fmt, validate, test, tflint, checkov, plan if OIDC vars]
   PUSH --> PRE[deploy: preflight reports gate]
   PRE -->|DEPLOY_ENABLED true| DEV[deploy-dev, env dev, OIDC]
@@ -24,17 +25,22 @@ flowchart LR
 
 ## 3. How it works
 
-1. `ci.yml` runs ruff, pytest, `modelrisk gate`, `render_docs.py --check`, and builds Bicep.
+1. `ci.yml` runs ruff, pytest, `modelrisk gate`, `render_docs.py --check`, and builds Bicep; its
+   `secrets` job runs gitleaks over the full git history.
 2. `infra.yml` checks Terraform; the plan job skips with a notice when OIDC variables are missing.
 3. `deploy.yml` preflight writes the gate state; dev and prod jobs run `deploy.sh provision`, `smoke`
    and `publish` with the chosen tool.
 4. `teardown.yml` needs the environment typed again as confirmation.
+5. `codeql.yml` analyses the Python code and the workflow files on push, pull request and weekly;
+   findings go to the Security tab and do not fail the build.
 
 ## 4. Key files
 
 | File | Role |
 |---|---|
-| `.github/workflows/ci.yml` | Tests and gate |
+| `.github/workflows/ci.yml` | Tests, gate and gitleaks |
+| `.github/workflows/codeql.yml` | CodeQL code scanning |
+| `.github/dependabot.yml` | Weekly grouped updates for pip, Actions and Terraform |
 | `.github/workflows/infra.yml` | IaC checks |
 | `.github/workflows/deploy.yml` | Gated deploy |
 | `.github/workflows/teardown.yml` | Gated teardown |
@@ -81,6 +87,8 @@ gh workflow run deploy.yml -f deploy_tool=bicep   # does nothing until DEPLOY_EN
 ```text
 ci.yml         test         on=push,pull_request                  gate=-               env=-                          -
 ci.yml         bicep        on=push,pull_request                  gate=-               env=-                          -
+ci.yml         secrets      on=push,pull_request                  gate=-               env=-                          -
+codeql.yml     analyze      on=push,pull_request,schedule         gate=-               env=-                          -
 deploy.yml     preflight    on=push,workflow_dispatch             gate=-               env=-                          -
 deploy.yml     deploy-dev   on=push,workflow_dispatch             gate=DEPLOY_ENABLED  env=dev                        oidc
 deploy.yml     deploy-prod  on=push,workflow_dispatch             gate=DEPLOY_ENABLED  env=prod                       oidc
@@ -94,7 +102,7 @@ teardown.yml   teardown     on=workflow_dispatch                  gate=DEPLOY_EN
 
 ## 9. Tests and gates
 
-* `tests/test_iac.py`: gating, OIDC permissions, environments, prod needs dev, tool options, teardown confirm, no client secrets.
+* `tests/test_iac.py`: gating, OIDC permissions, environments, prod needs dev, tool options, teardown confirm, no client secrets, and `test_workflows_are_hardened` (every action pinned to a commit SHA with a version comment, top-level permissions, gitleaks, CodeQL, Dependabot).
 
 ## 10. Guardrails
 
@@ -102,7 +110,7 @@ teardown.yml   teardown     on=workflow_dispatch                  gate=DEPLOY_EN
 
 ## 11. Security and governance
 
-Least-privilege permissions per job (`contents: read`, `id-token: write` only where needed).
+Least-privilege permissions: every workflow starts from `contents: read`, and only the OIDC jobs add `id-token: write` and only CodeQL adds `security-events: write`. Every third-party action is pinned to a full commit SHA; Dependabot moves the SHA and its version comment together. GitHub secret scanning, push protection, Dependabot alerts and a `main` ruleset (no force-push or deletion, CI required on pull requests) are switched on in the repository settings.
 
 ## 12. Observability
 

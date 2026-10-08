@@ -35,3 +35,5 @@
 3. Terraform and Bicep share policy JSON; smallest SKUs; deploy gated by `DEPLOY_ENABLED`, OIDC only.
 4. No dates in docs, no unfinished placeholders, and a README in every folder.
 5. Third-party frameworks are paraphrased and attributed, never copied.
+6. Actions are pinned to commit SHAs with read-only default permissions; gitleaks, CodeQL and weekly
+   Dependabot updates run, and `test_workflows_are_hardened` keeps the pins in place.

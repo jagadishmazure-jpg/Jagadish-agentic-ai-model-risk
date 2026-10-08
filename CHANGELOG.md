@@ -4,6 +4,10 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+### Added
+
+- Supply-chain hardening: every GitHub Action pinned to a commit SHA with a version comment, top-level `permissions` on every workflow, a gitleaks job in CI, a CodeQL workflow, `.github/dependabot.yml` and a guard test (`test_workflows_are_hardened`).
+- GitHub settings: Dependabot alerts and security updates, private vulnerability reporting and a `main` ruleset (no force-push or deletion; CI required on pull requests).
 - Four pillars as JSON Schema and YAML: model cards, data sheets, risk cards, scenarios.
 - Executable pillar links: card to required risks, data sheet understanding checks, risk-to-scenario
   links, scenario results to residual risk and a generated backlog.
