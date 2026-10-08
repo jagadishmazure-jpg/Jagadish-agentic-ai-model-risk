@@ -8,12 +8,12 @@ authors = [{ name = "Jagadish Meduri" }]
 requires-python = ">=3.13"
 dependencies = [
   "jsonschema==4.26.0", # validates every pillar artifact against schemas/
-  "mcp==2.2.0",         # risk register exposed as an MCP server
+  "mcp==2.3.0",         # risk register exposed as an MCP server
   "pyyaml==6.0.3",      # pillar artifacts are YAML
 ]
 
 [project.optional-dependencies]
-dev = ["pytest==9.1.1", "pytest-asyncio==1.4.0", "ruff==0.16.9"]
+dev = ["pytest==9.1.1", "pytest-asyncio==1.4.0", "ruff==0.16.10"]
 
 [project.scripts]
 modelrisk = "modelrisk.cli:main"
