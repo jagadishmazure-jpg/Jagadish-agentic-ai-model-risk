@@ -38,7 +38,7 @@ flowchart LR
 
 | File | Role |
 |---|---|
-| `.github/workflows/ci.yml` | Tests, gate and gitleaks |
+| `.github/workflows/ci.yml` | Tests, gate, gitleaks and the source SBOM |
 | `.github/workflows/codeql.yml` | CodeQL code scanning |
 | `.github/dependabot.yml` | Weekly grouped updates for pip, Actions and Terraform |
 | `.github/workflows/infra.yml` | IaC checks |
@@ -87,6 +87,7 @@ gh workflow run deploy.yml -f deploy_tool=bicep   # does nothing until DEPLOY_EN
 ```text
 ci.yml         test         on=push,pull_request                  gate=-               env=-                          -
 ci.yml         bicep        on=push,pull_request                  gate=-               env=-                          -
+ci.yml         sbom         on=push,pull_request                  gate=-               env=-                          -
 ci.yml         secrets      on=push,pull_request                  gate=-               env=-                          -
 codeql.yml     analyze      on=push,pull_request,schedule         gate=-               env=-                          -
 deploy.yml     preflight    on=push,workflow_dispatch             gate=-               env=-                          -
