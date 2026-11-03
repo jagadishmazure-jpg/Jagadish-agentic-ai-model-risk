@@ -30,7 +30,7 @@
 - **Terraform + Bicep** evidence plane (Azure Policy for required model-card tags, Log Analytics
   workbook, keyless evidence storage, smallest SKUs). GitHub Actions use OIDC with dev → prod
   approval, and deployment is switched off.
-- **593 automated tests**, all offline, plus 33 complete component docs whose outputs and code
+- **592 automated tests**, all offline, plus 33 complete component docs whose outputs and code
   excerpts are regenerated and drift-checked in CI.
 
 **Skills demonstrated:** AI governance and model risk management (SR 11-7, NIST AI RMF, EU AI Act,
@@ -41,14 +41,6 @@ GitHub Actions (OIDC) and Python.
 *Honesty note: all companies, people and data are fictional and synthetic. The language model is a
 deterministic mock, the injection screen and PII masking are regex stand-ins, sign-offs are seeded
 demo records, and nothing is deployed to Azure.*
-
-## Attribution
-
-The four-pillar structure (model cards, data sheets, risk cards, plus scenario planning, used together)
-comes from the Cloud Security Alliance AI Technology and Risk working group's AI Model Risk
-Management Framework: [https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk). The framework document is **not** included or redistributed
-here, and nothing in this repository copies its text. Schemas, scoring, scenarios, code and wording
-are this repository's own. Please read the framework on the CSA site.
 
 ## Quick start
 
@@ -122,7 +114,7 @@ flowchart LR
 | `regulatory/` | Framework mapping |
 | `infra/` | Terraform, Bicep, policies, workbook |
 | `docs/` | Pillars, domains, scenarios, components, infra, guides, ADRs |
-| `tests/` | 593 tests |
+| `tests/` | 592 tests |
 
 Start with [docs/implementation-guide.md](docs/implementation-guide.md), then
 [docs/pillars/combining-the-pillars.md](docs/pillars/combining-the-pillars.md),
@@ -142,4 +134,4 @@ Start with [docs/implementation-guide.md](docs/implementation-guide.md), then
 
 ## License
 
-MIT for this repository's code and docs. The CSA framework is not covered by this license and is not included.
+MIT for this repository's code and docs.

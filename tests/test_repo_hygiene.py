@@ -21,7 +21,6 @@ FULL_DOCS = sorted(
 MONTHS = r"\b(January|February|March|April|June|July|August|September|October|November|December)\b"
 SUFFIXES = {".md", ".py", ".json", ".yml", ".yaml", ".tf", ".bicep", ".hcl", ".sh", ".toml", ".jsonl", ".tfvars"}
 TEXT_FILES = [p for p in ROOT.rglob("*") if p.is_file() and not SKIP_PARTS & set(p.parts) and p.suffix in SUFFIXES]
-CSA_LINK = "https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk"
 
 
 def folders():
@@ -117,14 +116,6 @@ def test_framework_pdf_is_never_committed():
     tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split()
     assert not [f for f in tracked if f.lower().endswith(".pdf")]
     assert "*.pdf" in (ROOT / ".gitignore").read_text()
-
-
-def test_csa_is_attributed_and_linked():
-    readme = (ROOT / "README.md").read_text()
-    assert "Cloud Security Alliance" in readme and CSA_LINK in readme
-    for p in (ROOT / "docs/pillars").glob("*.md"):
-        if p.name != "README.md":
-            assert CSA_LINK in p.read_text(), p
 
 
 def test_companies_are_fictional():

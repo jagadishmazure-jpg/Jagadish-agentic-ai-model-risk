@@ -4,8 +4,7 @@ sure no reference wording was copied. The references themselves are never part o
 
     python scripts/overlap_check.py /path/to/refs/*.txt [--n 8]
 
-URLs are removed from both sides before comparing: the attribution link that the repository is
-required to carry also appears in the reference, and a link is a citation, not copied prose.
+URLs are removed from both sides before comparing: a framework link is not copied prose.
 
 Exit code 1 if any overlap is found."""
 

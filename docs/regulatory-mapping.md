@@ -37,7 +37,6 @@ The Cloud Security Alliance AI Technology and Risk working group frames model ri
 four tools used together: model cards, data sheets, risk cards, plus scenario planning
 ([working group page](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk)). This repository implements each as a JSON Schema, a YAML artifact
 per model and code, and adds explicit links between them (`docs/pillars/combining-the-pillars.md`).
-The framework document is not reproduced or redistributed here.
 
 <!-- output: regmap --framework csa-ai-mrm -->
 ```text

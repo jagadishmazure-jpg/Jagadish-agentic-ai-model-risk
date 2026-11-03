@@ -1,8 +1,7 @@
 # Implementation guide
 
 From a clean clone to the full demo in a few minutes, offline; then the path to a real Azure
-deployment. All companies, people and data are fictional. The pillar structure is credited to the
-[CSA AI Technology and Risk working group](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk).
+deployment. All companies, people and data are fictional.
 
 ## 1. Prerequisites
 

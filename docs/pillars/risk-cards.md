@@ -2,11 +2,7 @@
 
 Risk cards list the ways a model can cause harm, how likely and how severe each one is, which
 controls reduce it, who owns it and which scenarios test it. Scores are likelihood × impact for
-inherent risk; residual risk applies the credited effectiveness of implemented controls. The risk
-card as a pillar, and the idea of grouping risks into families, is credited to the Cloud Security
-Alliance AI Technology and Risk working group
-([framework page](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk));
-the nine-category enum, harm codes H1 to H6 and the scoring code are this repository's own.
+inherent risk; residual risk applies the credited effectiveness of implemented controls.
 
 Sections: [1. Purpose](#1-purpose) · [2. Architecture](#2-architecture) · [3. How it works](#3-how-it-works) · [4. Key files](#4-key-files) · [5. Code excerpts](#5-code-excerpts) · [6. Configuration](#6-configuration) · [7. Commands](#7-commands) · [8. Real output](#8-real-output) · [9. Tests and gates](#9-tests-and-gates) · [10. Guardrails](#10-guardrails) · [11. Security and governance](#11-security-and-governance) · [12. Observability](#12-observability) · [13. Failure modes](#13-failure-modes) · [14. Mapping to Azure services](#14-mapping-to-azure-services) · [15. Limitations](#15-limitations) · [16. Interview talking points](#16-interview-talking-points)
 

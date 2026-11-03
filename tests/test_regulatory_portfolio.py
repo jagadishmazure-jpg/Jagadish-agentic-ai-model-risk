@@ -31,7 +31,7 @@ def test_every_item_has_an_evidence_command():
     assert all(i["evidence"].startswith("modelrisk ") for f in DOC["frameworks"] for i in f["items"])
 
 
-def test_csa_attribution_links_the_working_group():
+def test_csa_mapping_links_the_framework_page():
     csa = next(f for f in DOC["frameworks"] if f["id"] == "csa-ai-mrm")
     assert csa["source"] == "https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk"
 

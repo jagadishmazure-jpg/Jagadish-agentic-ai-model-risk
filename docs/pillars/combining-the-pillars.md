@@ -3,9 +3,7 @@
 The four pillars are only useful together. This repository implements the combination as four
 executable links: the model card implies risks, the data sheet is checked against the model, risk
 cards drive scenarios, and scenario results update residual risk and generate the development
-backlog. The emphasis on combining the tools comes from the Cloud Security Alliance AI Technology
-and Risk working group ([framework page](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk));
-the link rules and code are this repository's own.
+backlog.
 
 Sections: [1. Purpose](#1-purpose) · [2. Architecture](#2-architecture) · [3. How it works](#3-how-it-works) · [4. Key files](#4-key-files) · [5. Code excerpts](#5-code-excerpts) · [6. Configuration](#6-configuration) · [7. Commands](#7-commands) · [8. Real output](#8-real-output) · [9. Tests and gates](#9-tests-and-gates) · [10. Guardrails](#10-guardrails) · [11. Security and governance](#11-security-and-governance) · [12. Observability](#12-observability) · [13. Failure modes](#13-failure-modes) · [14. Mapping to Azure services](#14-mapping-to-azure-services) · [15. Limitations](#15-limitations) · [16. Interview talking points](#16-interview-talking-points)
 

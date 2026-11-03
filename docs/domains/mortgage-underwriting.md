@@ -5,7 +5,7 @@ and records a recommendation (approve, refer or decline) with reasons tied to gu
 issues a credit decision: every recommendation waits for a licensed underwriter. Fair lending is the
 centre of this domain, with adverse impact ratio and matched-pair tests.
 
-All companies, people and data here are fictional. Pillar structure credited to the [CSA AI Technology and Risk working group](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk).
+All companies, people and data here are fictional.
 
 Sections: [1. Purpose](#1-purpose) · [2. Architecture](#2-architecture) · [3. How it works](#3-how-it-works) · [4. Key files](#4-key-files) · [5. Code excerpts](#5-code-excerpts) · [6. Configuration](#6-configuration) · [7. Commands](#7-commands) · [8. Real output](#8-real-output) · [9. Tests and gates](#9-tests-and-gates) · [10. Guardrails](#10-guardrails) · [11. Security and governance](#11-security-and-governance) · [12. Observability](#12-observability) · [13. Failure modes](#13-failure-modes) · [14. Mapping to Azure services](#14-mapping-to-azure-services) · [15. Limitations](#15-limitations) · [16. Interview talking points](#16-interview-talking-points)
 

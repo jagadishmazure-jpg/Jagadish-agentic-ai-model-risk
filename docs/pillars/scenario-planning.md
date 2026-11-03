@@ -4,9 +4,7 @@ Scenario planning asks "what if" before it happens. Here a scenario is a YAML en
 hypothesis, linked risks, parameters, a metric, a threshold and an optional warn level. The engine
 runs the real agent against synthetic cases twice: with controls on (the test that gates CI) and
 with the linked risks' runtime controls switched off (the what-if that shows each control's
-value). The scenario-planning pillar is credited to the Cloud Security Alliance AI Technology and
-Risk working group ([framework page](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk));
-the simulation engine and the eight families are this repository's own.
+value).
 
 Sections: [1. Purpose](#1-purpose) · [2. Architecture](#2-architecture) · [3. How it works](#3-how-it-works) · [4. Key files](#4-key-files) · [5. Code excerpts](#5-code-excerpts) · [6. Configuration](#6-configuration) · [7. Commands](#7-commands) · [8. Real output](#8-real-output) · [9. Tests and gates](#9-tests-and-gates) · [10. Guardrails](#10-guardrails) · [11. Security and governance](#11-security-and-governance) · [12. Observability](#12-observability) · [13. Failure modes](#13-failure-modes) · [14. Mapping to Azure services](#14-mapping-to-azure-services) · [15. Limitations](#15-limitations) · [16. Interview talking points](#16-interview-talking-points)
 

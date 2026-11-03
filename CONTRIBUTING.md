@@ -24,7 +24,7 @@ stale, so `modelrisk gate` fails at G7 until people re-approve. In this demo rep
 ## Rules
 
 - Fictional companies and synthetic data only. No real client names, people or identifiers.
-- Paraphrase and attribute third-party frameworks; never copy their text. The CSA framework PDF must
+- Never copy third-party framework text. Framework PDFs must
   never be committed (`*.pdf` is ignored and a test checks it). Run
   `python scripts/overlap_check.py <reference texts>` on new prose; it must report 0 overlaps.
 - New scenario families need a runner, a runtime control, risk-card links and a doc with all 16 sections.

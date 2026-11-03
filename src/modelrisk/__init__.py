@@ -1,4 +1,4 @@
-"""AI model risk management as code (CSA AI MRM pillars, implemented in my own design).
+"""AI model risk management as code (model cards, data sheets, risk cards and scenario planning).
 
 Paths and constants shared by every module. All companies, people and data are fictional.
 """

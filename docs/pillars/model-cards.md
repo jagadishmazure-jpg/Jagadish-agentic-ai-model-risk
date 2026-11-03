@@ -3,10 +3,7 @@
 A model card is the identity document of a model: what it is for, what it must not be used for,
 how it was evaluated, where it breaks and who answers for it. Here it is a YAML file validated by a
 JSON Schema, and the inventory tier, the EU AI Act class and the risks the model must carry are all
-computed from it. The idea of a model card as one of four complementary tools comes from the Cloud
-Security Alliance AI Technology and Risk working group
-([CSA AI Model Risk Management Framework](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk));
-the schema, fields and code below are this repository's own design.
+computed from it.
 
 Sections: [1. Purpose](#1-purpose) · [2. Architecture](#2-architecture) · [3. How it works](#3-how-it-works) · [4. Key files](#4-key-files) · [5. Code excerpts](#5-code-excerpts) · [6. Configuration](#6-configuration) · [7. Commands](#7-commands) · [8. Real output](#8-real-output) · [9. Tests and gates](#9-tests-and-gates) · [10. Guardrails](#10-guardrails) · [11. Security and governance](#11-security-and-governance) · [12. Observability](#12-observability) · [13. Failure modes](#13-failure-modes) · [14. Mapping to Azure services](#14-mapping-to-azure-services) · [15. Limitations](#15-limitations) · [16. Interview talking points](#16-interview-talking-points)
 

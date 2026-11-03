@@ -4,8 +4,7 @@ How to present this repository in 2, 10 and 30 minutes, with likely questions.
 
 ## Two minutes
 
-"This is a model risk management system for agentic AI, built on four pillars credited to the Cloud
-Security Alliance: model cards, data sheets, risk cards, plus scenario planning. Each pillar is a JSON
+"This is a model risk management system for agentic AI, built on four pillars: model cards, data sheets, risk cards, plus scenario planning. Each pillar is a JSON
 Schema and YAML per model, and the pillars are wired together in code: the card implies risks, the
 data sheet is tested against the model, risks drive scenarios, and scenario results update residual
 risk and generate the backlog. Five fictional enterprise agents (fraud, claims, mortgage underwriting,
@@ -54,4 +53,3 @@ digest and audit chain, the MCP server, the regulatory mapping and the infrastru
 | Why both Terraform and Bicep? | Teams use either; both load the same policy JSON and a test proves it. |
 | What is not done? | See the README's open gaps: attested external scenarios, mocks, regex screens, seeded sign-offs, nothing deployed. |
 
-Pillar structure credited to the [CSA AI Technology and Risk working group](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk).

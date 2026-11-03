@@ -46,4 +46,3 @@ flowchart TB
 | Telemetry | JSON lines | Application Insights + Log Analytics workbook |
 | Evidence | `evidence/` | Storage account, versioned, keyless |
 
-Pillar structure credited to the [CSA AI Technology and Risk working group](https://cloudsecurityalliance.org/research/working-groups/ai-technology-and-risk).
