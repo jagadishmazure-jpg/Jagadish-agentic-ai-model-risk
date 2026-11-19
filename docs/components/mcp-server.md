@@ -88,7 +88,7 @@ critical inherent risks: 3
   halcyon-fraud-triage                 BNK-R1   inherent 16 -> residual 3.36
   MTG-S1 adverse_impact_ratio = 0.955 (pass)
   MTG-S2 decision_flip_rate = 0.0 (pass)
-nist-ai-rmf items: GOVERN 1, GOVERN 2, GOVERN 6, MAP 1, MAP 2, MAP 4, MAP 5, MEASURE 1, MEASURE 2, MEASURE 3, MANAGE 1, MANAGE 2, MANAGE 4
+nist-ai-rmf items: GOVERN 1, GOVERN 2, GOVERN 6, GOVERN 6.1, MAP 1, MAP 2, MAP 4, MAP 4.1, MAP 5, MEASURE 1, MEASURE 2, MEASURE 2.7, MEASURE 3, MANAGE 1, MANAGE 2, MANAGE 2.4, MANAGE 4, MANAGE 4.1
 ```
 <!-- /output -->
 

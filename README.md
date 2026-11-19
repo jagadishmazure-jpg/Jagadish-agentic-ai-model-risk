@@ -25,12 +25,16 @@
   with a hash-chained audit log, and a read-only MCP server over the risk register.
 - **A CI gate** that fails if a pillar is missing, a high risk has no control or a scenario breaches,
   among eight checks.
+- **Sandbox controls for agent sessions.** A session is treated as an insider: deny-by-default network
+  policy with an audit chain, resume on a new worker without repeating completed model calls, and MCP
+  servers held to an exact reviewed pin. A synthetic examiner pack maps the three onto the framework
+  file. Preview product behaviour is marked [verify] and is not called.
 - **Regulatory mapping in my own words:** NIST AI RMF, EU AI Act tiers, SR 11-7, ISO/IEC 42001, HIPAA
   and fair lending. **Portfolio cross-link:** cards that govern components of my five other repos.
 - **Terraform + Bicep** evidence plane (Azure Policy for required model-card tags, Log Analytics
   workbook, keyless evidence storage, smallest SKUs). GitHub Actions use OIDC with dev → prod
   approval, and deployment is switched off.
-- **592 automated tests**, all offline, plus 33 complete component docs whose outputs and code
+- **677 automated tests**, all offline, plus 37 complete component docs whose outputs and code
   excerpts are regenerated and drift-checked in CI.
 
 **Skills demonstrated:** AI governance and model risk management (SR 11-7, NIST AI RMF, EU AI Act,
@@ -104,6 +108,36 @@ flowchart LR
   RC & SC & MC & DS --> G[CI gate G1-G8]
 ```
 
+## Sandbox controls (agents are insider risks)
+
+A sandbox keeps agent-written code off the worker. It does not stop the agent using a network destination, a saved model call, or a tool it was allowed to call. These four commands are the offline controls for that gap. They use the mock model and make no cloud call.
+
+```mermaid
+flowchart LR
+  S[sandboxed session] --> N[network policy<br/>deny by default]
+  N -->|allow| R[approved resource]
+  N -->|deny| A[audit log]
+  W1[worker A] --> C[context cache]
+  C --> W2[worker B<br/>no repeat model calls]
+  M[MCP manifest] --> P[exact pin and allowlist]
+  N & C & P --> E[examiner evidence pack]
+  E --> F[regulatory mapping]
+```
+
+| Control | What it decides | Command |
+|---|---|---|
+| Session network policy | Which resources one sandboxed session may reach. Deny by default, an explicit deny beats a broader allow, every decision on a hash-chained audit log. | `modelrisk network-policy` |
+| Work-state resume | Completed steps are saved so a new worker does not repeat those model calls. | `modelrisk context-cache` |
+| MCP server pin | A declared MCP server is admitted only on the allowlist, at an exact reviewed version. | `modelrisk mcp-supply` |
+| Examiner pack | One synthetic evidence pack from the three, joined to `regulatory/mapping.yaml`. | `modelrisk examiner` |
+
+Sources:
+
+- Session network policy and saved work, described as Agent Grid and ContextCache: [Microsoft's Azure upgrades add speed and security to agents](https://www.techtarget.com/news/microsofts-azure-upgrades-add-speed-and-security-to-agents/875110/). [verify] before treating either name as a committed service. This repository does not call them. MicroVM start times, attaching a managed platform to self-managed clusters, and discount comparisons in that announcement are out of scope here and are also [verify].
+- MCP reference-server release whose patched versions are the pins: [`mcp-server-git` 2026.11.18](https://github.com/modelcontextprotocol/servers/releases/tag/v2.5.0) and `@modelcontextprotocol/server-filesystem` 2.4.0, plus `@modelcontextprotocol/server-everything` 2.3.1 from the same release. The check is an allowlist. It does not describe a vulnerability.
+
+Docs: [network policy](docs/components/network-policy.md), [context cache](docs/components/context-cache.md), [MCP pin](docs/components/mcp-supply-chain.md), [examiner pack](docs/components/examiner-pack.md).
+
 ## Repository map
 
 | Path | What it holds |
@@ -114,7 +148,7 @@ flowchart LR
 | `regulatory/` | Framework mapping |
 | `infra/` | Terraform, Bicep, policies, workbook |
 | `docs/` | Pillars, domains, scenarios, components, infra, guides, ADRs |
-| `tests/` | 592 tests |
+| `tests/` | 677 tests |
 
 Start with [docs/implementation-guide.md](docs/implementation-guide.md), then
 [docs/pillars/combining-the-pillars.md](docs/pillars/combining-the-pillars.md),

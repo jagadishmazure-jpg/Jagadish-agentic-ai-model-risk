@@ -35,7 +35,8 @@ halcyon-fraud-triage                BNK-R1  operational       4  4  16 critical 
 ## Thirty minutes
 
 Add the agent runtime (`docs/components/agent-runtime.md`), independent validation, the sign-off
-digest and audit chain, the MCP server, the regulatory mapping and the infrastructure.
+digest and audit chain, the MCP server, the session network policy, the context cache, the MCP
+pin, `modelrisk examiner`, the regulatory mapping and the infrastructure.
 
 ## Questions and answers
 
@@ -48,6 +49,7 @@ digest and audit chain, the MCP server, the regulatory mapping and the infrastru
 | Is the mock model a weakness? | It makes tests deterministic and worst case (it obeys every injection). Real models go through Foundry evaluations with repeated sampling. |
 | How do you handle fair lending? | Proxy exclusion, AIR, matched pairs, human decisions, evidence-backed reasons, and a planned less discriminatory alternative search. |
 | What blocks production? | Valid sign-offs on the current digest from the tier's roles, no breaches and a non-failing validation. Mortgage and healthcare are blocked now. |
+| How do you treat an agent on the network? | As an insider. Deny by default, an explicit deny beats a broad allow, and the audit chain records every reach. Resume on a new worker must not repeat completed model calls. MCP servers stay on an exact pin. Preview hosted services are marked [verify] and are not called. |
 | How does this map to SR 11-7? | Inventory, development documentation, independent validation, ongoing monitoring and governance. |
 | EU AI Act? | Classes from declared uses; high-risk obligations mapped article by article. |
 | Why both Terraform and Bicep? | Teams use either; both load the same policy JSON and a test proves it. |

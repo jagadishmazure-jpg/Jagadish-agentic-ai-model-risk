@@ -30,6 +30,7 @@ person, so there is no formal SLA or bug bounty.
 - **Human sign-off is tamper-evident.** Approvals are bound to a digest of the pillars, refuse self
   sign-off, expire, and are written to a hash-chained audit log that the CI gate verifies.
 - **The MCP server is read-only** (every tool annotated read-only and non-destructive).
+- **A sandboxed session is deny-by-default on the network.** Explicit denies override a broad allow, and every decision is on a hash-chained audit log (`modelrisk network-policy`). Completed model calls are not repeated when work resumes on a new worker (`modelrisk context-cache`). A declared MCP server is admitted only on an allowlist at an exact reviewed pin (`modelrisk mcp-supply`). `modelrisk examiner` replays the three. Preview hosted behaviour is marked [verify] and is not called.
 - **Deploy gated off** until `DEPLOY_ENABLED` is set; prod needs environment reviewers.
 - **Scanned IaC.** checkov and tflint run on Terraform in CI; each skipped check is justified.
 - **Threat model:** [`docs/security/threat-model.md`](docs/security/threat-model.md) maps STRIDE, the OWASP Top 10 for LLM Applications and MITRE ATLAS techniques to this repository's real components, with the control, the test that proves it and whether it is built, written but not deployed, or planned.

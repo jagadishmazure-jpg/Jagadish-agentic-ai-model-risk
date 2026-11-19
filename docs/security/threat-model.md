@@ -21,6 +21,8 @@ flowchart LR
   IN[claims, applications, auth requests] -.->|untrusted text| AG[five domain agents]
   AG -->|prompt| LLM[mock model]
   AG --> TP[tool policy: allow-list, limits, approval]
+  AG --> NET[network policy: deny by default]
+  AG --> CACHE[context cache]
   AG --> HITL[human hand-over]
   CARDS[model, data, risk cards] --> GATE[modelrisk gate]
   SCN[43 scenarios: on / what-if] --> GATE
@@ -48,6 +50,10 @@ sign-offs that move a model between lifecycle stages; anything an MCP client can
 | Elevation of privilege | An agent calls a tool off its allow-list or with out-of-range arguments | Tool policy: allow-list, argument limits, approval for sensitive tools | `test_tool_policy_blocks_tools_off_the_allow_list`, `test_tool_policy_enforces_argument_limits`, `test_tool_policy_requires_approval` | Built |
 | Elevation of privilege | An MCP client signs off or edits a model | MCP tools are all read-only; there is no signing tool | `test_tools_are_all_read_only`, `test_there_is_no_signing_tool` | Built |
 | Elevation of privilege | A tier-one model reaches production with too few approvers | Tier-one production needs four approvers | `test_tier_one_production_needs_four_approvers` | Built |
+| Elevation of privilege | A sandboxed agent reaches payroll, the model admin plane, or the public internet | Deny-by-default network policy; an explicit deny beats a broader allow | `test_explicit_deny_beats_a_broader_allow`, `test_public_internet_is_denied_by_default`, `test_model_admin_route_is_denied_on_the_same_host` | Built |
+| Repudiation | A session later denies the resource it asked for | Hash-chained network audit log | `test_tampering_breaks_the_network_audit_chain` | Built |
+| Denial of service | Resume repeats model calls and spends the budget twice | Context cache skips a completed call key | `test_resume_does_not_repeat_completed_model_calls` | Built |
+| Tampering | An unpinned, old, or unreviewed MCP server is configured | Allowlist and an exact reviewed pin | `test_below_the_patched_pin_is_rejected`, `test_date_version_does_not_satisfy_a_semantic_pin`, `test_published_package_off_the_allowlist_is_rejected` | Built |
 
 ## OWASP Top 10 for LLM Applications
 
@@ -55,7 +61,7 @@ sign-offs that move a model between lifecycle stages; anything an MCP client can
 |---|---|---|---|
 | LLM01 Prompt injection | Instructions inside a claim narrative or prior-auth note | Flagged injection is withheld from the model (`test_flagged_injection_is_withheld_from_the_model`); the prompt-injection scenario family runs on and off | Built (regex) |
 | LLM02 Sensitive information disclosure | Member PHI, applicant PII | PHI and PII masking; PHI models add privacy and clinical review (`test_phi_models_add_privacy_and_clinical_review`) | Built |
-| LLM03 Supply chain | Compromised package or action | Pinned dependencies, SHA-pinned actions, Dependabot, CodeQL, gitleaks, SBOM | Built (no container image in this repo) |
+| LLM03 Supply chain | Compromised package, action, or MCP server | Pinned dependencies, SHA-pinned actions, Dependabot, CodeQL, gitleaks, SBOM, and an exact pin plus allowlist for MCP servers | Built (no container image in this repo) |
 | LLM04 Data and model poisoning | Training data drifts away from what the data sheet claims | Data sheet tested against the running model; data-drift scenario family | Built |
 | LLM05 Improper output handling | A rationale cites evidence that was never supplied | Rationale cites only supplied evidence (`test_rationale_cites_only_supplied_evidence`); schemas validated (`test_schema_error_fails`) | Built |
 | LLM06 Excessive agency | The prior-auth agent denies care; the fraud agent blocks an account | Healthcare has no deny path (`test_healthcare_has_no_deny_path`); interrupts hand over to a human (`test_interrupt_hands_over_to_a_human`) | Built |
@@ -74,7 +80,7 @@ sign-offs that move a model between lifecycle stages; anything an MCP client can
 | Poison training data (AML.T0020) | Biased labels in underwriting data | Bias scenario family: adverse impact ratio and matched-pair flips |
 | Erode AI model integrity (AML.T0031) | Silent drift after release | Monitoring and data-drift scenarios update residual risk |
 | Cost harvesting (AML.T0034) | Requests that loop an agent to burn budget | Budget caps |
-| AI supply chain compromise (AML.T0010) | Tampered dependency or action | Pins, SBOM, CodeQL, gitleaks |
+| AI supply chain compromise (AML.T0010) | Tampered dependency, action, or MCP server | Pins, SBOM, CodeQL, gitleaks, MCP allowlist |
 
 ## Residual risks
 
