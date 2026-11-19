@@ -3,6 +3,7 @@
 modelrisk inventory | model ID | risks | heatmap | scenarios --model ID [--mitigations off]
 modelrisk whatif --model ID | combine --model ID | validate --model ID | monitor --model ID
 modelrisk lifecycle | gate | regmap | portfolio | agent --model ID | signoff ... | mcp | mcp-demo
+modelrisk network-policy | context-cache | mcp-supply | examiner
 """
 
 from __future__ import annotations
@@ -371,6 +372,40 @@ def cmd_iac(a) -> int:
     return 0
 
 
+def cmd_network_policy(a) -> int:
+    from modelrisk.network_policy import demo, render_demo
+
+    result = demo()
+    _p(render_demo(result))
+    return 0 if result["audit_ok"] else 1
+
+
+def cmd_context_cache(a) -> int:
+    from modelrisk.context_cache import demo, render_demo
+
+    result = demo()
+    _p(render_demo(result))
+    return 0 if result["duplicate_model_calls"] == 0 else 1
+
+
+def cmd_mcp_supply(a) -> int:
+    from modelrisk.mcp_supply import demo, render_demo
+
+    result = demo()
+    _p(render_demo(result))
+    return 0 if result["approved_ok"] and not result["rejected_ok"] else 1
+
+
+def cmd_examiner(a) -> int:
+    from modelrisk.examiner import build_pack, render_pack
+
+    pack = build_pack()
+    _p(render_pack(pack))
+    cache = pack["context_cache"]
+    ok = pack["network"]["audit_ok"] and cache["duplicate_model_calls"] == 0 and pack["mcp_supply"]["approved_ok"]
+    return 0 if ok else 1
+
+
 def cmd_mcp(a) -> int:
     from modelrisk.mcp_server import build_server
 
@@ -457,6 +492,10 @@ def parser() -> argparse.ArgumentParser:
     s.set_defaults(fn=cmd_iac)
     sub.add_parser("mcp").set_defaults(fn=cmd_mcp)
     sub.add_parser("mcp-demo").set_defaults(fn=cmd_mcp_demo)
+    sub.add_parser("network-policy").set_defaults(fn=cmd_network_policy)
+    sub.add_parser("context-cache").set_defaults(fn=cmd_context_cache)
+    sub.add_parser("mcp-supply").set_defaults(fn=cmd_mcp_supply)
+    sub.add_parser("examiner").set_defaults(fn=cmd_examiner)
     return p
 
 

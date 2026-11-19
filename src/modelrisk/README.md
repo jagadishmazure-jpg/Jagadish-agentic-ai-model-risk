@@ -14,6 +14,10 @@ The `modelrisk` package: pillars, governance, CLI and MCP server.
 | `iac.py` | Summaries of the IaC files |
 | `lifecycle.py` | Stages and required roles |
 | `mcp_server.py` | Read-only MCP server |
+| `network_policy.py` | Deny-by-default session network policy and audit log |
+| `context_cache.py` | Resume work on a new worker without repeating model calls |
+| `mcp_supply.py` | MCP server allowlist and exact version pins |
+| `examiner.py` | Synthetic examiner evidence pack |
 | `monitoring.py` | PSI and performance monitoring |
 | `registry.py` | Loads pillars per model |
 | `report.py` | Text tables and heatmap |

@@ -20,10 +20,10 @@ flowchart LR
 
 <!-- output: regmap -->
 ```text
-csa-ai-mrm: CSA AI Model Risk Management Framework (pillars) (5 controls)
-nist-ai-rmf: NIST AI Risk Management Framework 1.0 (13 controls)
+csa-ai-mrm: CSA AI Model Risk Management Framework (pillars) (6 controls)
+nist-ai-rmf: NIST AI Risk Management Framework 1.0 (18 controls)
 eu-ai-act: EU AI Act (the EU regulation on artificial intelligence) (8 controls)
-sr-11-7: SR 11-7 Supervisory Guidance on Model Risk Management (6 controls)
+sr-11-7: SR 11-7 Supervisory Guidance on Model Risk Management (7 controls)
 iso-42001: ISO/IEC 42001 AI management system (8 controls)
 hipaa: HIPAA Privacy and Security Rules (4 controls)
 fair-lending: Fair lending (ECOA and Regulation B, Fair Housing Act) (5 controls)
@@ -40,7 +40,7 @@ per model and code, and adds explicit links between them (`docs/pillars/combinin
 
 <!-- output: regmap --framework csa-ai-mrm -->
 ```text
-csa-ai-mrm: CSA AI Model Risk Management Framework (pillars) (5 controls)
+csa-ai-mrm: CSA AI Model Risk Management Framework (pillars) (6 controls)
 ref                    implemented_by
 ---------------------  ---------------------------------------------------------------
 model cards            schemas/model-card.schema.json, src/modelrisk/tiering.py
@@ -48,6 +48,7 @@ data sheets            schemas/data-sheet.schema.json, src/modelrisk/combine.py
 risk cards             schemas/risk-card.schema.json, src/modelrisk/scoring.py
 scenario planning      schemas/scenario.schema.json, src/modelrisk/scenarios/engine.py
 combining the pillars  src/modelrisk/combine.py
+examined controls      src/modelrisk/examiner.py
 ```
 <!-- /output -->
 
@@ -61,22 +62,27 @@ combining the pillars  src/modelrisk/combine.py
 
 <!-- output: regmap --framework nist-ai-rmf -->
 ```text
-nist-ai-rmf: NIST AI Risk Management Framework 1.0 (13 controls)
-ref        implemented_by
----------  --------------------------------------------------------------------
-GOVERN 1   src/modelrisk/lifecycle.py, docs/best-practices.md
-GOVERN 2   schemas/risk-card.schema.json, src/modelrisk/signoff.py
-GOVERN 6   registry/pfa-mortgage-flow/model-card.yaml, src/modelrisk/combine.py
-MAP 1      schemas/model-card.schema.json
-MAP 2      src/modelrisk/tiering.py
-MAP 4      schemas/model-card.schema.json
-MAP 5      src/modelrisk/scoring.py
-MEASURE 1  src/modelrisk/scenarios/engine.py, src/modelrisk/evaluation.py
-MEASURE 2  src/modelrisk/scenarios/engine.py, src/modelrisk/validation.py
-MEASURE 3  src/modelrisk/monitoring.py
-MANAGE 1   src/modelrisk/combine.py
-MANAGE 2   src/modelrisk/agents/base.py
-MANAGE 4   src/modelrisk/combine.py, src/modelrisk/signoff.py
+nist-ai-rmf: NIST AI Risk Management Framework 1.0 (18 controls)
+ref          implemented_by
+-----------  --------------------------------------------------------------------
+GOVERN 1     src/modelrisk/lifecycle.py, docs/best-practices.md
+GOVERN 2     schemas/risk-card.schema.json, src/modelrisk/signoff.py
+GOVERN 6     registry/pfa-mortgage-flow/model-card.yaml, src/modelrisk/combine.py
+GOVERN 6.1   src/modelrisk/mcp_supply.py
+MAP 1        schemas/model-card.schema.json
+MAP 2        src/modelrisk/tiering.py
+MAP 4        schemas/model-card.schema.json
+MAP 4.1      src/modelrisk/network_policy.py
+MAP 5        src/modelrisk/scoring.py
+MEASURE 1    src/modelrisk/scenarios/engine.py, src/modelrisk/evaluation.py
+MEASURE 2    src/modelrisk/scenarios/engine.py, src/modelrisk/validation.py
+MEASURE 2.7  src/modelrisk/examiner.py, src/modelrisk/context_cache.py
+MEASURE 3    src/modelrisk/monitoring.py
+MANAGE 1     src/modelrisk/combine.py
+MANAGE 2     src/modelrisk/agents/base.py
+MANAGE 2.4   src/modelrisk/network_policy.py, src/modelrisk/context_cache.py
+MANAGE 4     src/modelrisk/combine.py, src/modelrisk/signoff.py
+MANAGE 4.1   src/modelrisk/examiner.py
 ```
 <!-- /output -->
 
@@ -95,14 +101,14 @@ monitoring; the table shows where each is implemented.
 ```text
 eu-ai-act: EU AI Act (the EU regulation on artificial intelligence) (8 controls)
 ref      implemented_by
--------  -----------------------------------------------------------
-Art. 9   src/modelrisk/combine.py, src/modelrisk/lifecycle.py
+-------  -----------------------------------------------------------------------------------------------
+Art. 9   src/modelrisk/combine.py, src/modelrisk/lifecycle.py, src/modelrisk/examiner.py
 Art. 10  schemas/data-sheet.schema.json, src/modelrisk/combine.py
 Art. 11  schemas/model-card.schema.json, docs/pillars/model-cards.md
-Art. 12  src/modelrisk/signoff.py, infra/terraform/main.tf
+Art. 12  src/modelrisk/signoff.py, infra/terraform/main.tf, src/modelrisk/network_policy.py
 Art. 13  schemas/model-card.schema.json
 Art. 14  src/modelrisk/agents/graph.py, src/modelrisk/signoff.py
-Art. 15  src/modelrisk/scenarios/engine.py
+Art. 15  src/modelrisk/scenarios/engine.py, src/modelrisk/network_policy.py, src/modelrisk/mcp_supply.py
 Art. 72  src/modelrisk/monitoring.py
 ```
 <!-- /output -->
@@ -115,7 +121,7 @@ inventory, and ongoing monitoring. Here: model cards and data sheets (developmen
 
 <!-- output: regmap --framework sr-11-7 -->
 ```text
-sr-11-7: SR 11-7 Supervisory Guidance on Model Risk Management (6 controls)
+sr-11-7: SR 11-7 Supervisory Guidance on Model Risk Management (7 controls)
 ref                   implemented_by
 --------------------  --------------------------------------------------------------
 development and use   schemas/model-card.schema.json, schemas/data-sheet.schema.json
@@ -124,6 +130,7 @@ ongoing monitoring    src/modelrisk/monitoring.py, src/modelrisk/validation.py
 outcomes analysis     src/modelrisk/validation.py, src/modelrisk/evaluation.py
 effective challenge   src/modelrisk/validation.py, src/modelrisk/signoff.py
 model inventory       registry/inventory.yaml, src/modelrisk/tiering.py
+vendor products       src/modelrisk/mcp_supply.py
 ```
 <!-- /output -->
 
@@ -141,12 +148,12 @@ ref              implemented_by
 ---------------  -----------------------------------------------------------
 6.1.2 and 6.1.3  src/modelrisk/scoring.py, src/modelrisk/combine.py
 6.1.4            src/modelrisk/tiering.py, src/modelrisk/scenarios/engine.py
-8                src/modelrisk/lifecycle.py
+8                src/modelrisk/lifecycle.py, src/modelrisk/network_policy.py
 9.1              src/modelrisk/monitoring.py
 10               src/modelrisk/combine.py
 Annex A.6        src/modelrisk/lifecycle.py
 Annex A.7        schemas/data-sheet.schema.json
-Annex A.10       registry/inventory.yaml
+Annex A.10       registry/inventory.yaml, src/modelrisk/mcp_supply.py
 ```
 <!-- /output -->
 

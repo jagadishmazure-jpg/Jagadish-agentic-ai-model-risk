@@ -60,6 +60,7 @@ gate: PASS
 8. **Lifecycle**: `modelrisk lifecycle` shows mortgage and healthcare blocked on sign-offs.
 9. **Sign-off flow**: `modelrisk signoff verify`; a self sign-off attempt is refused.
 10. **MCP**: `modelrisk mcp-demo`.
+11. **Sandbox controls**: `modelrisk network-policy`, `modelrisk context-cache`, `modelrisk mcp-supply`, then `modelrisk examiner` for the evidence pack. Preview product names in the docs are marked [verify].
 
 <!-- output: whatif --model juniper-prior-auth -->
 ```text

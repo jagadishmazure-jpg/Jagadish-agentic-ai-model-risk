@@ -71,6 +71,10 @@ def test_query_filters():
         ["agent", "--model", "juniper-prior-auth"],
         ["signoff", "verify"],
         ["mcp-demo"],
+        ["network-policy"],
+        ["context-cache"],
+        ["mcp-supply"],
+        ["examiner"],
     ],
 )
 def test_cli_commands_succeed(argv, capsys):

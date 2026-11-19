@@ -69,7 +69,7 @@ def test_full_doc_set_exists():
     assert len([n for n in names if n.startswith("pillars/")]) == 5
     assert len([n for n in names if n.startswith("domains/")]) == 5
     assert len([n for n in names if n.startswith("scenarios/")]) == 8
-    assert len([n for n in names if n.startswith("components/")]) == 10
+    assert len([n for n in names if n.startswith("components/")]) == 14
     assert len([n for n in names if n.startswith("infra/")]) == 5
     for top in ("implementation-guide", "regulatory-mapping", "interview-guide", "best-practices", "architecture", "deployment"):
         assert (ROOT / "docs" / f"{top}.md").exists()
@@ -134,9 +134,9 @@ def test_changelog_has_only_unreleased():
     assert versions == ["Unreleased"]
 
 
-def test_six_adrs_without_date_lines():
+def test_adrs_have_status_and_no_date_lines():
     adrs = sorted((ROOT / "docs/adr").glob("0*.md"))
-    assert len(adrs) == 6
+    assert len(adrs) == 7
     for a in adrs:
         t = a.read_text()
         assert "**Status:**" in t and "Date" not in t
