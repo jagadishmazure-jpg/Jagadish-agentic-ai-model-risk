@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from modelrisk.network_policy import (
@@ -125,10 +127,6 @@ def test_bad_rule_is_rejected_at_construction():
 
 
 def test_policy_module_does_not_open_sockets():
-    from pathlib import Path
-
-    import modelrisk.network_policy as policy
-
-    text = Path(policy.__file__).read_text()
+    text = Path(evaluate.__code__.co_filename).read_text()
     for word in ("socket", "urllib", "httpx", "requests"):
         assert word not in text

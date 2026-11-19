@@ -2,14 +2,13 @@ from pathlib import Path
 
 import pytest
 
-import modelrisk.mcp_supply as supply
-from modelrisk.mcp_supply import APPROVED, APPROVED_MANIFEST, ServerDecl, check_manifest, check_server, demo
+from modelrisk.mcp_supply import APPROVED, APPROVED_MANIFEST, Pin, ServerDecl, check_manifest, check_server, demo
 
 
 def test_patched_versions_are_the_reviewed_pins():
-    assert APPROVED["mcp-server-git"] == supply.Pin("calver", (2026, 11, 18), "pypi")
-    assert APPROVED["@modelcontextprotocol/server-filesystem"] == supply.Pin("semver", (2, 4, 0), "npm")
-    assert APPROVED["@modelcontextprotocol/server-everything"] == supply.Pin("semver", (2, 3, 1), "npm")
+    assert APPROVED["mcp-server-git"] == Pin("calver", (2026, 11, 18), "pypi")
+    assert APPROVED["@modelcontextprotocol/server-filesystem"] == Pin("semver", (2, 4, 0), "npm")
+    assert APPROVED["@modelcontextprotocol/server-everything"] == Pin("semver", (2, 3, 1), "npm")
 
 
 def test_approved_manifest_passes():
@@ -70,6 +69,6 @@ def test_demo_passes_the_reviewed_manifest_and_fails_the_fixtures():
 
 
 def test_supply_module_stays_defensive():
-    text = Path(supply.__file__).read_text().lower()
+    text = Path(check_server.__code__.co_filename).read_text().lower()
     for word in ("exploit", "payload", "proof of concept", "socket", "urllib", "httpx"):
         assert word not in text
