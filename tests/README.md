@@ -13,6 +13,10 @@ pytest suite, offline.
 | `test_iac.py` | Terraform, Bicep, policies, workflows (including the supply-chain guard: pinned actions, permissions, gitleaks, CodeQL, Dependabot) |
 | `test_lifecycle_validation_monitoring.py` | Lifecycle, validation, monitoring |
 | `test_mcp_cli.py` | MCP tools, CLI, telemetry |
+| `test_network_policy.py` | Session network policy and audit chain |
+| `test_context_cache.py` | Resume without duplicate model calls |
+| `test_mcp_supply.py` | MCP allowlist and exact pins |
+| `test_examiner.py` | Examiner pack, digest and framework map |
 | `test_regulatory_portfolio.py` | Regulatory mapping and portfolio cards |
 | `test_render_docs.py` | Doc renderer |
 | `test_repo_hygiene.py` | READMEs, sections, no dates, no real identifiers |

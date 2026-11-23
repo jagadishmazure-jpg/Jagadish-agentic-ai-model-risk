@@ -21,6 +21,9 @@
 6. **Outage falls back to people**, measured at 100%.
 7. **Budgets refuse before crossing the cap.**
 8. **Claims must cite evidence.**
+9. **A sandboxed session is deny-by-default on the network.** An explicit deny beats a broad allow, and every reach is audited.
+10. **Completed model calls are not repeated** when work resumes on a new worker. A changed payload is a new call.
+11. **MCP servers are allowlisted and exact-pinned.** A range, a floating tag, or a date-style version on a semantic pin is rejected.
 
 ## Fairness
 

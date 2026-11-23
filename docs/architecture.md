@@ -13,13 +13,18 @@ flowchart TB
   SC --> ENG --> COMB
   COMB --> RES[residual + backlog]
   AG --> VAL[independent validation] & MON[monitoring]
+  AG --> NET[session network policy]
+  AG --> CACHE[context cache]
   AP --> LC[lifecycle gates] --> GATE
   RES --> GATE[CI gate G1-G8]
   VAL --> GATE
   LOG[audit-log.jsonl] --> GATE
   GATE --> TEL[telemetry events] --> AZ[(Azure: App Insights, workbook,<br/>evidence storage, Azure Policy)]
   Registry --> MCP[MCP server, read-only]
+  MCP --> PIN[MCP version pin]
+  NET & CACHE & PIN --> EX[examiner pack]
   REG[regulatory/mapping.yaml] --> MCP
+  EX --> REG
 ```
 
 ## Layers
@@ -31,6 +36,7 @@ flowchart TB
 | Scenario engine | `src/modelrisk/scenarios/` | `docs/scenarios/` |
 | Governance | `tiering.py`, `combine.py`, `lifecycle.py`, `validation.py`, `monitoring.py`, `signoff.py`, `gate.py` | `docs/components/` |
 | Interfaces | `cli.py`, `mcp_server.py`, `telemetry.py` | `docs/components/` |
+| Session controls | `network_policy.py`, `context_cache.py`, `mcp_supply.py`, `examiner.py` | `docs/components/network-policy.md`, `context-cache.md`, `mcp-supply-chain.md`, `examiner-pack.md` |
 | Infrastructure | `infra/` | `docs/infra/` |
 
 ## Azure mapping
@@ -44,5 +50,8 @@ flowchart TB
 | Data governance | data sheets | Microsoft Purview |
 | Resource guardrails | tests on tags | Azure Policy (`infra/policies`) |
 | Telemetry | JSON lines | Application Insights + Log Analytics workbook |
-| Evidence | `evidence/` | Storage account, versioned, keyless |
+| Evidence | `evidence/` and `modelrisk examiner` | Storage account, versioned, keyless |
+| Session reach | `network_policy.py` (deny by default) | Policy next to a sandbox. [verify] hosted product behaviour |
+| Resume | `context_cache.py` (no repeated model calls) | Saved agent work on a new worker. [verify] hosted product behaviour |
+| MCP pins | `mcp_supply.py` | Allowlist of exact versions; not a hosted service |
 

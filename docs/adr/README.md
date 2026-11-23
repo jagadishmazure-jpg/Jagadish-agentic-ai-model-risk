@@ -10,3 +10,4 @@ Architecture decision records.
 | `0004-scenarios-run-with-controls-on-and-off.md` | On/off scenarios |
 | `0005-signoffs-bound-to-digest.md` | Digest-bound sign-offs |
 | `0006-deploy-gated-and-dual-iac.md` | Dual IaC, gated deploy |
+| `0007-sandbox-controls-offline.md` | Offline sandbox controls for agent sessions |
